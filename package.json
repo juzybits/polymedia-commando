@@ -1,0 +1,31 @@
+{
+    "private": true,
+    "version": "0.0.0",
+    "name": "@polymedia/airdrop",
+    "author": "@juzybits (https://polymedia.app)",
+    "homepage": "https://github.com/juzybits/polymedia-airdrop",
+    "description": "Tools for Sui airdrops",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/juzybits/polymedia-airdrop"
+    },
+    "keywords": [],
+    "type": "module",
+    "scripts": {
+        "send": "tsc && node dist/bulksender/bulksender.js",
+        "clean": "rm -rf dist/",
+        "build": "pnpm clean && tsc",
+        "fetchHolders": "pnpm build && node dist/holderfinder/fetchHolders.js",
+        "fetchNfts": "pnpm build && node dist/holderfinder/fetchNfts.js",
+        "aggregateNfts": "pnpm build && node dist/holderfinder/aggregateNfts.js"
+    },
+    "dependencies": {
+        "@mysten/sui.js": "^0.48.1",
+        "graphql": "^16.8.1"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.5",
+        "typescript": "^5.3.3"
+    }
+}
