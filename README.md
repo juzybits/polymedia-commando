@@ -4,8 +4,8 @@ Tools for Sui airdrops.
 
 ## Address gathering
 
-[./holderfinder/](./holderfinder/)
+[./src/holderfinder/](./src/holderfinder/)
 
 ## Airdrop tool
 
-- [./bulksender/](./bulksender/)
+[./src/bulksender/](./src/bulksender/)
