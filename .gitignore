@@ -1,5 +1,6 @@
 .auth.ts
 .DS_Store
+config.ts
 data/
 dist/
 node_modules/
