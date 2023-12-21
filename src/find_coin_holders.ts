@@ -1,3 +1,10 @@
+import { writeJsonFile } from './common/file_utils.js';
+
+let COIN_TYPE = '';
+let OUTPUT_FILE = './data/find_coin_holders.json';
+// const LIMIT = 999999;
+const LIMIT = 3;
+
 const USAGE = `
 Find Coin<T> holders using the Suiscan API
 
@@ -5,15 +12,11 @@ Usage: pnpm find_coin_holders <COIN_TYPE> [OUTPUT_FILE]
 
 Arguments:
   COIN_TYPE     - Required. The T in Coin<T>
-  OUTPUT_FILE   - Optional. Path to the output CSV file. Default is ./data/find_coin_holders.csv'
+  OUTPUT_FILE   - Optional. Path to the output file. Default is ${OUTPUT_FILE}'
 
 Example:
-  pnpm find_coin_holders 0x123::lol::LOL ./custom/output.csv
+  pnpm find_coin_holders 0x123::lol::LOL ./custom/output.json
 `;
-
-let COIN_TYPE = '';
-let OUTPUT_FILE = './data/find_coin_holders.csv';
-const LIMIT = 3; // TODO: change to 99999 when done
 
 function printUsage() {
     console.log(USAGE);
@@ -53,7 +56,8 @@ async function main()
     .then((result: any) => {
         return result;
     });
-    console.log(result);
+
+    writeJsonFile(OUTPUT_FILE, result.content);
 }
 
 main();
