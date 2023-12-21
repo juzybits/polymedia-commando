@@ -77,21 +77,19 @@ async function main()
         return;
     }
 
-    writeJsonFile(OUTPUT_FILE, resp.content);
+    const output = [];
+    for (const holder of resp.content) {
+        output.push({
+            address: holder.address,
+            amount: holder.amount,
+        });
+    }
+
+    writeJsonFile(OUTPUT_FILE, output);
 }
 
 type ApiResponse = {
-    content: [{
-        address: string;
-        holderName: null | string;
-        holderImg: null | string;
-        amount: number;
-        usdAmount: number;
-        percentage: number;
-        countObjects: number;
-        coinType: string;
-        denom: string;
-    }];
+    content: Holder[];
 
     first: boolean;
     last: boolean;
@@ -104,6 +102,18 @@ type ApiResponse = {
     size: number;
     sort: any;
     pageable: any;
+};
+
+type Holder =  {
+    address: string;
+    holderName: null | string;
+    holderImg: null | string;
+    amount: number;
+    usdAmount: number;
+    percentage: number;
+    countObjects: number;
+    coinType: string;
+    denom: string;
 };
 
 main();
