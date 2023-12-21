@@ -1,5 +1,7 @@
+import { writeTextFile } from '../common/file_utils.js';
+import { sleep } from '../common/misc_utils.js';
 import * as Config from './config.js';
-import { apiRequest, sleep, writeTextFile } from './utils.js';
+import { apiRequestIndexer, makeFilePath } from './utils.js';
 
 /**
  * Retrieves the list of unique NFT holders for a set of collections.
@@ -23,7 +25,7 @@ async function fetchHolders(collectionId: string, offset: number): Promise<any[]
         }
     }
     `;
-    const result = await apiRequest(query);
+    const result = await apiRequestIndexer(query);
     if (!result?.data?.sui?.nfts) {
         throw new Error(`[fetchHolders] unexpected result: ${JSON.stringify(result)}`);
     }
@@ -49,6 +51,6 @@ async function fetchHolders(collectionId: string, offset: number): Promise<any[]
 
         const filename = `${collection.name}.holders.txt`;
         const contents = [...holders].join('\n');
-        await writeTextFile(filename, contents);
+        await writeTextFile(makeFilePath(filename), contents);
     }
 })();

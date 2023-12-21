@@ -1,7 +1,15 @@
 /* Miscellaneous utils */
 
 import crypto from 'crypto';
-import { createInterface } from "readline";
+import { createInterface } from 'readline';
+
+export async function sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function formatNumber(num: number|BigInt): string {
+    return num.toLocaleString('en-US');
+}
 
 export function chunkArray<T>(array: T[], chunkSize: number): T[][] {
     const chunks: T[][] = [];
@@ -10,14 +18,6 @@ export function chunkArray<T>(array: T[], chunkSize: number): T[][] {
         chunks.push(chunk);
     }
     return chunks;
-}
-
-export function formatNumber(num: number|BigInt): string {
-    return num.toLocaleString('en-US');
-}
-
-export async function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export async function promptUser(question: string): Promise<boolean> {

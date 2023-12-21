@@ -1,6 +1,7 @@
 import { normalizeSuiAddress } from '@mysten/sui.js/utils';
+import { readJsonFile, writeCsvFile } from '../common/file_utils.js';
 import * as Config from './config.js';
-import { readJsonFile, writeCsvFile } from './utils.js';
+import { makeFilePath } from './utils.js';
 
 /**
  * Aggregates the .json files produced by fetchNfts.
@@ -20,7 +21,7 @@ type Count = number; // How many NFTs an Owner holds for a particular collection
         console.log(`aggregating ${collection.name}`);
 
         const inputFilename = `${collection.name}.nfts.json`;
-        const nfts: any[] = await readJsonFile(inputFilename);
+        const nfts: any[] = await readJsonFile(makeFilePath(inputFilename));
         let nullOwners = 0;
         for (const nft of nfts) {
             let owner = nft.owner;
@@ -44,7 +45,7 @@ type Count = number; // How many NFTs an Owner holds for a particular collection
             lines.push([collection.name, owner, count]);
         }
         const filename = `${collection.name}.aggregate.csv`;
-        writeCsvFile(filename, lines);
+        writeCsvFile(makeFilePath(filename), lines);
         */
 
         // add to `allCollectionCounts`
@@ -82,5 +83,5 @@ type Count = number; // How many NFTs an Owner holds for a particular collection
         csvLines.push(csvLine);
     }
     const filename = 'all.aggregate.csv';
-    writeCsvFile(filename, csvLines);
+    writeCsvFile(makeFilePath(filename), csvLines);
 })();

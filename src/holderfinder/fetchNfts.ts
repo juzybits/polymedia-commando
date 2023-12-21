@@ -1,5 +1,7 @@
+import { writeJsonFile } from '../common/file_utils.js';
+import { sleep } from '../common/misc_utils.js';
 import * as Config from './config.js';
-import { apiRequest, sleep, writeJsonFile } from './utils.js';
+import { apiRequestIndexer, makeFilePath } from './utils.js';
 
 /**
  * Retrieves all NFTs and their owners for a set of collections.
@@ -25,7 +27,7 @@ async function fetchNfts(collectionId: string, offset: number): Promise<any[]> {
         }
     }
     `;
-    const result = await apiRequest(query);
+    const result = await apiRequestIndexer(query);
     if (!result?.data?.sui?.nfts) {
         throw new Error(`[fetchNfts] unexpected result: ${JSON.stringify(result)}`);
     }
@@ -48,6 +50,6 @@ async function fetchNfts(collectionId: string, offset: number): Promise<any[]> {
         }
 
         const filename = `${collection.name}.nfts.json`;
-        await writeJsonFile(filename, nfts);
+        await writeJsonFile(makeFilePath(filename), nfts);
     }
 })();
