@@ -18,7 +18,9 @@
         "build": "pnpm clean && tsc",
         "fetchHolders": "pnpm build && node dist/holderfinder/fetchHolders.js",
         "fetchNfts": "pnpm build && node dist/holderfinder/fetchNfts.js",
-        "aggregateNfts": "pnpm build && node dist/holderfinder/aggregateNfts.js"
+        "aggregateNfts": "pnpm build && node dist/holderfinder/aggregateNfts.js",
+        "fetchLastTxn": "pnpm build && node dist/holderfinder/fetchLastTxn.js"
+
     },
     "dependencies": {
         "@mysten/sui.js": "^0.48.1",
