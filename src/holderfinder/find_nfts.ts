@@ -53,3 +53,5 @@ async function fetchNfts(collectionId: string, offset: number): Promise<any[]> {
         await writeJsonFile(makeFilePath(filename), nfts);
     }
 })();
+
+export {};

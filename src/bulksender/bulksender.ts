@@ -11,9 +11,9 @@ const USAGE = `
 Usage: pnpm send <COIN_ID> [INPUT_FILE] [OUTPUT_FILE]
 
 Arguments:
-  COIN_ID     - Required. The Coin<T> identifier to pay for the airdrop.
-  INPUT_FILE  - Optional. Path to the input CSV file. Default is ./data/bulksender.input.csv'.
-  OUTPUT_FILE - Optional. Path to the output CSV file. Default is ./data/bulksender.output.csv'.
+  COIN_ID     - Required. The Coin<T> identifier to pay for the airdrop
+  INPUT_FILE  - Optional. Path to the input file. Default is ./data/bulksender.input.csv'
+  OUTPUT_FILE - Optional. Path to the output file. Default is ./data/bulksender.output.csv'
 
 Example:
   pnpm send 0x1234abdc ./custom/input.csv ./custom/output.csv
@@ -282,3 +282,5 @@ function logText(text: string) {
 }
 
 main();
+
+export {};

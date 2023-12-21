@@ -54,3 +54,5 @@ async function fetchHolders(collectionId: string, offset: number): Promise<any[]
         await writeTextFile(makeFilePath(filename), contents);
     }
 })();
+
+export {};

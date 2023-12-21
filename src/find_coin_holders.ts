@@ -13,7 +13,7 @@ Example:
 
 let COIN_TYPE = '';
 let OUTPUT_FILE = './data/find_coin_holders.csv';
-const PAGE_SIZE = 9; // TODO: update to 99999 when done
+const PAGE_SIZE = 3; // TODO: change to 99999 when done
 
 function printUsage() {
     console.log(USAGE);
@@ -57,3 +57,5 @@ async function main()
 }
 
 main();
+
+export {};

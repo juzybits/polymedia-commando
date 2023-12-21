@@ -85,3 +85,5 @@ type Count = number; // How many NFTs an Owner holds for a particular collection
     const filename = 'aggregate_nfts.csv';
     writeCsvFile(makeFilePath(filename), csvLines);
 })();
+
+export {};
