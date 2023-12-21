@@ -14,13 +14,11 @@
     "type": "module",
     "scripts": {
         "send": "tsc && node dist/bulksender/bulksender.js",
-        "clean": "rm -rf dist/",
-        "build": "pnpm clean && tsc",
-        "fetchHolders": "pnpm build && node dist/holderfinder/fetchHolders.js",
-        "fetchNfts": "pnpm build && node dist/holderfinder/fetchNfts.js",
-        "aggregateNfts": "pnpm build && node dist/holderfinder/aggregateNfts.js",
-        "fetchLastTxn": "pnpm build && node dist/holderfinder/fetchLastTxn.js"
-
+        "fetchHolders": "tsc && node dist/holderfinder/fetchHolders.js",
+        "fetchNfts": "tsc && node dist/holderfinder/fetchNfts.js",
+        "aggregateNfts": "tsc && node dist/holderfinder/aggregateNfts.js",
+        "fetchLastTxn": "tsc && node dist/holderfinder/fetchLastTxn.js",
+        "find_coin_holders": "tsc && node dist/find_coin_holders.js"
     },
     "dependencies": {
         "@mysten/sui.js": "^0.48.1",
