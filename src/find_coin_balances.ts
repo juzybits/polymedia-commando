@@ -1,0 +1,51 @@
+let COIN_TYPE = '';
+let INPUT_FILE = './data/find_coin_balances.input.json';
+let OUTPUT_FILE = './data/find_coin_balances.output.json';
+
+const USAGE = `
+Find how much Coin<T> is owned by each address
+
+Usage: pnpm find_coin_balances <COIN_TYPE> [INPUT_FILE] [OUTPUT_FILE]
+
+Arguments:
+  COIN_TYPE    - Required. The T in Coin<T>
+  INPUT_FILE   - Optional. Path to the input file. Default is ${INPUT_FILE}'
+  OUTPUT_FILE  - Optional. Path to the output file. Default is ${OUTPUT_FILE}'
+
+Example:
+  pnpm find_coin_balances 0x123::lol::LOL ./custom/input.json ./custom/output.json
+`;
+
+function printUsage() {
+    console.log(USAGE);
+}
+
+async function main()
+{
+    /* Read and validate inputs */
+
+    const args = process.argv.slice(2);
+
+    if (args.includes('-h') || args.includes('--help')) {
+        printUsage();
+        return;
+    }
+
+    if (args.length < 1) {
+        console.error('Error: COIN_TYPE is required as the first argument.');
+        printUsage();
+        return;
+    }
+
+    COIN_TYPE = args[0];
+    OUTPUT_FILE = args[1] || OUTPUT_FILE;
+    console.log(`COIN_TYPE: ${COIN_TYPE}`);
+    console.log(`INPUT_FILE: ${INPUT_FILE}`);
+    console.log(`OUTPUT_FILE: ${OUTPUT_FILE}`);
+
+    /* TODO */
+}
+
+main();
+
+export {};

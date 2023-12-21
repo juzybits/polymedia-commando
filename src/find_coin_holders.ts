@@ -13,7 +13,7 @@ Example:
 
 let COIN_TYPE = '';
 let OUTPUT_FILE = './data/find_coin_holders.csv';
-const PAGE_SIZE = 3; // TODO: change to 99999 when done
+const LIMIT = 3; // TODO: change to 99999 when done
 
 function printUsage() {
     console.log(USAGE);
@@ -39,11 +39,11 @@ async function main()
     COIN_TYPE = args[0];
     OUTPUT_FILE = args[1] || OUTPUT_FILE;
     console.log(`COIN_TYPE: ${COIN_TYPE}`);
-    console.log(`Output file: ${OUTPUT_FILE}`);
+    console.log(`OUTPUT_FILE: ${OUTPUT_FILE}`);
 
     /* Fetch */
 
-    const URL_HOLDERS = `https://suiscan.xyz/api/sui-backend/mainnet/api/coins/${COIN_TYPE}/holders?sortBy=AMOUNT&orderBy=DESC&searchStr=&page=0&size=${PAGE_SIZE}`;
+    const URL_HOLDERS = `https://suiscan.xyz/api/sui-backend/mainnet/api/coins/${COIN_TYPE}/holders?sortBy=AMOUNT&orderBy=DESC&searchStr=&page=0&size=${LIMIT}`;
     const result = await fetch(URL_HOLDERS)
     .then((response: Response) => {
         if (!response.ok)

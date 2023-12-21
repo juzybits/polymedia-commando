@@ -15,6 +15,7 @@
     "scripts": {
         "aggregate_nfts": "tsc && node dist/holderfinder/aggregate_nfts.js",
         "bulksender": "tsc && node dist/bulksender/bulksender.js",
+        "find_coin_balances": "tsc && node dist/find_coin_balances.js",
         "find_coin_holders": "tsc && node dist/find_coin_holders.js",
         "find_last_txn": "tsc && node dist/find_last_txn.js",
         "find_nft_holders": "tsc && node dist/holderfinder/find_nft_holders.js",
