@@ -20,7 +20,7 @@ type Count = number; // How many NFTs an Owner holds for a particular collection
         const collectionCounts = new Map<Owner, Count>();
         console.log(`aggregating ${collection.name}`);
 
-        const inputFilename = `${collection.name}.nfts.json`;
+        const inputFilename = `find_nfts.${collection.name}.json`;
         const nfts: any[] = await readJsonFile(makeFilePath(inputFilename));
         let nullOwners = 0;
         for (const nft of nfts) {
@@ -82,6 +82,6 @@ type Count = number; // How many NFTs an Owner holds for a particular collection
         csvLine.splice(1, 0, totalAllocation); // insert total allocation in the second CSV column
         csvLines.push(csvLine);
     }
-    const filename = 'all.aggregate.csv';
+    const filename = 'aggregate_nfts.csv';
     writeCsvFile(makeFilePath(filename), csvLines);
 })();

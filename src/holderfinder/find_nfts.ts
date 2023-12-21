@@ -49,7 +49,7 @@ async function fetchNfts(collectionId: string, offset: number): Promise<any[]> {
             await sleep(580); // avoid hitting the 100 req/min rate limit
         }
 
-        const filename = `${collection.name}.nfts.json`;
+        const filename = `find_nfts.${collection.name}.json`;
         await writeJsonFile(makeFilePath(filename), nfts);
     }
 })();

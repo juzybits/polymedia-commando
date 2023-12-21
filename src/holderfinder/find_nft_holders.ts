@@ -49,7 +49,7 @@ async function fetchHolders(collectionId: string, offset: number): Promise<any[]
             await sleep(580); // avoid hitting the 100 req/min rate limit
         }
 
-        const filename = `${collection.name}.holders.txt`;
+        const filename = `find_nft_holders.${collection.name}.txt`;
         const contents = [...holders].join('\n');
         await writeTextFile(makeFilePath(filename), contents);
     }

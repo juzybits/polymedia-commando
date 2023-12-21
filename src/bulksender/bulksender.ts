@@ -12,8 +12,8 @@ Usage: pnpm send <COIN_ID> [INPUT_FILE] [OUTPUT_FILE]
 
 Arguments:
   COIN_ID     - Required. The Coin<T> identifier to pay for the airdrop.
-  INPUT_FILE  - Optional. Path to the input CSV file. Default is ./data/bulksender_input.csv'.
-  OUTPUT_FILE - Optional. Path to the output CSV file. Default is ./data/bulksender_output.csv'.
+  INPUT_FILE  - Optional. Path to the input CSV file. Default is ./data/bulksender.input.csv'.
+  OUTPUT_FILE - Optional. Path to the output CSV file. Default is ./data/bulksender.output.csv'.
 
 Example:
   pnpm send 0x1234abdc ./custom/input.csv ./custom/output.csv
@@ -33,11 +33,11 @@ let COIN_ID = '';
  *      0x567,33
  * would airdrop 25_000_000_000 SUI to address 0x123 (5 * 10^9 MIST)
  */
-let INPUT_FILE = './data/bulksender_input.csv';
+let INPUT_FILE = './data/bulksender.input.csv';
 /**
  * A log file with details about transactions sent/failed.
  */
-let OUTPUT_FILE = './data/bulksender_output.csv';
+let OUTPUT_FILE = './data/bulksender.output.csv';
 /**
  * How many addresses (split_and_transfer() calls) to include in each transaction block.
  * On localnet it breaks above 191 calls per PTB.
