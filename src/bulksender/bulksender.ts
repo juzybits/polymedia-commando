@@ -1,25 +1,19 @@
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
-import { appendFileSync } from 'fs';
-import {
-    AddressAmountPair,
-    chunkArray,
-    fileExists,
-    formatNumber,
-    getActiveAddressKeypair,
-    getActiveEnv,
-    promptUser,
-    readCsvInputFile,
-    sleep,
-} from './utils.js';
+import { isValidSuiAddress, normalizeSuiAddress } from '@mysten/sui.js/utils';
+import { appendFileSync, readFileSync } from 'fs';
+import { fileExists } from '../common/file_utils.js';
+import { chunkArray, formatNumber, promptUser, sleep } from '../common/misc_utils.js';
+import { getActiveAddressKeypair, getActiveEnv } from '../common/sui_utils.js';
+import { excludedOwners } from './config.js';
 
 const USAGE = `
 Usage: pnpm send <COIN_ID> [INPUT_FILE] [OUTPUT_FILE]
 
 Arguments:
   COIN_ID     - Required. The Coin<T> identifier to pay for the airdrop.
-  INPUT_FILE  - Optional. Path to the input CSV file. Default is ./data/input.csv'.
-  OUTPUT_FILE - Optional. Path to the output CSV file. Default is ./data/output.csv'.
+  INPUT_FILE  - Optional. Path to the input CSV file. Default is ./data/bulksender_input.csv'.
+  OUTPUT_FILE - Optional. Path to the output CSV file. Default is ./data/bulksender_output.csv'.
 
 Example:
   pnpm send 0x1234abdc ./custom/input.csv ./custom/output.csv
@@ -39,11 +33,11 @@ let COIN_ID = '';
  *      0x567,33
  * would airdrop 25_000_000_000 SUI to address 0x123 (5 * 10^9 MIST)
  */
-let INPUT_FILE = './data/input.csv';
+let INPUT_FILE = './data/bulksender_input.csv';
 /**
  * A log file with details about transactions sent/failed.
  */
-let OUTPUT_FILE = './data/output.csv';
+let OUTPUT_FILE = './data/bulksender_output.csv';
 /**
  * How many addresses (split_and_transfer() calls) to include in each transaction block.
  * On localnet it breaks above 191 calls per PTB.
@@ -219,6 +213,52 @@ async function main() {
     } catch (error) {
         console.error(error);
     }
+}
+
+type AddressAmountPair = {
+    address: string;
+    amount: bigint;
+}
+
+/**
+ * A basic CSV parser designed to read the output of holderfinder/src/aggregateNfts.ts.
+ *
+ * It expects the 1st column to be the owner address and the 2nd column to be the amount to be sent.
+ *
+ * Note that this is not a generic CSV parsing solution and it will break if the input
+ * CSV data contains commas or newlines.
+ */
+function readCsvInputFile(filename: string): AddressAmountPair[] {
+    const fileContent = readFileSync(filename, 'utf8');
+    const lines = fileContent.split('\n');
+    const results: AddressAmountPair[] = [];
+
+    for (const line of lines) {
+        const trimmedLine = line.trim();
+        if (!trimmedLine) {
+            continue;
+        }
+        // Split the line by commas and remove quotes from each value
+        const [addressStr, amountStr] = trimmedLine.split(',').map(value =>
+            value.replace(/^"|"$/g, '').replace(/\\"/g, '"').trim()
+        );
+        if (!addressStr.startsWith('0x')) {
+            console.debug(`[readCsvInputFile] Skipping line with missing owner: ${trimmedLine.substring(0, 70)}`);
+            continue;
+        }
+        const address = normalizeSuiAddress(addressStr);
+        if (!isValidSuiAddress(address)) {
+            console.debug(`[readCsvInputFile] Skipping line with invalid owner: ${trimmedLine.substring(0, 70)}`);
+            continue;
+        }
+        if (excludedOwners.includes(address)) {
+            console.debug(`[readCsvInputFile] Skipping excluded owner: ${address}`);
+            continue;
+        }
+        results.push({ address, amount: BigInt(amountStr) });
+    }
+
+    return results;
 }
 
 /**
