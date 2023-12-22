@@ -1,6 +1,6 @@
 import { writeJsonFile } from './common/file_utils.js';
 
-const IS_DEV = true;
+const IS_DEV = false;
 
 let COIN_TYPE = '';
 let OUTPUT_FILE = './data/find_coin_holders.json';
