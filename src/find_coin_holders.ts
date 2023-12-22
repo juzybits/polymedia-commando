@@ -77,16 +77,21 @@ async function main()
         return;
     }
 
-    const output = [];
+    const output = new Array<AddressAndBalance>();
     for (const holder of resp.content) {
         output.push({
             address: holder.address,
-            amount: holder.amount,
+            balance: holder.amount,
         });
     }
 
     writeJsonFile(OUTPUT_FILE, output);
 }
+
+export type AddressAndBalance = {
+    address: string;
+    balance: number;
+};
 
 type ApiResponse = {
     content: Holder[];
