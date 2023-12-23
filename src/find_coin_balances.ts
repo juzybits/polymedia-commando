@@ -1,6 +1,5 @@
 import { readJsonFile, writeJsonFile } from './common/file_utils.js';
-import { sleep } from './common/misc_utils.js';
-import { SuiClientRotator } from './common/sui_utils.js';
+import { SuiClientRotator, SuiClientWithEndpoint } from './common/sui_utils.js';
 import { AddressAndBalance } from './find_coin_holders.js';
 
 let COIN_TYPE = '';
@@ -49,47 +48,17 @@ async function main()
     console.log(`INPUT_FILE: ${INPUT_FILE}`);
     console.log(`OUTPUT_FILE: ${OUTPUT_FILE}`);
 
+    /* Find how much Coin<T> is owned by each address */
+
     const inputs: AddressAndBalance[] = readJsonFile(INPUT_FILE);
-    const balances = await getAllBalances(inputs);
-    writeJsonFile(OUTPUT_FILE, balances);
-}
+    console.log(`Fetching ${inputs.length} balances in batches...`);
 
-const rotator = new SuiClientRotator();
-
-// Performance notes: took 11m27s to fetch 17,352 balances (about 25 req/sec)
-async function getAllBalances(inputs: AddressAndBalance[]) {
-    const results = [];
-    const batchSize = rotator.getNumberOfClients();
-    const totalBatches = Math.ceil(inputs.length / batchSize);
-    const rateLimitDelay = 334; // minimum time between batches (in milliseconds)
-
-    console.log(`Fetching ${inputs.length} balances in batches of ${batchSize}`);
-
-    for (let start = 0, batchNum = 1; start < inputs.length; start += batchSize, batchNum++) {
-        console.log(`Fetching batch ${batchNum} of ${totalBatches}`);
-
-        const batch = inputs.slice(start, start + batchSize);
-        const startTime = Date.now();
-        const batchResults = await processBatch(batch);
-        const endTime = Date.now();
-        results.push(...batchResults); // flatten into a single array
-
-        const timeTaken = endTime - startTime;
-        if (timeTaken < rateLimitDelay) {
-            await sleep(rateLimitDelay - timeTaken);
-        }
-    }
-
-    return results;
-}
-
-async function processBatch(batch: AddressAndBalance[]) {
-    const promises = batch.map(input => {
-        const client = rotator.getNextClient();
+    const rotator = new SuiClientRotator();
+    const fetchBalance = (client: SuiClientWithEndpoint, input: AddressAndBalance) => {
         return client.getBalance({
             owner: input.address,
             coinType: COIN_TYPE,
-        }).then(balance => { // TODO divide by 10**coin_decimals
+        }).then(balance => {
             return { address: input.address, balance: balance.totalBalance };
         }).catch(error => {
             console.error(`Error getting balance from rpc ${client.endpoint}:\n`, error);
@@ -100,10 +69,12 @@ async function processBatch(batch: AddressAndBalance[]) {
                 error: String(error),
             };
         });
-    });
-    return Promise.all(promises);
+    };
+    const balances = await rotator.executeInBatches(inputs, fetchBalance);
+
+    writeJsonFile(OUTPUT_FILE, balances);
 }
 
 main();
 
-export {};
+export { };

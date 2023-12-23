@@ -6,6 +6,7 @@ import path from 'path';
 import { SuiClient } from '@mysten/sui.js/client';
 import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 import { fromB64 } from '@mysten/sui.js/utils';
+import { sleep } from './misc_utils.js';
 
 /**
  * Build a Ed25519Keypair object for the current active address,
@@ -44,12 +45,14 @@ export function getActiveEnv():  'mainnet' | 'testnet' | 'devnet' | 'localnet' {
     return activeEnv as 'mainnet' | 'testnet' | 'devnet' | 'localnet';
 }
 
-type SuiClientWithEndpoint = SuiClient & {
+export type SuiClientWithEndpoint = SuiClient & {
     endpoint: string;
 };
 export class SuiClientRotator {
     private readonly clients: SuiClientWithEndpoint[];
     private clientIdx = 0; // the index of the next client to be returned by getNextClient()
+
+    private readonly rateLimitDelay = 334; // minimum time between batches (in milliseconds)
     private readonly endpoints = [
         // 'https://mainnet-rpc.sui.chainbase.online',          // low req/sec limit
         // 'https://mainnet.sui.rpcpool.com',                   // 403 forbidden when using VPN
@@ -88,14 +91,47 @@ export class SuiClientRotator {
     /**
      * Returns a different SuiClient in a round-robin fashion
      */
-    public getNextClient(): SuiClientWithEndpoint {
+    private getNextClient(): SuiClientWithEndpoint {
         const client = this.clients[this.clientIdx];
         this.clientIdx = (this.clientIdx + 1) % this.clients.length;
         return client;
     }
 
-    public getNumberOfClients(): number {
-        return this.clients.length;
+    /**
+    * Executes a batch of RPC operations in parallel using multiple RPC endpoints.
+    * @param inputs The inputs for each RPC call.
+    * @param operation A function that performs the RPC operation.
+    * @returns The results of the RPC operations.
+    */
+   public async executeInBatches<InputType, OutputType>(
+       inputs: InputType[],
+       operation: (client: SuiClientWithEndpoint, input: InputType) => Promise<OutputType>
+    ): Promise<OutputType[]> {
+        const results = new Array<OutputType>();
+        const batchSize = this.clients.length;
+        const totalBatches = Math.ceil(inputs.length / batchSize);
+        console.log(`Fetching ${inputs.length} balances in batches of ${batchSize}`);
+
+        for (let start = 0, batchNum = 1; start < inputs.length; start += batchSize, batchNum++) {
+            console.log(`Fetching batch ${batchNum} of ${totalBatches}`);
+
+            const batch = inputs.slice(start, start + batchSize);
+            const client = this.getNextClient();
+
+            const timeStart = Date.now();
+            const batchResults = await Promise.all(
+                batch.map(input => operation(client, input))
+            );
+            const timeTaken = Date.now() - timeStart;
+
+            results.push(...batchResults);
+
+            if (timeTaken < this.rateLimitDelay) {
+                await sleep(this.rateLimitDelay - timeTaken);
+            }
+        }
+
+        return results;
     }
 
     public async testEndpoints(): Promise<void> {
