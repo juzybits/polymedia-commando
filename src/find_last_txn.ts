@@ -1,23 +1,78 @@
-import { getFullnodeUrl, PaginatedEvents, SuiClient, SuiEvent } from '@mysten/sui.js/client';
+import { readJsonFile, writeJsonFile } from './common/file_utils.js';
+import { SuiClientRotator, SuiClientWithEndpoint } from './common/sui_utils.js';
+import { AddressAndBalance } from './find_coin_holders.js';
 
-// Quick demo to pull the latest transaction for an address
+let INPUT_FILE = './data/find_coin_holders.json';
+let OUTPUT_FILE = './data/find_last_txn.json';
 
-async function main() {
-    const networkName = 'mainnet'; // TODO
-    console.log(`Active network: ${networkName}`);
-    const suiClient = new SuiClient({ url: getFullnodeUrl(networkName)});
-    const res: PaginatedEvents = await suiClient.queryEvents({
-        query: {
-            Sender: '0x57909e7d18c1092e05c9405997aa2238341e547cbf017eea4a65ef83adffbaa4',
-        },
-        limit: 1,
-        order: 'descending',
-    });
-    const data: SuiEvent = res.data[0];
-    const date = new Date(parseInt(data.timestampMs || '0'));
-    console.log(data, date);
+const USAGE = `
+Find the last transaction for each Sui address
+
+Usage: pnpm find_last_txn [INPUT_FILE] [OUTPUT_FILE]
+
+Arguments:
+  INPUT_FILE   - Optional. Path to the input file. Default is '${INPUT_FILE}'
+  OUTPUT_FILE  - Optional. Path to the output file. Default is '${OUTPUT_FILE}'
+
+Example:
+  pnpm find_last_txn ./custom/input.json ./custom/output.json
+`;
+
+function printUsage() {
+    console.log(USAGE);
+}
+
+async function main()
+{
+    /* Read and validate inputs */
+
+    const args = process.argv.slice(2);
+
+    if (args.includes('-h') || args.includes('--help')) {
+        printUsage();
+        return;
+    }
+
+    INPUT_FILE = args[0] || INPUT_FILE;
+    OUTPUT_FILE = args[1] || OUTPUT_FILE;
+    console.log(`INPUT_FILE: ${INPUT_FILE}`);
+    console.log(`OUTPUT_FILE: ${OUTPUT_FILE}`);
+
+    /* Fetch last transaction for each address */
+
+    const inputs: AddressAndBalance[] = readJsonFile(INPUT_FILE);
+    console.log(`Fetching last transaction for ${inputs.length} addresses in batches...`);
+
+    const rotator = new SuiClientRotator();
+    const fetchLastTxn = async (client: SuiClientWithEndpoint, input: AddressAndBalance) => {
+        return client.queryEvents({
+            query: { Sender: input.address },
+            limit: 1,
+            order: 'descending',
+        }).then(events => {
+            console.log(events);
+            const event = events.data.length ? events.data[0] : null;
+            return {
+                address: input.address,
+                txnId: event ? event.id.txDigest : null,
+                txnTime: event ? event.timestampMs : null,
+            };
+        }).catch(error => {
+            console.error(`Error getting last transaction from rpc ${client.endpoint}:\n`, error);
+            return {
+                address: input.address,
+                txnId: null,
+                txnTime: null,
+                rpc: client.endpoint,
+                error: String(error),
+            };
+        });
+    };
+    const lastTxns = await rotator.executeInBatches(inputs, fetchLastTxn);
+
+    writeJsonFile(OUTPUT_FILE, lastTxns);
 }
 
 main();
 
-export {};
+export { };
