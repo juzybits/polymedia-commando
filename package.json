@@ -19,7 +19,8 @@
         "find_coin_holders": "tsc && node dist/find_coin_holders.js",
         "find_last_txn": "tsc && node dist/find_last_txn.js",
         "find_nft_holders": "tsc && node dist/holderfinder/find_nft_holders.js",
-        "find_nfts": "tsc && node dist/holderfinder/find_nfts.js"
+        "find_nfts": "tsc && node dist/holderfinder/find_nfts.js",
+        "test_endpoints": "tsc && node dist/test_endpoints.js"
     },
     "dependencies": {
         "@mysten/sui.js": "^0.48.1",
