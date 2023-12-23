@@ -54,8 +54,8 @@ export class SuiClientRotator {
 
     private readonly rateLimitDelay = 334; // minimum time between batches (in milliseconds)
     private readonly endpoints = [
-        // 'https://mainnet-rpc.sui.chainbase.online',          // low req/sec limit
-        // 'https://mainnet.sui.rpcpool.com',                   // 403 forbidden when using VPN
+        // 'https://mainnet-rpc.sui.chainbase.online',       // 567 response
+        'https://mainnet.sui.rpcpool.com',                   // 403 forbidden when using VPN
         'https://mainnet.suiet.app',
         'https://rpc-mainnet.suiscan.xyz',
         'https://sui-mainnet-endpoint.blockvision.org',
@@ -63,18 +63,18 @@ export class SuiClientRotator {
         'https://sui-rpc-mainnet.testnet-pride.com',
         // 'https://sui1mainnet-rpc.chainode.tech',             // 502 bad gateway
         // 'https://sui-mainnet-ca-1.cosmostation.io',
-        // 'https://sui-mainnet-ca-2.cosmostation.io',
+        'https://sui-mainnet-ca-2.cosmostation.io',
         // 'https://sui-mainnet-eu-1.cosmostation.io',          // 000
         // 'https://sui-mainnet-eu-2.cosmostation.io',          // 000
         'https://sui-mainnet-eu-3.cosmostation.io',
-        // 'https://sui-mainnet-eu-4.cosmostation.io',
-        // 'https://sui-mainnet-us-1.cosmostation.io',
-        // 'https://sui-mainnet-us-2.cosmostation.io',
+        'https://sui-mainnet-eu-4.cosmostation.io',
+        'https://sui-mainnet-us-1.cosmostation.io',
+        'https://sui-mainnet-us-2.cosmostation.io',
         'https://fullnode.mainnet.sui.io',
-        'https://sui-mainnet-rpc-germany.allthatnode.com',
+        // 'https://sui-mainnet-rpc.allthatnode.com',           // 429 too many requests
+        // 'https://sui-mainnet-rpc-germany.allthatnode.com',   // 429 too many requests
         // 'https://sui-mainnet-rpc-korea.allthatnode.com',     // too slow/far
-        // 'https://sui-mainnet-rpc.allthatnode.com',
-        // 'https://sui-mainnet.nodeinfra.com',                 // low req/sec limit
+        // 'https://sui-mainnet.nodeinfra.com',                 // 429 too many requests
         'https://sui.publicnode.com',
         'https://sui-mainnet-rpc.bartestnet.com',
     ];
