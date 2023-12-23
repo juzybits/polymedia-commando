@@ -58,14 +58,8 @@ async function main()
                 txnTime: event ? event.timestampMs : null,
             };
         }).catch(error => {
-            console.error(`Error getting last transaction from rpc ${client.endpoint}:\n`, error);
-            return {
-                address: input.address,
-                txnId: null,
-                txnTime: null,
-                rpc: client.endpoint,
-                error: String(error),
-            };
+            console.error(`Error getting last transaction for address ${input.address} from rpc ${client.endpoint}: ${error}`, error);
+            throw error;
         });
     };
     const lastTxns = await rotator.executeInBatches(inputs, fetchLastTxn);

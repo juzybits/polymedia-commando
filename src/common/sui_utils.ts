@@ -98,40 +98,61 @@ export class SuiClientRotator {
     }
 
     /**
-    * Executes a batch of RPC operations in parallel using multiple RPC endpoints.
-    * @param inputs The inputs for each RPC call.
-    * @param operation A function that performs the RPC operation.
-    * @returns The results of the RPC operations.
-    */
-   public async executeInBatches<InputType, OutputType>(
-       inputs: InputType[],
-       operation: (client: SuiClientWithEndpoint, input: InputType) => Promise<OutputType>
+     * Executes SuiClient RPC operations in parallel using multiple endpoints.
+     * If any operation fails, it's retried by calling this function recursively.
+     * @param inputs The inputs for each RPC call.
+     * @param operation A function that performs the RPC operation.
+     * @returns The results of the RPC operations in the same order as the inputs.
+     */
+    public async executeInBatches<InputType, OutputType>(
+        inputs: InputType[],
+        operation: (client: SuiClientWithEndpoint, input: InputType) => Promise<OutputType>
     ): Promise<OutputType[]> {
-        const results = new Array<OutputType>();
+        const results = new Array<OutputType|null>(inputs.length).fill(null);
+        const retries = new Array<InputType>();
         const batchSize = this.clients.length;
         const totalBatches = Math.ceil(inputs.length / batchSize);
-        console.log(`Fetching ${inputs.length} balances in batches of ${batchSize}`);
+        console.log(`Executing ${inputs.length} operations in batches of ${batchSize}`);
 
         for (let start = 0, batchNum = 1; start < inputs.length; start += batchSize, batchNum++) {
-            console.log(`Fetching batch ${batchNum} of ${totalBatches}`);
+            console.log(`Processing batch ${batchNum} of ${totalBatches}`);
 
+            // Execute all operations in the current batch
             const batch = inputs.slice(start, start + batchSize);
             const client = this.getNextClient();
-
             const timeStart = Date.now();
-            const batchResults = await Promise.all(
+            const batchResults = await Promise.allSettled(
                 batch.map(input => operation(client, input))
             );
             const timeTaken = Date.now() - timeStart;
 
-            results.push(...batchResults);
+            // Process results and keep track of failed operations for retries
+            batchResults.forEach((result, index) => {
+                if (result.status === 'fulfilled') {
+                    results[start + index] = result.value;
+                } else {
+                    retries.push(batch[index]);
+                }
+            });
 
+            // Respect rate limit delay
             if (timeTaken < this.rateLimitDelay) {
                 await sleep(this.rateLimitDelay - timeTaken);
             }
         }
 
-        return results;
+        // Retry failed operations by calling executeInBatches recursively
+        if (retries.length > 0) {
+            const retryResults = await this.executeInBatches(retries, operation);
+            for (let i = 0, retryIndex = 0; i < results.length; i++) {
+                if (results[i] === null) {
+                    results[i] = retryResults[retryIndex++];
+                }
+            }
+        }
+
+        // Safe to cast as all nulls have been replaced with OutputType
+        return results as OutputType[];
     }
 
     public async testEndpoints(): Promise<void> {

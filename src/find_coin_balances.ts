@@ -24,6 +24,7 @@ function printUsage() {
     console.log(USAGE);
 }
 
+// Performance notes: took 9m12s to fetch 17,494 balances from 14 endpoints (31.7 req/sec)
 async function main()
 {
     /* Read and validate inputs */
@@ -61,13 +62,8 @@ async function main()
         }).then(balance => {
             return { address: input.address, balance: balance.totalBalance };
         }).catch(error => {
-            console.error(`Error getting balance from rpc ${client.endpoint}:\n`, error);
-            return {
-                address: input.address,
-                balance: null,
-                rpc: client.endpoint,
-                error: String(error),
-            };
+            console.error(`Error getting balance for address ${input.address} from rpc ${client.endpoint}: ${error}`);
+            throw error;
         });
     };
     const balances = await rotator.executeInBatches(inputs, fetchBalance);
