@@ -49,8 +49,9 @@ type SuiClientWithEndpoint = SuiClient & {
 };
 export class SuiClientRotator {
     private readonly clients: SuiClientWithEndpoint[];
+    private clientIdx = 0; // the index of the next client to be returned by getNextClient()
     private readonly endpoints = [
-        'https://mainnet-rpc.sui.chainbase.online',
+        // 'https://mainnet-rpc.sui.chainbase.online',          // low req/sec limit
         // 'https://mainnet.sui.rpcpool.com',                   // 403 forbidden when using VPN
         'https://mainnet.suiet.app',
         'https://rpc-mainnet.suiscan.xyz',
@@ -70,7 +71,7 @@ export class SuiClientRotator {
         'https://sui-mainnet-rpc-germany.allthatnode.com',
         // 'https://sui-mainnet-rpc-korea.allthatnode.com',     // too slow/far
         // 'https://sui-mainnet-rpc.allthatnode.com',
-        'https://sui-mainnet.nodeinfra.com',
+        // 'https://sui-mainnet.nodeinfra.com',                 // low req/sec limit
         'https://sui.publicnode.com',
         'https://sui-mainnet-rpc.bartestnet.com',
     ];
@@ -84,24 +85,31 @@ export class SuiClientRotator {
         }
     }
 
-    public async testEndpoints(): Promise<void> {
-        console.log(`\ntesting ${this.clients.length} endpoints\n`);
+    /**
+     * Returns a different SuiClient in a round-robin fashion
+     */
+    public getNextClient(): SuiClientWithEndpoint {
+        const client = this.clients[this.clientIdx];
+        this.clientIdx = (this.clientIdx + 1) % this.clients.length;
+        return client;
+    }
 
-        const startTime = Date.now();
+    public getNumberOfClients(): number {
+        return this.clients.length;
+    }
+
+    public async testEndpoints(): Promise<void> {
+        console.log(`testing ${this.clients.length} endpoints`);
+        console.time('total time');
         for (const client of this.clients) {
-            // console.log(`----- ${client.endpoint} -----`);
-            console.time(`time - ${client.endpoint}`);
+            console.time(`time: ${client.endpoint}`);
             const balance = await client.getBalance({
                 owner: '0x8ec0945def230349b2cbd72abd0a91ceb1ca8a4604474d03ef16379414f05a10',
                 coinType: '0x2::sui::SUI',
             });
-            console.timeEnd(`time - ${client.endpoint}`);
-            // console.log(balance.totalBalance);
+            console.timeEnd(`time: ${client.endpoint}`);
+            console.log(`balance: ${balance.totalBalance}`);
         }
-        const endTime = Date.now();
-        const totalTime = (endTime - startTime) / 1000;
-        const reqPerSec = this.clients.length / totalTime;
-        console.log(`\nTotal time: ${totalTime} seconds`);
-        console.log(`Requests per second: ${reqPerSec}\n`);
+        console.timeEnd('total time');
     }
 }
