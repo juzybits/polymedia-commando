@@ -1,13 +1,15 @@
 import { readJsonFile, writeCsvFile } from './common/file_utils.js';
 import { AddressAndBalance } from './find_coin_holders.js';
 
+let DECIMALS: number;
 let INPUT_FILE = './data/find_coin_balances.json';
-let OUTPUT_FILE = './data/transform_balances_to_csv.json';
+let OUTPUT_FILE = './data/transform_balances_to_csv.csv';
 
 const USAGE = `
-Usage: pnpm transform_balances_to_csv [INPUT_FILE] [OUTPUT_FILE]
+Usage: pnpm transform_balances_to_csv DECIMALS [INPUT_FILE] [OUTPUT_FILE]
 
 Arguments:
+  DECIMALS     - Number of decimals for Coin<T>
   INPUT_FILE   - Optional. Path to the input file. Default is ${INPUT_FILE}'
   OUTPUT_FILE  - Optional. Path to the output file. Default is ${OUTPUT_FILE}'
 
@@ -30,8 +32,11 @@ async function main()
         return;
     }
 
+    DECIMALS = Number(args[0]);
+    const decimalsDivider = 10**DECIMALS;
     INPUT_FILE = args[1] || INPUT_FILE;
     OUTPUT_FILE = args[2] || OUTPUT_FILE;
+    console.log(`DECIMALS: ${DECIMALS}`);
     console.log(`INPUT_FILE: ${INPUT_FILE}`);
     console.log(`OUTPUT_FILE: ${OUTPUT_FILE}`);
 
@@ -44,7 +49,7 @@ async function main()
         if (input.balance == 0) {
             continue;
         }
-        lines.push([input.address, input.balance]);
+        lines.push([input.address, input.balance / decimalsDivider]);
     }
     writeCsvFile(OUTPUT_FILE, lines);
 }

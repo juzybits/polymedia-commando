@@ -50,7 +50,6 @@ async function main()
             limit: 1,
             order: 'descending',
         }).then(events => {
-            console.log(events);
             const event = events.data.length ? events.data[0] : null;
             return {
                 address: input.address,
