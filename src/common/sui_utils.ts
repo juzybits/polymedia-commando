@@ -55,7 +55,7 @@ export class SuiClientRotator {
     private readonly rateLimitDelay = 334; // minimum time between batches (in milliseconds)
     private readonly endpoints = [
         // 'https://mainnet-rpc.sui.chainbase.online',       // 567 response
-        'https://mainnet.sui.rpcpool.com',                   // 403 forbidden when using VPN
+        // 'https://mainnet.sui.rpcpool.com',                   // 403 forbidden when using VPN
         'https://mainnet.suiet.app',
         'https://rpc-mainnet.suiscan.xyz',
         'https://sui-mainnet-endpoint.blockvision.org',

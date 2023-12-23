@@ -20,7 +20,8 @@
         "find_last_txn": "tsc && node dist/find_last_txn.js",
         "find_nft_holders": "tsc && node dist/holderfinder/find_nft_holders.js",
         "find_nfts": "tsc && node dist/holderfinder/find_nfts.js",
-        "test_endpoints": "tsc && node dist/test_endpoints.js"
+        "test_endpoints": "tsc && node dist/test_endpoints.js",
+        "transform_balances_to_csv": "tsc && node dist/transform_balances_to_csv.js"
     },
     "dependencies": {
         "@mysten/sui.js": "^0.48.1",

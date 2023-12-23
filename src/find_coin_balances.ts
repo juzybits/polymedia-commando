@@ -24,7 +24,7 @@ function printUsage() {
     console.log(USAGE);
 }
 
-// Performance notes: took 9m12s to fetch 17,494 balances from 14 endpoints (31.7 req/sec)
+// Performance notes: took 8m32s to fetch 17,499 balances from 13 endpoints (34 req/sec)
 async function main()
 {
     /* Read and validate inputs */
