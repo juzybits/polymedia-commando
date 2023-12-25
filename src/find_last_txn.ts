@@ -45,16 +45,24 @@ async function main()
 
     const rotator = new SuiClientRotator();
     const fetchLastTxn = async (client: SuiClientWithEndpoint, input: AddressAndBalance) => {
-        return client.queryEvents({
-            query: { Sender: input.address },
+        return client.queryTransactionBlocks({
+            filter: { FromAddress: input.address },
+            options: {
+                // showBalanceChanges: true,
+                // showEffects: true,
+                // showEvents: true,
+                // showInput: true,
+                // showObjectChanges: true,
+                showRawInput: true, // only to get timestampMs
+            },
             limit: 1,
             order: 'descending',
-        }).then(events => {
-            const event = events.data.length ? events.data[0] : null;
+        }).then(paginatedResp => {
+            const resp = paginatedResp.data.length ? paginatedResp.data[0] : null;
             return {
                 address: input.address,
-                txnId: event ? event.id.txDigest : null,
-                txnTime: event ? event.timestampMs : null,
+                txnId: resp ? resp.digest : null,
+                txnTime: resp ? resp.timestampMs : null,
             };
         }).catch(error => {
             console.error(`Error getting last transaction for address ${input.address} from rpc ${client.endpoint}: ${error}`, error);
