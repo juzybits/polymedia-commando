@@ -1,14 +1,14 @@
 {
-    "private": true,
-    "version": "0.0.0",
-    "name": "@polymedia/airdrop",
+    "private": false,
+    "version": "0.0.1",
+    "name": "@polymedia/commando",
     "author": "@juzybits (https://polymedia.app)",
-    "homepage": "https://github.com/juzybits/polymedia-airdrop",
-    "description": "Tools for Sui airdrops",
+    "homepage": "https://github.com/juzybits/polymedia-commando",
+    "description": "Command line tools for Sui (airdrops, data, and more)",
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
-        "url": "https://github.com/juzybits/polymedia-airdrop"
+        "url": "https://github.com/juzybits/polymedia-commando"
     },
     "keywords": [],
     "type": "module",
@@ -21,7 +21,8 @@
         "find_nft_holders": "tsc && node dist/holderfinder/find_nft_holders.js",
         "find_nfts": "tsc && node dist/holderfinder/find_nfts.js",
         "test_endpoints": "tsc && node dist/test_endpoints.js",
-        "transform_balances_to_csv": "tsc && node dist/transform_balances_to_csv.js"
+        "transform_balances_to_csv": "tsc && node dist/transform_balances_to_csv.js",
+        "build": "rm -rf dist/ && tsc"
     },
     "dependencies": {
         "@mysten/sui.js": "^0.48.1",

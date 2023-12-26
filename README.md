@@ -1,11 +1,5 @@
-# Polymedia Airdrop
+# Polymedia Commando
 
-Tools for Sui airdrops.
+Command line tools for Sui (airdrops, data, and more)
 
-## Address gathering
-
-[./src/holderfinder/](./src/holderfinder/)
-
-## Airdrop tool
-
-[./src/bulksender/](./src/bulksender/)
+![Polymedia Commando](./img/open-graph.webp)
