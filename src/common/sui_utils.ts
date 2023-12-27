@@ -1,4 +1,5 @@
 import { execSync } from 'child_process';
+import crypto from 'crypto';
 import { readFileSync } from 'fs';
 import { homedir } from 'os';
 import path from 'path';
@@ -169,4 +170,13 @@ export class SuiClientRotator {
         }
         console.timeEnd('total time');
     }
+}
+
+/**
+ * Generate a random Sui address (for development only)
+ */
+export function getRandomAddress(): string {
+    const randomBytes = crypto.randomBytes(32);
+    const address = '0x' + randomBytes.toString('hex');
+    return address;
 }

@@ -1,6 +1,5 @@
 /* Miscellaneous utils */
 
-import crypto from 'crypto';
 import { createInterface } from 'readline';
 
 export async function sleep(ms: number): Promise<void> {
@@ -32,13 +31,4 @@ export async function promptUser(question: string): Promise<boolean> {
             resolve(answer.toLowerCase() === 'y');
         });
     });
-}
-
-/**
- * Generate a random Sui address (for development only)
- */
-export function getRandomAddress(): string {
-    const randomBytes = crypto.randomBytes(32);
-    const address = '0x' + randomBytes.toString('hex');
-    return address;
 }
