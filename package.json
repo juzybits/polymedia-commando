@@ -1,6 +1,6 @@
 {
     "private": false,
-    "version": "0.0.1",
+    "version": "0.0.2",
     "name": "@polymedia/commando",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://github.com/juzybits/polymedia-commando",
@@ -10,19 +10,24 @@
         "type": "git",
         "url": "https://github.com/juzybits/polymedia-commando"
     },
-    "keywords": [],
+    "keywords": [
+        "polymedia",
+        "sui",
+        "commando"
+    ],
     "type": "module",
     "scripts": {
-        "aggregate_nfts": "tsc && node dist/holderfinder/aggregate_nfts.js",
-        "bulksender": "tsc && node dist/bulksender/bulksender.js",
-        "find_coin_balances": "tsc && node dist/find_coin_balances.js",
-        "find_coin_holders": "tsc && node dist/find_coin_holders.js",
-        "find_last_txn": "tsc && node dist/find_last_txn.js",
-        "find_nft_holders": "tsc && node dist/holderfinder/find_nft_holders.js",
-        "find_nfts": "tsc && node dist/holderfinder/find_nfts.js",
-        "test_endpoints": "tsc && node dist/test_endpoints.js",
-        "transform_balances_to_csv": "tsc && node dist/transform_balances_to_csv.js",
-        "build": "rm -rf dist/ && tsc"
+        "aggregate_nfts": "pnpm build && node dist/esm/holderfinder/aggregate_nfts.js",
+        "bulksender": "pnpm build && node dist/esm/bulksender/bulksender.js",
+        "find_coin_balances": "pnpm build && node dist/esm/find_coin_balances.js",
+        "find_coin_holders": "pnpm build && node dist/esm/find_coin_holders.js",
+        "find_last_txn": "pnpm build && node dist/esm/find_last_txn.js",
+        "find_nft_holders": "pnpm build && node dist/esm/holderfinder/find_nft_holders.js",
+        "find_nfts": "pnpm build && node dist/esm/holderfinder/find_nfts.js",
+        "test_endpoints": "pnpm build && node dist/esm/test_endpoints.js",
+        "transform_balances_to_csv": "pnpm build && node dist/esm/transform_balances_to_csv.js",
+        "build": "rm -rf dist/ && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
+        "prepublishOnly": "pnpm build"
     },
     "dependencies": {
         "@mysten/sui.js": "^0.48.1",
@@ -31,5 +36,19 @@
     "devDependencies": {
         "@types/node": "^20.10.5",
         "typescript": "^5.3.3"
+    },
+    "files": [
+        "dist/",
+        "src/",
+        "LICENSE",
+        "README.md"
+    ],
+    "main": "dist/cjs/index.js",
+    "module": "dist/esm/index.js",
+    "types": "dist/esm/index.d.ts",
+    "exports": {
+        "source": "./src/index.ts",
+        "import": "./dist/esm/index.js",
+        "require": "./dist/cjs/index.js"
     }
 }
