@@ -1,5 +1,5 @@
 import { readJsonFile, writeCsvFile } from './common/file_utils.js';
-import { AddressAndBalance } from './find_coin_holders.js';
+import { AddressAndBalance } from './types.js';
 
 let DECIMALS: number;
 let INPUT_FILE = './data/find_coin_balances.json';

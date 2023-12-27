@@ -1,4 +1,5 @@
 import { writeJsonFile } from './common/file_utils.js';
+import { AddressAndBalance } from './types.js';
 
 const IS_DEV = false;
 
@@ -88,11 +89,6 @@ async function main()
     writeJsonFile(OUTPUT_FILE, output);
 }
 
-export type AddressAndBalance = {
-    address: string;
-    balance: number;
-};
-
 type ApiResponse = {
     content: Holder[];
 
@@ -123,4 +119,4 @@ type Holder =  {
 
 main();
 
-export {};
+export { };

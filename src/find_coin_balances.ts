@@ -1,6 +1,6 @@
 import { readJsonFile, writeJsonFile } from './common/file_utils.js';
 import { SuiClientRotator, SuiClientWithEndpoint } from './common/sui_utils.js';
-import { AddressAndBalance } from './find_coin_holders.js';
+import { AddressAndBalance } from './types.js';
 
 let COIN_TYPE = '';
 let INPUT_FILE = './data/find_coin_holders.json';
