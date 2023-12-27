@@ -1,10 +1,9 @@
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
-import { isValidSuiAddress, normalizeSuiAddress } from '@mysten/sui.js/utils';
-import { appendFileSync, readFileSync } from 'fs';
-import { fileExists } from '../common/file_utils.js';
+import { appendFileSync } from 'fs';
+import { fileExists, readCsvFile } from '../common/file_utils.js';
 import { chunkArray, formatNumber, promptUser, sleep } from '../common/misc_utils.js';
-import { getActiveAddressKeypair, getActiveEnv } from '../common/sui_utils.js';
+import { getActiveAddressKeypair, getActiveEnv, validateAndNormalizeSuiAddress } from '../common/sui_utils.js';
 import { excludedOwners } from './config.js';
 
 const USAGE = `
@@ -88,6 +87,8 @@ async function main() {
             throw new Error(`${INPUT_FILE} doesn't exist. Create a .csv file with two columns: address and amount.`);
         }
 
+        console.log(`Excluded addresses: ${excludedOwners.length}`);
+
         // Create a SuiClient instance for the current `sui client active-env`
         const networkName = getActiveEnv();
         console.log(`Active network: ${networkName}`);
@@ -142,7 +143,7 @@ async function main() {
         console.log(`COIN_ID balance: ${formatNumber(coinBalanceNoDecimals)} (${formatNumber(coinBalanceDecimals)})`);
 
         // Read addresses and amounts from input file
-        const addressAmountPairs = readCsvInputFile(INPUT_FILE);
+        const addressAmountPairs = readCsvFile<AddressAmountPair>(INPUT_FILE, parseCsvLine);
         const totalAmountNoDecimals = addressAmountPairs.reduce((sum, pair) => sum + pair.amount, BigInt(0));
         const totalAmountDecimals = totalAmountNoDecimals * decimalMultiplier;
         console.log(`Found ${addressAmountPairs.length} addresses in ${INPUT_FILE}`);
@@ -221,44 +222,27 @@ type AddressAmountPair = {
 }
 
 /**
- * A basic CSV parser designed to read the output of holderfinder/src/aggregateNfts.ts.
- *
  * It expects the 1st column to be the owner address and the 2nd column to be the amount to be sent.
- *
- * Note that this is not a generic CSV parsing solution and it will break if the input
- * CSV data contains commas or newlines.
  */
-function readCsvInputFile(filename: string): AddressAmountPair[] {
-    const fileContent = readFileSync(filename, 'utf8');
-    const lines = fileContent.split('\n');
-    const results: AddressAmountPair[] = [];
+function parseCsvLine(values: string[]): AddressAmountPair | null {
+    const [addressStr, amountStr] = values;
 
-    for (const line of lines) {
-        const trimmedLine = line.trim();
-        if (!trimmedLine) {
-            continue;
-        }
-        // Split the line by commas and remove quotes from each value
-        const [addressStr, amountStr] = trimmedLine.split(',').map(value =>
-            value.replace(/^"|"$/g, '').replace(/\\"/g, '"').trim()
-        );
-        if (!addressStr.startsWith('0x')) {
-            console.debug(`[readCsvInputFile] Skipping line with missing owner: ${trimmedLine.substring(0, 70)}`);
-            continue;
-        }
-        const address = normalizeSuiAddress(addressStr);
-        if (!isValidSuiAddress(address)) {
-            console.debug(`[readCsvInputFile] Skipping line with invalid owner: ${trimmedLine.substring(0, 70)}`);
-            continue;
-        }
-        if (excludedOwners.includes(address)) {
-            console.debug(`[readCsvInputFile] Skipping excluded owner: ${address}`);
-            continue;
-        }
-        results.push({ address, amount: BigInt(amountStr) });
+    const address = validateAndNormalizeSuiAddress(addressStr);
+
+    if (address === null) {
+        console.debug(`[parseCsvLine] Skipping line with invalid owner: ${addressStr}`);
+        return null;
     }
 
-    return results;
+    if (excludedOwners.includes(address)) {
+        console.debug(`[parseCsvLine] Skipping excluded owner: ${address}`);
+        return null;
+    }
+
+    const amount = BigInt(amountStr);
+
+    return { address, amount };
+
 }
 
 /**
@@ -283,4 +267,4 @@ function logText(text: string) {
 
 main();
 
-export {};
+export { };
