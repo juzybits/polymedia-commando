@@ -6,8 +6,16 @@ import path from 'path';
 
 import { SuiClient } from '@mysten/sui.js/client';
 import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
-import { fromB64 } from '@mysten/sui.js/utils';
+import { fromB64, isValidSuiAddress, normalizeSuiAddress } from '@mysten/sui.js/utils';
 import { sleep } from './misc_utils.js';
+
+export function validateAndNormalizeSuiAddress(address: string): string | null {
+    const normalizedAddr = normalizeSuiAddress(address);
+    if (!isValidSuiAddress(normalizedAddr)) {
+        return null;
+    }
+    return normalizedAddr;
+}
 
 /**
  * Build a Ed25519Keypair object for the current active address,
