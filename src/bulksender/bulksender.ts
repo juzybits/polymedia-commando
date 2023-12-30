@@ -63,8 +63,6 @@ async function main() {
     try {
         /* Read and validate inputs */
 
-        // Process command line arguments
-
         const args = process.argv.slice(2);
 
         if (args.includes('-h') || args.includes('--help')) {
@@ -176,24 +174,20 @@ async function main() {
             const packageId = PACKAGE_IDS.get(networkName) as NetworkName;
             for (const batch of batches) {
                 batchNumber++;
-                logTransactionStart(batchNumber, batch);
+                const batchAmount = batch.reduce((total, pair) => total + pair.amount, BigInt(0));
+                logTransactionStart(batchAmount, batchNumber, batch);
 
                 const txb = new TransactionBlock();
-                const coinArg = txb.object(COIN_ID);
-
-                const [changeCoin] = txb.moveCall({
+                const payCoin = txb.splitCoins(COIN_ID, [batchAmount * decimalMultiplier]);
+                txb.moveCall({
                     target: `${packageId}::bulksender::send`,
                     typeArguments: [ coinType ],
                     arguments: [
-                        coinArg,
-                        txb.pure(batch.map(pair => pair.amount)),
+                        payCoin,
+                        txb.pure(batch.map(pair => pair.amount * decimalMultiplier)),
                         txb.pure(batch.map(pair => pair.address)),
                     ],
                 });
-                txb.transferObjects(
-                    [changeCoin],
-                    activeAddress,
-                );
 
                 const result = await suiClient.signAndExecuteTransactionBlock({
                     signer,
@@ -265,8 +259,8 @@ function parseCsvLine(values: string[]): AddressAmountPair | null {
  * 2023-12-06T09:42:05.963Z - Sending to batch 1 (180 addresses): 0x326c, 0x445e, ...
  * ```
  */
-function logTransactionStart(batchNumber: number, batch: AddressAmountPair[]) {
-    const shortText = `Sending to batch ${batchNumber} (${batch.length} addresses)`;
+function logTransactionStart(batchAmount: bigint, batchNumber: number, batch: AddressAmountPair[]) {
+    const shortText = `Sending ${batchAmount} to batch ${batchNumber} (${batch.length} addresses)`;
     console.log(shortText);
     const addresses = batch.map(pair => pair.address.substring(0, 6)).join(', ');
     const longText = `${shortText}: ${addresses}`;

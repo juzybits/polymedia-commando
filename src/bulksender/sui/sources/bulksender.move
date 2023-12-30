@@ -1,7 +1,7 @@
 module polymedia_bulksender::bulksender
 {
     use std::vector;
-    use sui::coin::{Coin};
+    use sui::coin::{Self, Coin};
     use sui::pay;
     use sui::tx_context::{TxContext};
 
@@ -12,7 +12,7 @@ module polymedia_bulksender::bulksender
         amounts: vector<u64>,
         recipients: vector<address>,
         ctx: &mut TxContext,
-    ): Coin<T>
+    )
     {
         assert!(vector::length(&amounts) == vector::length(&recipients), E_LENGTH_MISMATCH);
 
@@ -22,6 +22,6 @@ module polymedia_bulksender::bulksender
             pay::split_and_transfer(&mut pay_coin, amount, recipient, ctx);
         };
 
-        return pay_coin
+        coin::destroy_zero(pay_coin);
     }
 }
