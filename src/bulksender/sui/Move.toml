@@ -1,0 +1,12 @@
+[package]
+name = "PolymediaBulksender"
+version = "1.0.0"
+authors = ["@juzybits (https://polymedia.app)"]
+license = "Apache-2.0"
+published-at = "0x0"
+
+[dependencies]
+Sui = { local = "../../../../sui/crates/sui-framework/packages/sui-framework" }
+
+[addresses]
+polymedia_bulksender = "0x0"
