@@ -164,6 +164,7 @@ async function main() {
 
         /* Send Coin<T> to each address */
 
+        let totalGas = 0;
         let batchNumber = 0;
         try {
             for (const batch of batches) {
@@ -203,9 +204,14 @@ async function main() {
 
                 logText(`Transaction successful: ${result.digest}`);
 
+                const gas = result.effects.gasUsed;
+                totalGas += Number(gas.computationCost) + Number(gas.storageCost) - Number(gas.storageRebate);
+
                 // Wait a bit to stay below the public RPC rate limit
                 await sleep(RATE_LIMIT_DELAY);
             }
+            console.log('\nDone!')
+            console.log(`Gas used: ${totalGas / 1_000_000_000} SUI\n`);
         }
         catch (error) {
             logText(String(error));
