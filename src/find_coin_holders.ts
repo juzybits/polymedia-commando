@@ -119,4 +119,4 @@ type Holder =  {
 
 main();
 
-export { };
+export {};

@@ -267,4 +267,4 @@ function logText(text: string) {
 
 main();
 
-export { };
+export {};

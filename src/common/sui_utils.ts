@@ -183,7 +183,7 @@ export class SuiClientRotator {
 /**
  * Generate a random Sui address (for development only)
  */
-export function getRandomAddress(): string {
+export function generateRandomAddress(): string {
     const randomBytes = crypto.randomBytes(32);
     const address = '0x' + randomBytes.toString('hex');
     return address;

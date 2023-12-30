@@ -56,4 +56,4 @@ async function main()
 
 main();
 
-export { };
+export {};
