@@ -206,7 +206,9 @@ async function main() {
                 totalGas += Number(gas.computationCost) + Number(gas.storageCost) - Number(gas.storageRebate);
 
                 // Wait a bit to stay below the public RPC rate limit
-                await sleep(RATE_LIMIT_DELAY);
+                if (networkName !== 'localnet') {
+                    await sleep(RATE_LIMIT_DELAY);
+                }
             }
             console.log('\nDone!')
             console.log(`Gas used: ${totalGas / 1_000_000_000} SUI\n`);
