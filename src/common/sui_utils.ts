@@ -7,6 +7,7 @@ import path from 'path';
 import { SuiClient } from '@mysten/sui.js/client';
 import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 import { fromB64, isValidSuiAddress, normalizeSuiAddress } from '@mysten/sui.js/utils';
+import { NetworkName } from '../types.js';
 import { sleep } from './misc_utils.js';
 
 export function validateAndNormalizeSuiAddress(address: string): string | null {
@@ -49,9 +50,9 @@ export function getActiveAddressKeypair(): Ed25519Keypair {
     return signer;
 }
 
-export function getActiveEnv():  'mainnet' | 'testnet' | 'devnet' | 'localnet' {
+export function getActiveEnv(): NetworkName {
     const activeEnv = execSync('sui client active-env', { encoding: 'utf8' }).trim();
-    return activeEnv as 'mainnet' | 'testnet' | 'devnet' | 'localnet';
+    return activeEnv as NetworkName;
 }
 
 export type SuiClientWithEndpoint = SuiClient & {
