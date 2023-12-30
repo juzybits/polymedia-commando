@@ -6,22 +6,9 @@ import { chunkArray, formatNumber, promptUser, sleep } from '../common/misc_util
 import { getActiveAddressKeypair, getActiveEnv, validateAndNormalizeSuiAddress } from '../common/sui_utils.js';
 import { NetworkName } from '../types.js';
 
-const USAGE = `
-Usage: pnpm send <COIN_ID> [INPUT_FILE] [OUTPUT_FILE]
-
-Arguments:
-  COIN_ID     - Required. The Coin<T> identifier to pay for the airdrop
-  INPUT_FILE  - Optional. Path to the input file. Default is ./data/bulksender.input.csv'
-  OUTPUT_FILE - Optional. Path to the output file. Default is ./data/bulksender.output.csv'
-
-Example:
-  pnpm send 0x1234abdc ./custom/input.csv ./custom/output.csv
-`;
-
-function printUsage() {
-    console.log(USAGE);
-}
-
+/**
+ * The Polymedia Bulksender package ID which contains the bulksender::send() function
+ */
 const PACKAGE_IDS: Map<NetworkName, string> = new Map([
     ['localnet', ''],
     ['devnet', ''],
@@ -55,6 +42,22 @@ const BATCH_SIZE = 500;
  * https://docs.sui.io/references/sui-api/rpc-best-practices
  */
 const RATE_LIMIT_DELAY = 500;
+
+const USAGE = `
+Usage: pnpm send <COIN_ID> [INPUT_FILE] [OUTPUT_FILE]
+
+Arguments:
+  COIN_ID     - Required. The Coin<T> object to pay for the airdrop
+  INPUT_FILE  - Optional. Path to the input file. Default is ${INPUT_FILE}
+  OUTPUT_FILE - Optional. Path to the output file. Default is ${OUTPUT_FILE}
+
+Example:
+  pnpm send 0x1234abdc ./custom/input.csv ./custom/output.csv
+`;
+
+function printUsage() {
+    console.log(USAGE);
+}
 
 async function main() {
     try {
