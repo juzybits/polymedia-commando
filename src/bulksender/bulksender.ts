@@ -4,6 +4,7 @@ import { appendFileSync } from 'fs';
 import { fileExists, readCsvFile } from '../common/file_utils.js';
 import { chunkArray, formatNumber, promptUser, sleep } from '../common/misc_utils.js';
 import { getActiveAddressKeypair, getActiveEnv, validateAndNormalizeSuiAddress } from '../common/sui_utils.js';
+import { NetworkName } from '../types.js';
 
 const USAGE = `
 Usage: pnpm send <COIN_ID> [INPUT_FILE] [OUTPUT_FILE]
@@ -21,6 +22,12 @@ function printUsage() {
     console.log(USAGE);
 }
 
+const PACKAGE_IDS: Map<NetworkName, string> = new Map([
+    ['localnet', ''],
+    ['devnet', ''],
+    ['testnet', ''],
+    ['mainnet', ''],
+]);
 /**
  * The Coin<T> to pay for the airdrop. Must be owned by the current `sui client active-address`.
  */
@@ -37,13 +44,11 @@ let INPUT_FILE = './data/bulksender.input.csv';
  */
 let OUTPUT_FILE = './data/bulksender.output.csv';
 /**
- * How many addresses (split_and_transfer() calls) to include in each transaction block.
- * On localnet it breaks above 191 calls per PTB.
- * On testnet it breaks around  95 calls per PTB (it varies).
- * If you get a "TypeError: fetch failed" response with "code: 'UND_ERR_SOCKET'",
- * likely it is because BATCH_SIZE is too high.
+ * How many addresses to include in each transaction block.
+ * It breaks above 511 addresses per PTB. You'll get this error if BATCH_SIZE is too high:
+ * "JsonRpcError: Error checking transaction input objects: SizeLimitExceeded"
  */
-const BATCH_SIZE = 85;
+const BATCH_SIZE = 500;
 /**
  * How long to sleep between RPC requests, in milliseconds.
  * The public RPC rate limit is 100 requests per 30 seconds according to
@@ -165,6 +170,7 @@ async function main() {
         let totalGas = 0;
         let batchNumber = 0;
         try {
+            const packageId = PACKAGE_IDS.get(networkName) as NetworkName;
             for (const batch of batches) {
                 batchNumber++;
                 logTransactionStart(batchNumber, batch);
@@ -172,15 +178,19 @@ async function main() {
                 const txb = new TransactionBlock();
                 const coinArg = txb.object(COIN_ID);
 
-                for (const pair of batch) {
-                    const amount = pair.amount * decimalMultiplier;
-                    const recipient = pair.address;
-                    txb.moveCall({
-                        target: '0x2::pay::split_and_transfer',
-                        typeArguments: [ coinType ],
-                        arguments: [ coinArg, txb.pure(amount), txb.pure(recipient) ],
-                    });
-                }
+                const [changeCoin] = txb.moveCall({
+                    target: `${packageId}::bulksender::send`,
+                    typeArguments: [ coinType ],
+                    arguments: [
+                        coinArg,
+                        txb.pure(batch.map(pair => pair.amount)),
+                        txb.pure(batch.map(pair => pair.address)),
+                    ],
+                });
+                txb.transferObjects(
+                    [changeCoin],
+                    activeAddress,
+                );
 
                 const result = await suiClient.signAndExecuteTransactionBlock({
                     signer,
@@ -268,4 +278,4 @@ function logText(text: string) {
 
 main();
 
-export {};
+export { };
