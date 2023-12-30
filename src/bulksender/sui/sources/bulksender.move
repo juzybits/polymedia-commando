@@ -1,6 +1,5 @@
 module polymedia_bulksender::bulksender
 {
-    use std::option::{Self, Option};
     use std::vector;
     use sui::coin::{Self, Coin};
     use sui::pay;
@@ -14,7 +13,7 @@ module polymedia_bulksender::bulksender
         amounts: vector<u64>,
         recipients: vector<address>,
         ctx: &mut TxContext,
-    ): Option<Coin<T>>
+    ): Coin<T>
     {
         assert!(vector::length(&amounts) == vector::length(&recipients), E_LENGTH_MISMATCH);
 
@@ -24,12 +23,7 @@ module polymedia_bulksender::bulksender
             pay::split_and_transfer(&mut pay_coin, amount, recipient, ctx);
         };
 
-        if (coin::value(&pay_coin) == 0) {
-            coin::destroy_zero(pay_coin);
-            return option::none()
-        } else {
-            return option::some(pay_coin)
-        }
+        return pay_coin
     }
 
     #[lint_allow(self_transfer)]
@@ -40,11 +34,11 @@ module polymedia_bulksender::bulksender
         ctx: &mut TxContext,
     )
     {
-        let opt_change: Option<Coin<T>> = send(pay_coin, amounts, recipients, ctx);
-        if (option::is_some(&opt_change)) {
-            let change: Coin<T> = option::extract(&mut opt_change);
+        let change: Coin<T> = send(pay_coin, amounts, recipients, ctx);
+        if (coin::value(&change) > 0) {
             transfer::public_transfer(change, tx_context::sender(ctx));
+        } else {
+            coin::destroy_zero(change)
         };
-        option::destroy_none(opt_change);
     }
 }
