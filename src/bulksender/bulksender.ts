@@ -4,7 +4,6 @@ import { appendFileSync } from 'fs';
 import { fileExists, readCsvFile } from '../common/file_utils.js';
 import { chunkArray, formatNumber, promptUser, sleep } from '../common/misc_utils.js';
 import { getActiveAddressKeypair, getActiveEnv, validateAndNormalizeSuiAddress } from '../common/sui_utils.js';
-import { excludedOwners } from './config.js';
 
 const USAGE = `
 Usage: pnpm send <COIN_ID> [INPUT_FILE] [OUTPUT_FILE]
@@ -143,7 +142,6 @@ async function main() {
         // Read addresses and amounts from input file
         const addressAmountPairs = readCsvFile<AddressAmountPair>(INPUT_FILE, parseCsvLine);
         console.log(`\nFound ${addressAmountPairs.length} addresses in ${INPUT_FILE}`);
-        console.log(`Excluded addresses: ${excludedOwners.length}`);
         const batches = chunkArray(addressAmountPairs, BATCH_SIZE);
         console.log(`Airdrop will be done in ${batches.length} batches`);
         const totalAmountNoDecimals = addressAmountPairs.reduce((sum, pair) => sum + pair.amount, BigInt(0));
@@ -237,11 +235,6 @@ function parseCsvLine(values: string[]): AddressAmountPair | null {
 
     if (address === null) {
         console.debug(`[parseCsvLine] Skipping line with invalid owner: ${addressStr}`);
-        return null;
-    }
-
-    if (excludedOwners.includes(address)) {
-        console.debug(`[parseCsvLine] Skipping excluded owner: ${address}`);
         return null;
     }
 
