@@ -87,11 +87,9 @@ async function main() {
             throw new Error(`${INPUT_FILE} doesn't exist. Create a .csv file with two columns: address and amount.`);
         }
 
-        console.log(`Excluded addresses: ${excludedOwners.length}`);
-
         // Create a SuiClient instance for the current `sui client active-env`
         const networkName = getActiveEnv();
-        console.log(`Active network: ${networkName}`);
+        console.log(`\nActive network: ${networkName}`);
         const suiClient = new SuiClient({ url: getFullnodeUrl(networkName)});
 
         // Get the keypair for the current `sui client active-address`
@@ -100,7 +98,7 @@ async function main() {
         console.log(`Active address: ${activeAddress}`)
 
         // Abort if COIN_ID doesn't exist
-        console.log(`COIN_ID: ${COIN_ID}`);
+        console.log(`\nCOIN_ID: ${COIN_ID}`);
         const coinObject = await suiClient.getObject({
             id: COIN_ID,
             options: {
@@ -140,14 +138,17 @@ async function main() {
         // Get COIN_ID balance
         const coinBalanceDecimals = BigInt((coinObject.data.content.fields as any).balance);
         const coinBalanceNoDecimals = coinBalanceDecimals / decimalMultiplier;
-        console.log(`COIN_ID balance: ${formatNumber(coinBalanceNoDecimals)} (${formatNumber(coinBalanceDecimals)})`);
+        console.log(`COIN_ID balance: ${formatNumber(coinBalanceNoDecimals)} (${coinBalanceDecimals})`);
 
         // Read addresses and amounts from input file
         const addressAmountPairs = readCsvFile<AddressAmountPair>(INPUT_FILE, parseCsvLine);
+        console.log(`\nFound ${addressAmountPairs.length} addresses in ${INPUT_FILE}`);
+        console.log(`Excluded addresses: ${excludedOwners.length}`);
+        const batches = chunkArray(addressAmountPairs, BATCH_SIZE);
+        console.log(`Airdrop will be done in ${batches.length} batches`);
         const totalAmountNoDecimals = addressAmountPairs.reduce((sum, pair) => sum + pair.amount, BigInt(0));
         const totalAmountDecimals = totalAmountNoDecimals * decimalMultiplier;
-        console.log(`Found ${addressAmountPairs.length} addresses in ${INPUT_FILE}`);
-        console.log(`Total amount to be sent: ${formatNumber(totalAmountNoDecimals)} (${formatNumber(totalAmountDecimals)})`);
+        console.log(`Total amount to be sent: ${formatNumber(totalAmountNoDecimals)} (${totalAmountDecimals})`);
 
         // Abort if COIN_ID doesn't have enough balance
         if (totalAmountDecimals > coinBalanceDecimals) {
@@ -163,7 +164,6 @@ async function main() {
 
         /* Send Coin<T> to each address */
 
-        const batches = chunkArray(addressAmountPairs, BATCH_SIZE);
         let batchNumber = 0;
         try {
             for (const batch of batches) {
