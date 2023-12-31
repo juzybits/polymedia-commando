@@ -16,6 +16,10 @@ const PACKAGE_IDS: Map<NetworkName, string> = new Map([
     ['mainnet', ''],
 ]);
 /**
+ * To estimate total gas costs
+ */
+let GAS_PER_ADDRESS = 0.0013092459;
+/**
  * The Coin<T> to pay for the airdrop. Must be owned by the current `sui client active-address`.
  */
 let COIN_ID = '';
@@ -150,6 +154,7 @@ async function main() {
         console.log(`\nFound ${addressAmountPairs.length} addresses in ${INPUT_FILE}`);
         const batches = chunkArray(addressAmountPairs, BATCH_SIZE);
         console.log(`Airdrop will be done in ${batches.length} batches`);
+        console.log(`Gas estimate: ${formatNumber(GAS_PER_ADDRESS*addressAmountPairs.length)} SUI`);
         const totalAmountNoDecimals = addressAmountPairs.reduce((sum, pair) => sum + pair.amount, BigInt(0));
         const totalAmountDecimals = totalAmountNoDecimals * decimalMultiplier;
         console.log(`Total amount to be sent: ${formatNumber(totalAmountNoDecimals)} (${totalAmountDecimals})`);
