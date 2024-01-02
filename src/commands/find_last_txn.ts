@@ -7,19 +7,23 @@ class FindLastTransactionCommand implements BaseCommand {
     private input_file: string = './data/find_coin_holders.json';
     private output_file: string = './data/find_last_txn.json';
 
+    public getDescription(): string {
+        return 'Find the last transaction for each Sui address';
+    }
+
     public getUsage(): string {
         return `
-Find the last transaction for each Sui address
+${this.getDescription()}
 
-Usage: pnpm find_last_txn [INPUT_FILE] [OUTPUT_FILE]
+Usage: find_last_txn [INPUT_FILE] [OUTPUT_FILE]
 
 Arguments:
   INPUT_FILE   - Optional. Path to the input file. Default is '${this.input_file}'
   OUTPUT_FILE  - Optional. Path to the output file. Default is '${this.output_file}'
 
 Example:
-  pnpm find_last_txn ./custom/input.json ./custom/output.json
-        `;
+  find_last_txn ./custom/input.json ./custom/output.json
+`;
     }
 
     public async execute(args: string[]): Promise<void> {

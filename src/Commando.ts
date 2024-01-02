@@ -1,6 +1,7 @@
 import { FindLastTransactionCommand } from './commands/find_last_txn.js';
 
 export interface BaseCommand {
+    getDescription(): string;
     getUsage(): string;
     execute(args: string[]): Promise<void>;
 }
@@ -47,8 +48,9 @@ export class Commando {
     private printGeneralHelp(): void {
         console.log('Usage: commando [command] [options]');
         console.log('Available commands:');
-        for (const command in this.commands) {
-            console.log(`- ${command}`);
+        for (const commandName in this.commands) {
+            const command = this.commands[commandName];
+            console.log(`- ${commandName}: ${command.getDescription()}`);
         }
     }
 }
