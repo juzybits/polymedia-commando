@@ -28,35 +28,35 @@ Example:
 
         const inputs: AddressAndBalance[] = readJsonFile(this.input_file);
         const rotator = new SuiClientRotator();
-        const lastTxns = await rotator.executeInBatches(inputs, this.fetchLastTxn.bind(this));
+        const lastTxns = await rotator.executeInBatches(inputs, fetchLastTxn);
         writeJsonFile(this.output_file, lastTxns);
     }
+}
 
-    private async fetchLastTxn(client: SuiClientWithEndpoint, input: AddressAndBalance): Promise<any> {
-        return client.queryTransactionBlocks({
-            filter: { FromAddress: input.address },
-            options: {
-                // showBalanceChanges: true,
-                // showEffects: true,
-                // showEvents: true,
-                // showInput: true,
-                // showObjectChanges: true,
-                showRawInput: true, // only to get timestampMs
-            },
-            limit: 1,
-            order: 'descending',
-        }).then(paginatedResp => {
-            const resp = paginatedResp.data.length ? paginatedResp.data[0] : null;
-            return {
-                address: input.address,
-                txnId: resp ? resp.digest : null,
-                txnTime: resp ? resp.timestampMs : null,
-            };
-        }).catch(error => {
-            console.error(`Error getting last transaction for address ${input.address} from rpc ${client.endpoint}: ${error}`, error);
-            throw error;
-        });
-    }
+async function fetchLastTxn(client: SuiClientWithEndpoint, input: AddressAndBalance): Promise<any> {
+    return client.queryTransactionBlocks({
+        filter: { FromAddress: input.address },
+        options: {
+            // showBalanceChanges: true,
+            // showEffects: true,
+            // showEvents: true,
+            // showInput: true,
+            // showObjectChanges: true,
+            showRawInput: true, // only to get timestampMs
+        },
+        limit: 1,
+        order: 'descending',
+    }).then(paginatedResp => {
+        const resp = paginatedResp.data.length ? paginatedResp.data[0] : null;
+        return {
+            address: input.address,
+            txnId: resp ? resp.digest : null,
+            txnTime: resp ? resp.timestampMs : null,
+        };
+    }).catch(error => {
+        console.error(`Error getting last transaction for address ${input.address} from rpc ${client.endpoint}: ${error}`, error);
+        throw error;
+    });
 }
 
 export { FindLastTransactionCommand };
