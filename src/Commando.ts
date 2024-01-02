@@ -65,11 +65,18 @@ export class Commando {
     }
 
     private printGeneralHelp(): void {
-        console.log('Usage: commando [command] [options]');
-        console.log('Available commands:');
+        console.log('*** POLYMEDIA COMMANDO ***');
+        console.log('\nUsage:');
+        console.log('  pnpm commando [command] [options]\n');
+
+        console.log('Available Commands:');
         for (const commandName in this.commands) {
             const command = this.commands[commandName];
-            console.log(`- ${commandName}: ${command.getDescription()}`);
+            console.log(`  - ${commandName}: ${command.getDescription()}`);
         }
+
+        console.log('\nFor more information on a specific command, type:');
+        console.log('  commando [command] -h');
     }
+
 }

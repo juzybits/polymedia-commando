@@ -3,19 +3,19 @@ import { readJsonFile, writeJsonFile } from '../common/file_utils.js';
 import { SuiClientRotator, SuiClientWithEndpoint } from '../common/sui_utils.js';
 import { AddressAndBalance } from '../types.js';
 
-class FindLastTransactionCommand implements BaseCommand {
+export class FindLastTransactionCommand implements BaseCommand {
     private input_file: string = './data/find_coin_holders.json';
     private output_file: string = './data/find_last_txn.json';
 
     public getDescription(): string {
-        return 'Find the last transaction for each Sui address';
+        return 'Find the last transaction for each Sui address.';
     }
 
     public getUsage(): string {
-        return `
-${this.getDescription()}
+        return `${this.getDescription()}
 
-Usage: find_last_txn [INPUT_FILE] [OUTPUT_FILE]
+Usage:
+  find_last_txn [INPUT_FILE] [OUTPUT_FILE]
 
 Arguments:
   INPUT_FILE   - Optional. Path to the input file. Default is '${this.input_file}'
@@ -62,5 +62,3 @@ async function fetchLastTxn(client: SuiClientWithEndpoint, input: AddressAndBala
         throw error;
     });
 }
-
-export { FindLastTransactionCommand };
