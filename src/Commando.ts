@@ -10,9 +10,12 @@ export class Commando {
     private commands: Record<string, BaseCommand>;
 
     constructor() {
-        this.commands = {
-            'find_last_txn': new FindLastTransactionCommand(),
-        };
+        this.commands = {};
+        this.registerCommand('find_last_txn', new FindLastTransactionCommand());
+    }
+
+    public registerCommand(name: string, command: BaseCommand) {
+        this.commands[name] = command;
     }
 
     async run(): Promise<void> {
