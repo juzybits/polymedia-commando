@@ -17,6 +17,7 @@
     ],
     "type": "module",
     "scripts": {
+        "commando": "tsc -p tsconfig.esm.json && node dist/esm/main.js",
         "aggregate_nfts": "pnpm build && node dist/esm/holderfinder/aggregate_nfts.js",
         "bulksender": "pnpm build && node dist/esm/bulksender/bulksender.js",
         "find_coin_balances": "pnpm build && node dist/esm/find_coin_balances.js",
