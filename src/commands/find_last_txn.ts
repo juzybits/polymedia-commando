@@ -1,13 +1,13 @@
-import { BaseCommand } from '../BaseCommand.js';
+import { BaseCommand } from '../Commando.js';
 import { readJsonFile, writeJsonFile } from '../common/file_utils.js';
 import { SuiClientRotator, SuiClientWithEndpoint } from '../common/sui_utils.js';
 import { AddressAndBalance } from '../types.js';
 
-class FindLastTransactionCommand extends BaseCommand {
+class FindLastTransactionCommand implements BaseCommand {
     private input_file: string = './data/find_coin_holders.json';
     private output_file: string = './data/find_last_txn.json';
 
-    protected getUsage(): string {
+    public getUsage(): string {
         return `
 Find the last transaction for each Sui address
 
@@ -22,7 +22,7 @@ Example:
         `;
     }
 
-    protected async execute(args: string[]): Promise<void> {
+    public async execute(args: string[]): Promise<void> {
         this.input_file = args[0] || this.input_file;
         this.output_file = args[1] || this.output_file;
 
