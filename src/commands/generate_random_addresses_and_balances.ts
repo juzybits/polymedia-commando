@@ -1,13 +1,8 @@
-import { Command } from '../types.js';
+import { Command } from '../Commando.js';
 import { generateRandomAddress } from '../utils/sui_utils.js';
 
-export class GenerateRandomAddressesAndBalancesCommand extends Command {
+export class GenerateRandomAddressesAndBalancesCommand implements Command {
     private amount = 0;
-
-    constructor(args: string[]) {
-        super(args);
-        this.amount = Number(args[0]) || this.amount;
-    }
 
     public getDescription(): string {
         return 'Generate random Sui addresses and balances';
@@ -27,7 +22,14 @@ Example:
 `;
     }
 
-    public async execute(): Promise<void> {
+    public async execute(args: string[]): Promise<void>
+    {
+        /* Read command arguments */
+
+        this.amount = Number(args[0]) || this.amount;
+
+        /* Generate random addresses and balances */
+
         for (let index = 0; index < this.amount; index++) {
             const address = generateRandomAddress();
             const amount = Math.floor(Math.random() * (1_000_000 - 1_000 + 1)) + 1_000;

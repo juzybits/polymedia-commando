@@ -1,11 +1,7 @@
-import { Command } from '../types.js';
+import { Command } from '../Commando.js';
 import { SuiClientRotator } from '../utils/sui_utils.js';
 
-export class TestRpcEndpointsCommand extends Command {
-    constructor(args: string[]) {
-        super(args);
-    }
-
+export class TestRpcEndpointsCommand implements Command {
     public getDescription(): string {
         return 'Test Sui RPC endpoints by calling SuiRotator.testEndpoints()';
     }
@@ -18,7 +14,8 @@ Usage:
 `;
     }
 
-    public async execute(): Promise<void> {
+    public async execute(_args: string[]): Promise<void>
+    {
         const rotator = new SuiClientRotator();
         rotator.testEndpoints();
     }

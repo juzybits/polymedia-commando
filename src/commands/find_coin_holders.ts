@@ -1,18 +1,13 @@
+import { Command } from '../Commando.js';
 import { writeJsonFile } from '../utils/file_utils.js';
-import { AddressAndBalance, Command } from '../types.js';
+import { AddressAndBalance } from '../types.js';
 
 const IS_DEV = false;
 
-export class FindCoinHoldersCommand extends Command {
+export class FindCoinHoldersCommand implements Command {
     private coinType = '';
     private outputFile = './data/find_coin_holders.json';
     private limit = IS_DEV ? 3 : 999999;
-
-    constructor(args: string[]) {
-        super(args);
-        this.coinType = args[0] || this.coinType;
-        this.outputFile = args[1] || this.outputFile;
-    }
 
     public getDescription(): string {
         return 'Find Coin<T> holders using the Suiscan API';
@@ -33,10 +28,16 @@ Example:
 `;
     }
 
-    public async execute(): Promise<void>
+    public async execute(args: string[]): Promise<void>
     {
+        /* Read command arguments */
+
+        this.coinType = args[0] || this.coinType;
+        this.outputFile = args[1] || this.outputFile;
         console.log(`coinType: ${this.coinType}`);
         console.log(`outputFile: ${this.outputFile}`);
+
+        /* Fetch holders */
 
         const urlHolders = `https://suiscan.xyz/api/sui-backend/mainnet/api/coins/${this.coinType}/holders?sortBy=AMOUNT&orderBy=DESC&searchStr=&page=0&size=${this.limit}`;
         const resp: ApiResponse = await fetch(urlHolders)

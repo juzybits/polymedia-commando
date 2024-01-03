@@ -1,33 +1,47 @@
 import { BulksenderCommand } from './commands/bulksender/bulksender.js';
 import { FindCoinBalancesCommand } from './commands/find_coin_balances.js';
 import { FindCoinHoldersCommand } from './commands/find_coin_holders.js';
-import { FindLastTxnCommand } from './commands/find_last_txn.js';
+import { FindLastTransactionCommand } from './commands/find_last_txn.js';
 import { GenerateRandomAddressesAndBalancesCommand } from './commands/generate_random_addresses_and_balances.js';
 import { TestRpcEndpointsCommand } from './commands/test_rpc_endpoints.js';
 import { TransformBalancesJsonToCsvCommand } from './commands/transform_balances_json_to_csv.js';
-import { CommandFactory } from './types.js';
 
+/**
+ * Interface defining the structure of a command in the Commando framework.
+ */
+export interface Command {
+    /** Returns a short description of the command. */
+    getDescription(): string;
+    /** Returns detailed usage information for the command. */
+    getUsage(): string;
+    /** Executes the command logic. */
+    execute(args: string[]): Promise<void>;
+}
+
+/**
+ * The main class responsible for managing and executing commands.
+ */
 export class Commando {
-    private commandFactories: Record<string, CommandFactory>;
+    private commands: Record<string, Command>;
 
     constructor() {
-        this.commandFactories = {};
-        this.registerCommand('bulksender', args => new BulksenderCommand(args));
-        this.registerCommand('find_coin_balances', args => new FindCoinBalancesCommand(args));
-        this.registerCommand('find_coin_holders', args => new FindCoinHoldersCommand(args));
-        this.registerCommand('find_last_txn', args => new FindLastTxnCommand(args));
-        this.registerCommand('test_rpc_endpoints', args => new TestRpcEndpointsCommand(args));
-        this.registerCommand('transform_balances_json_to_csv', args => new TransformBalancesJsonToCsvCommand(args));
-        this.registerCommand('generate_random_addresses_and_balances', args => new GenerateRandomAddressesAndBalancesCommand(args));
+        this.commands = {};
+        this.registerCommand('bulksender', new BulksenderCommand());
+        this.registerCommand('find_coin_balances', new FindCoinBalancesCommand());
+        this.registerCommand('find_coin_holders', new FindCoinHoldersCommand());
+        this.registerCommand('find_last_txn', new FindLastTransactionCommand());
+        this.registerCommand('test_rpc_endpoints', new TestRpcEndpointsCommand());
+        this.registerCommand('transform_balances_json_to_csv', new TransformBalancesJsonToCsvCommand());
+        this.registerCommand('generate_random_addresses_and_balances', new GenerateRandomAddressesAndBalancesCommand());
     }
 
     /**
-     * Registers a new Command
-     * @param name - The name of the command
-     * @param factory - A function to instantiate the Command
+     * Registers a new command with the Commando framework.
+     * @param name - The name of the command.
+     * @param command - The command object.
      */
-    public registerCommand(name: string, factory: CommandFactory) {
-        this.commandFactories[name] = factory;
+    public registerCommand(name: string, command: Command) {
+        this.commands[name] = command;
     }
 
     async run(): Promise<void> {
@@ -40,14 +54,13 @@ export class Commando {
             return;
         }
 
-        // Instantiate the requested Command object
-        const factory = this.commandFactories[commandName];
-        if (!factory) {
+        // Grab the requested command object
+        const command = this.commands[commandName];
+        if (!command) {
             console.error(`Unknown command: ${commandName}`);
             this.printGeneralHelp();
-            return;
+            process.exit(1);
         }
-        const command = factory(args);
 
         // Show command usage
         if (args.includes('-h') || args.includes('--help')) {
@@ -56,7 +69,7 @@ export class Commando {
         }
 
         try {
-            await command.execute();
+            await command.execute(args);
         } catch (error) {
             console.error(`Error executing ${commandName}:`, error);
             process.exit(1);
@@ -67,12 +80,15 @@ export class Commando {
         console.log('*** POLYMEDIA COMMANDO ***');
         console.log('\nUsage:');
         console.log('  pnpm commando [command] [options]\n');
+
         console.log('Available Commands:');
-        Object.keys(this.commandFactories).forEach(commandName => {
-            const command = this.commandFactories[commandName]([]);
+        for (const commandName in this.commands) {
+            const command = this.commands[commandName];
             console.log(`  - ${commandName}: ${command.getDescription()}`);
-        });
+        }
+
         console.log('\nFor more information on a specific command, type:');
         console.log('  commando [command] -h');
     }
+
 }
