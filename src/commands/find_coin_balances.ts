@@ -15,8 +15,6 @@ export class FindCoinBalancesCommand implements Command {
     public getUsage(): string {
         return `${this.getDescription()}
 
-Find how much Coin<T> is owned by each address
-
 Usage:
   find_coin_balances <COIN_TYPE> [INPUT_FILE] [OUTPUT_FILE]
 
@@ -37,9 +35,9 @@ Example:
         this.coinType = args[0] || this.coinType;
         this.inputFile = args[1] || this.inputFile;
         this.outputFile = args[2] || this.outputFile;
-        console.log(`coin_type: ${this.coinType}`);
-        console.log(`input_file: ${this.inputFile}`);
-        console.log(`output_file: ${this.outputFile}`);
+        console.log(`coinType: ${this.coinType}`);
+        console.log(`inputFile: ${this.inputFile}`);
+        console.log(`outputFile: ${this.outputFile}`);
 
         /* Find how much Coin<T> is owned by each address */
 

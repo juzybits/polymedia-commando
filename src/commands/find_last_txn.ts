@@ -29,6 +29,8 @@ Example:
     public async execute(args: string[]): Promise<void> {
         this.inputFile = args[0] || this.inputFile;
         this.outputFile = args[1] || this.outputFile;
+        console.log(`inputFile: ${this.inputFile}`);
+        console.log(`outputFile: ${this.outputFile}`);
 
         const inputs: AddressAndBalance[] = readJsonFile(this.inputFile);
         const rotator = new SuiClientRotator();
