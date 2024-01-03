@@ -1,5 +1,5 @@
 import { Command } from '../Commando.js';
-import { SuiClientRotator } from '../common/sui_utils.js';
+import { SuiClientRotator } from '../utils/sui_utils.js';
 
 export class TestRpcEndpointsCommand implements Command {
     public getDescription(): string {

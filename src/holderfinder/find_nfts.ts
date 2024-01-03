@@ -1,5 +1,5 @@
-import { writeJsonFile } from '../common/file_utils.js';
-import { sleep } from '../common/misc_utils.js';
+import { writeJsonFile } from '../utils/file_utils.js';
+import { sleep } from '../utils/misc_utils.js';
 import * as Config from './config.js';
 import { apiRequestIndexer, makeFilePath } from './utils.js';
 

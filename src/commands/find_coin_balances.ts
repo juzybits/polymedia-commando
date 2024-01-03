@@ -1,6 +1,6 @@
 import { Command } from '../Commando.js';
-import { readJsonFile, writeJsonFile } from '../common/file_utils.js';
-import { SuiClientRotator, SuiClientWithEndpoint } from '../common/sui_utils.js';
+import { readJsonFile, writeJsonFile } from '../utils/file_utils.js';
+import { SuiClientRotator, SuiClientWithEndpoint } from '../utils/sui_utils.js';
 import { AddressAndBalance } from '../types.js';
 
 export class FindCoinBalancesCommand implements Command {

@@ -1,5 +1,5 @@
 import { normalizeSuiAddress } from '@mysten/sui.js/utils';
-import { readJsonFile, writeCsvFile } from '../common/file_utils.js';
+import { readJsonFile, writeCsvFile } from '../utils/file_utils.js';
 import * as Config from './config.js';
 import { makeFilePath } from './utils.js';
 

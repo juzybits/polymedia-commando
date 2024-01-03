@@ -1,5 +1,5 @@
-import { writeTextFile } from '../common/file_utils.js';
-import { sleep } from '../common/misc_utils.js';
+import { writeTextFile } from '../utils/file_utils.js';
+import { sleep } from '../utils/misc_utils.js';
 import * as Config from './config.js';
 import { apiRequestIndexer, makeFilePath } from './utils.js';
 
