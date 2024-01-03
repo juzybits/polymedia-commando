@@ -1,11 +1,16 @@
-import { Command } from '../Commando.js';
 import { readJsonFile, writeJsonFile } from '../utils/file_utils.js';
 import { SuiClientRotator, SuiClientWithEndpoint } from '../utils/sui_utils.js';
-import { AddressAndBalance } from '../types.js';
+import { AddressAndBalance, Command } from '../types.js';
 
-export class FindLastTransactionCommand implements Command {
-    private inputFile: string = './data/find_coin_holders.json';
-    private outputFile: string = './data/find_last_txn.json';
+export class FindLastTxnCommand extends Command {
+    private inputFile = './data/find_coin_holders.json';
+    private outputFile = './data/find_last_txn.json';
+
+    constructor(args: string[]) {
+        super(args);
+        this.inputFile = args[0] || this.inputFile;
+        this.outputFile = args[1] || this.outputFile;
+    }
 
     public getDescription(): string {
         return 'Find the last transaction for each Sui address';
@@ -26,16 +31,9 @@ Example:
 `;
     }
 
-    public async execute(args: string[]): Promise<void>
-    {
-        /* Read command arguments */
-
-        this.inputFile = args[0] || this.inputFile;
-        this.outputFile = args[1] || this.outputFile;
+    public async execute(): Promise<void> {
         console.log(`inputFile: ${this.inputFile}`);
         console.log(`outputFile: ${this.outputFile}`);
-
-        /* Find last transactions */
 
         const inputs: AddressAndBalance[] = readJsonFile(this.inputFile);
         const rotator = new SuiClientRotator();

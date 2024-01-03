@@ -1,12 +1,18 @@
-import { Command } from '../Commando.js';
 import { readJsonFile, writeJsonFile } from '../utils/file_utils.js';
 import { SuiClientRotator, SuiClientWithEndpoint } from '../utils/sui_utils.js';
-import { AddressAndBalance } from '../types.js';
+import { AddressAndBalance, Command } from '../types.js';
 
-export class FindCoinBalancesCommand implements Command {
+export class FindCoinBalancesCommand extends Command {
     private coinType = '';
     private inputFile = './data/find_coin_holders.json';
     private outputFile = './data/find_coin_balances.json';
+
+    constructor(args: string[]) {
+        super(args);
+        this.coinType = args[0] || this.coinType;
+        this.inputFile = args[1] || this.inputFile;
+        this.outputFile = args[2] || this.outputFile;
+    }
 
     public getDescription(): string {
         return 'Find how much Coin<T> is owned by each address';
@@ -28,18 +34,11 @@ Example:
 `;
     }
 
-    public async execute(args: string[]): Promise<void>
+    public async execute(): Promise<void>
     {
-        /* Read command arguments */
-
-        this.coinType = args[0] || this.coinType;
-        this.inputFile = args[1] || this.inputFile;
-        this.outputFile = args[2] || this.outputFile;
         console.log(`coinType: ${this.coinType}`);
         console.log(`inputFile: ${this.inputFile}`);
         console.log(`outputFile: ${this.outputFile}`);
-
-        /* Find how much Coin<T> is owned by each address */
 
         const inputs: AddressAndBalance[] = readJsonFile(this.inputFile);
         console.log(`Fetching ${inputs.length} balances in batches...`);

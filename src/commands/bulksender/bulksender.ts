@@ -4,8 +4,7 @@ import { appendFileSync } from 'fs';
 import { fileExists, readCsvFile } from '../../utils/file_utils.js';
 import { chunkArray, formatNumber, promptUser, sleep } from '../../utils/misc_utils.js';
 import { getActiveAddressKeypair, getActiveEnv, validateAndNormalizeSuiAddress } from '../../utils/sui_utils.js';
-import { NetworkName } from '../../types.js';
-import { Command } from '../../Commando.js';
+import { Command, NetworkName } from '../../types.js';
 
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function
@@ -33,7 +32,7 @@ const RATE_LIMIT_DELAY = 500;
  */
 const GAS_PER_ADDRESS = 0.0013092459;
 
-export class BulksenderCommand implements Command {
+export class BulksenderCommand extends Command {
     /**
      * The Coin<T> to pay for the airdrop. Must be owned by the current `sui client active-address`.
      */
@@ -48,7 +47,14 @@ export class BulksenderCommand implements Command {
     /**
      * A log file with details about transactions sent/failed.
      */
-    private outputFile = './data/bulksender.out.csv';
+    private outputFile = './data/bulksender.out';
+
+    constructor(args: string[]) {
+        super(args);
+        this.coinId = args[0] || this.coinId
+        this.inputFile = args[1] || this.inputFile;
+        this.outputFile = args[2] || this.outputFile;
+    }
 
     public getDescription(): string {
         return 'Send Coin<T> to a list of addresses';
@@ -69,17 +75,12 @@ Example:
 `;
     }
 
-    public async execute(args: string[]): Promise<void> {
+    public async execute(): Promise<void> {
+        console.log(`Coin ID: ${this.coinId}`);
+        console.log(`Input file: ${this.inputFile}`);
+        console.log(`Output file: ${this.outputFile}`);
 
         try {
-            /* Read and validate inputs */
-
-            this.coinId = args[0];
-            this.inputFile = args[1] || this.inputFile;
-            this.outputFile = args[2] || this.outputFile;
-            console.log(`Input file: ${this.inputFile}`);
-            console.log(`Output file: ${this.outputFile}`);
-
             // Abort if the output file already exists, to prevent double-runs
             if (fileExists(this.outputFile)) {
                 throw new Error(`${this.outputFile} already exists. Check and handle it before rerunning the script.`);
