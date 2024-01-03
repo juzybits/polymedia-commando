@@ -1,11 +1,11 @@
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { appendFileSync } from 'fs';
-import { fileExists, readCsvFile } from '../utils/file_utils.js';
-import { chunkArray, formatNumber, promptUser, sleep } from '../utils/misc_utils.js';
-import { getActiveAddressKeypair, getActiveEnv, validateAndNormalizeSuiAddress } from '../utils/sui_utils.js';
-import { NetworkName } from '../types.js';
-import { Command } from '../Commando.js';
+import { fileExists, readCsvFile } from '../../utils/file_utils.js';
+import { chunkArray, formatNumber, promptUser, sleep } from '../../utils/misc_utils.js';
+import { getActiveAddressKeypair, getActiveEnv, validateAndNormalizeSuiAddress } from '../../utils/sui_utils.js';
+import { NetworkName } from '../../types.js';
+import { Command } from '../../Commando.js';
 
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function
@@ -16,10 +16,6 @@ const PACKAGE_IDS: Map<NetworkName, string> = new Map([
     ['testnet', '0x7f541b25c64aa2d0330a64dfaeb7c0e35924b6633069b8047125e038728d15d6'],
     ['mainnet', ''],
 ]);
-/**
- * To estimate total gas costs
- */
-let GAS_PER_ADDRESS = 0.0013092459;
 /**
  * How many addresses to include in each transaction block.
  * It breaks above 511 addresses per PTB. You'll get this error if BATCH_SIZE is too high:
@@ -32,6 +28,10 @@ const BATCH_SIZE = 500;
  * https://docs.sui.io/references/sui-api/rpc-best-practices
  */
 const RATE_LIMIT_DELAY = 500;
+/**
+ * To estimate total gas costs
+ */
+const GAS_PER_ADDRESS = 0.0013092459;
 
 export class BulksenderCommand implements Command {
     /**
@@ -44,11 +44,11 @@ export class BulksenderCommand implements Command {
      *      0x567,33
      * would airdrop 25_000_000_000 SUI to address 0x123 (5 * 10^9 MIST)
      */
-    private inputFile = './data/bulksender.input.csv';
+    private inputFile = './data/bulksender.in.csv';
     /**
      * A log file with details about transactions sent/failed.
      */
-    private outputFile = './data/bulksender.output.csv';
+    private outputFile = './data/bulksender.out.csv';
 
     public getDescription(): string {
         return 'Send Coin<T> to a list of addresses';

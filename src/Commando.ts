@@ -1,4 +1,4 @@
-import { BulksenderCommand } from './bulksender/bulksender.js';
+import { BulksenderCommand } from './commands/bulksender/bulksender.js';
 import { FindCoinBalancesCommand } from './commands/find_coin_balances.js';
 import { FindCoinHoldersCommand } from './commands/find_coin_holders.js';
 import { FindLastTransactionCommand } from './commands/find_last_txn.js';
