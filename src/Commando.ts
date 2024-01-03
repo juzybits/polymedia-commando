@@ -1,3 +1,4 @@
+import { BulksenderCommand } from './bulksender/bulksender.js';
 import { FindCoinBalancesCommand } from './commands/find_coin_balances.js';
 import { FindCoinHoldersCommand } from './commands/find_coin_holders.js';
 import { FindLastTransactionCommand } from './commands/find_last_txn.js';
@@ -25,6 +26,7 @@ export class Commando {
 
     constructor() {
         this.commands = {};
+        this.registerCommand('bulksender', new BulksenderCommand());
         this.registerCommand('find_coin_balances', new FindCoinBalancesCommand());
         this.registerCommand('find_coin_holders', new FindCoinHoldersCommand());
         this.registerCommand('find_last_txn', new FindLastTransactionCommand());

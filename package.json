@@ -19,7 +19,6 @@
     "scripts": {
         "commando": "tsc -p tsconfig.esm.json && node dist/esm/main.js",
         "aggregate_nfts": "pnpm build && node dist/esm/holderfinder/aggregate_nfts.js",
-        "bulksender": "pnpm build && node dist/esm/bulksender/bulksender.js",
         "find_nft_holders": "pnpm build && node dist/esm/holderfinder/find_nft_holders.js",
         "find_nfts": "pnpm build && node dist/esm/holderfinder/find_nfts.js",
         "build": "rm -rf dist/ && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
