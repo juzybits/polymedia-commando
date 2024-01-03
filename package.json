@@ -24,7 +24,6 @@
         "find_nfts": "pnpm build && node dist/esm/holderfinder/find_nfts.js",
         "test_endpoints": "pnpm build && node dist/esm/test_endpoints.js",
         "transform_balances_to_csv": "pnpm build && node dist/esm/transform_balances_to_csv.js",
-        "dev": "pnpm build && node dist/esm/dev.js",
         "build": "rm -rf dist/ && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
         "prepublishOnly": "pnpm build"
     },
