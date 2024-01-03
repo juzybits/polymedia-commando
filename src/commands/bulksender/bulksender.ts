@@ -14,7 +14,7 @@ const PACKAGE_IDS: Map<NetworkName, string> = new Map([
     ['localnet', ''],
     ['devnet', ''],
     ['testnet', '0x7f541b25c64aa2d0330a64dfaeb7c0e35924b6633069b8047125e038728d15d6'],
-    ['mainnet', ''],
+    ['mainnet', '0x026b2b422e630c79c961fdb5d63821547ec8fb2ad5b7095189c440e1bdbba9f1'],
 ]);
 /**
  * How many addresses to include in each transaction block.
