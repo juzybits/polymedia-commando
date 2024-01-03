@@ -64,13 +64,13 @@ export class SuiClientRotator {
 
     private readonly rateLimitDelay = 334; // minimum time between batches (in milliseconds)
     private readonly endpoints = [
-        // 'https://mainnet-rpc.sui.chainbase.online',       // 567 response
+        // 'https://mainnet-rpc.sui.chainbase.online',          // 567 response
         // 'https://mainnet.sui.rpcpool.com',                   // 403 forbidden when using VPN
         'https://mainnet.suiet.app',
         'https://rpc-mainnet.suiscan.xyz',
         'https://sui-mainnet-endpoint.blockvision.org',
         'https://sui-mainnet.public.blastapi.io',
-        'https://sui-rpc-mainnet.testnet-pride.com',
+        // 'https://sui-rpc-mainnet.testnet-pride.com',         // 502 bad gateway
         // 'https://sui1mainnet-rpc.chainode.tech',             // 502 bad gateway
         // 'https://sui-mainnet-ca-1.cosmostation.io',
         'https://sui-mainnet-ca-2.cosmostation.io',
