@@ -22,7 +22,6 @@
         "bulksender": "pnpm build && node dist/esm/bulksender/bulksender.js",
         "find_nft_holders": "pnpm build && node dist/esm/holderfinder/find_nft_holders.js",
         "find_nfts": "pnpm build && node dist/esm/holderfinder/find_nfts.js",
-        "transform_balances_to_csv": "pnpm build && node dist/esm/transform_balances_to_csv.js",
         "build": "rm -rf dist/ && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
         "prepublishOnly": "pnpm build"
     },

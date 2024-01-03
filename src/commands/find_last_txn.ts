@@ -26,11 +26,16 @@ Example:
 `;
     }
 
-    public async execute(args: string[]): Promise<void> {
+    public async execute(args: string[]): Promise<void>
+    {
+        /* Read command arguments */
+
         this.inputFile = args[0] || this.inputFile;
         this.outputFile = args[1] || this.outputFile;
         console.log(`inputFile: ${this.inputFile}`);
         console.log(`outputFile: ${this.outputFile}`);
+
+        /* Find last transactions */
 
         const inputs: AddressAndBalance[] = readJsonFile(this.inputFile);
         const rotator = new SuiClientRotator();

@@ -3,6 +3,7 @@ import { FindCoinHoldersCommand } from './commands/find_coin_holders.js';
 import { FindLastTransactionCommand } from './commands/find_last_txn.js';
 import { GenerateRandomAddressesAndBalancesCommand } from './commands/generate_random_addresses_and_balances.js';
 import { TestRpcEndpointsCommand } from './commands/test_rpc_endpoints.js';
+import { TransformBalancesJsonToCsvCommand } from './commands/transform_balances_json_to_csv.js';
 
 /**
  * Interface defining the structure of a command in the Commando framework.
@@ -28,6 +29,7 @@ export class Commando {
         this.registerCommand('find_coin_holders', new FindCoinHoldersCommand());
         this.registerCommand('find_last_txn', new FindLastTransactionCommand());
         this.registerCommand('test_rpc_endpoints', new TestRpcEndpointsCommand());
+        this.registerCommand('transform_balances_json_to_csv', new TransformBalancesJsonToCsvCommand());
         this.registerCommand('generate_random_addresses_and_balances', new GenerateRandomAddressesAndBalancesCommand());
     }
 
