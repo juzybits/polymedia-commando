@@ -4,7 +4,7 @@ import { FindLastTransactionCommand } from './commands/find_last_txn.js';
 /**
  * Interface defining the structure of a command in the Commando framework.
  */
-export interface BaseCommand {
+export interface Command {
     /** Returns a short description of the command. */
     getDescription(): string;
     /** Returns detailed usage information for the command. */
@@ -17,7 +17,7 @@ export interface BaseCommand {
  * The main class responsible for managing and executing commands.
  */
 export class Commando {
-    private commands: Record<string, BaseCommand>;
+    private commands: Record<string, Command>;
 
     constructor() {
         this.commands = {};
@@ -30,7 +30,7 @@ export class Commando {
      * @param name - The name of the command.
      * @param command - The command object.
      */
-    public registerCommand(name: string, command: BaseCommand) {
+    public registerCommand(name: string, command: Command) {
         this.commands[name] = command;
     }
 

@@ -1,9 +1,9 @@
-import { BaseCommand } from '../Commando.js';
+import { Command } from '../Commando.js';
 import { readJsonFile, writeJsonFile } from '../common/file_utils.js';
 import { SuiClientRotator, SuiClientWithEndpoint } from '../common/sui_utils.js';
 import { AddressAndBalance } from '../types.js';
 
-export class FindCoinBalancesCommand implements BaseCommand {
+export class FindCoinBalancesCommand implements Command {
     private coinType = '';
     private inputFile = './data/find_coin_holders.json';
     private outputFile = './data/find_coin_balances.json';
