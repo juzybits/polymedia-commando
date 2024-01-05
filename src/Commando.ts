@@ -83,7 +83,7 @@ export class Commando {
     private printGeneralHelp(): void {
         console.log('*** POLYMEDIA COMMANDO ***');
         console.log('\nUsage:');
-        console.log('  pnpm commando [command] [options]\n');
+        console.log('  pnpm commando COMMAND [OPTIONS]\n');
 
         console.log('Available Commands:');
         for (const commandName in this.commands) {
@@ -92,7 +92,7 @@ export class Commando {
         }
 
         console.log('\nFor more information on a specific command, type:');
-        console.log('  commando [command] -h');
+        console.log('  commando COMMAND -h');
     }
 
 }
