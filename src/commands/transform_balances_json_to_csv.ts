@@ -1,5 +1,5 @@
 import { Command } from '../Commando.js';
-import { readJsonFile, writeCsvFile } from '../utils/file_utils.js';
+import { readJsonFile, writeCsvFile } from '../lib/file_utils.js';
 import { AddressAndBalance } from '../types.js';
 
 export class TransformBalancesJsonToCsvCommand implements Command {

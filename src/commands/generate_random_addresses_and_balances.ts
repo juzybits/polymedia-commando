@@ -1,5 +1,5 @@
 import { Command } from '../Commando.js';
-import { generateRandomAddress } from '../utils/sui_utils.js';
+import { generateRandomAddress } from '../lib/sui_utils.js';
 
 export class GenerateRandomAddressesAndBalancesCommand implements Command {
     private amount = 0;

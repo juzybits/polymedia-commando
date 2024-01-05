@@ -1,9 +1,9 @@
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { appendFileSync } from 'fs';
-import { fileExists, readCsvFile } from '../../utils/file_utils.js';
-import { chunkArray, formatNumber, promptUser, sleep } from '../../utils/misc_utils.js';
-import { getActiveAddressKeypair, getActiveEnv, validateAndNormalizeSuiAddress } from '../../utils/sui_utils.js';
+import { fileExists, readCsvFile } from '../../lib/file_utils.js';
+import { chunkArray, formatNumber, promptUser, sleep } from '../../lib/misc_utils.js';
+import { getActiveAddressKeypair, getActiveEnv, validateAndNormalizeSuiAddress } from '../../lib/sui_utils.js';
 import { NetworkName } from '../../types.js';
 import { Command } from '../../Commando.js';
 

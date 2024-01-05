@@ -1,8 +1,8 @@
 import * as Auth from '../.auth.js';
 import { Command } from '../Commando.js';
-import { readJsonFile, writeTextFile } from '../utils/file_utils.js';
-import { apiRequestIndexer, sleep } from '../utils/misc_utils.js';
-import { validateAndNormalizeSuiAddress } from '../utils/sui_utils.js';
+import { readJsonFile, writeTextFile } from '../lib/file_utils.js';
+import { apiRequestIndexer, sleep } from '../lib/misc_utils.js';
+import { validateAndNormalizeSuiAddress } from '../lib/sui_utils.js';
 
 // Note: it took ~6.5 minutes to fetch 10,703 holders from 11 collections
 
