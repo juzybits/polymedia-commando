@@ -16,7 +16,7 @@ export class FindNftHoldersCommand implements Command {
     private outputDir: string = './data';
 
     public getDescription(): string {
-        return 'Retrieves the list of unique NFT holders for a set of collections';
+        return 'Find the list of unique NFT holders for a set of collections';
     }
 
     public getUsage(): string {
