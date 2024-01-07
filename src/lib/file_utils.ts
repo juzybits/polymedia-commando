@@ -1,5 +1,8 @@
 import fs from 'fs';
 
+/**
+ * Check if a file exists in the filesystem.
+ */
 export function fileExists(filename: string): boolean {
     try {
         fs.accessSync(filename);
@@ -9,6 +12,9 @@ export function fileExists(filename: string): boolean {
     }
 }
 
+/**
+ * Write a string into a file.
+ */
 export function writeTextFile(filename: string, contents: string): void {
     fs.writeFileSync(
         filename,
@@ -36,9 +42,14 @@ export function writeCsvFile(filename: string, data: any[][]): void {
     );
 }
 
-// A generic function to parse CSV lines
+/**
+ * A generic function to transform a CSV line into an object.
+ */
 export type ParseCsvLine<T> = (values: string[]) => T | null;
 
+/**
+ * Read a CSV file and parse each line into an object.
+ */
 export function readCsvFile<T>(filename: string, parseLine: ParseCsvLine<T>, reverse: boolean = false): T[] {
     const results: T[] = [];
     const fileContent = fs.readFileSync(filename, 'utf8');
@@ -69,6 +80,9 @@ export function readCsvFile<T>(filename: string, parseLine: ParseCsvLine<T>, rev
     return results;
 }
 
+/**
+ * Write an object's JSON representation into a file.
+ */
 export function writeJsonFile(filename: string, contents: any): void {
     writeTextFile(
         filename,
@@ -76,6 +90,9 @@ export function writeJsonFile(filename: string, contents: any): void {
     );
 }
 
+/**
+ * Read a JSON file and parse its contents into an object.
+ */
 export function readJsonFile(filename: string): any {
     const fileContent = fs.readFileSync(filename, 'utf8');
     const jsonData = JSON.parse(fileContent);

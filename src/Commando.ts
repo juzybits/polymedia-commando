@@ -81,7 +81,8 @@ export class Commando {
     }
 
     private printGeneralHelp(): void {
-        console.log('*** POLYMEDIA COMMANDO ***');
+        console.log('POLYMEDIA COMMANDO');
+        console.log('  Sui command line tools and TypeScript utilities.');
         console.log('\nUsage:');
         console.log('  pnpm commando COMMAND [OPTIONS]\n');
 
@@ -91,8 +92,8 @@ export class Commando {
             console.log(`  - ${commandName}: ${command.getDescription()}`);
         }
 
-        console.log('\nFor more information on a specific command, type:');
-        console.log('  commando COMMAND -h');
+        console.log('\nFor more information about a command:');
+        console.log('  pnpm commando COMMAND -h');
     }
 
 }

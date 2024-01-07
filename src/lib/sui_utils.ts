@@ -10,6 +10,9 @@ import { fromB64, isValidSuiAddress, normalizeSuiAddress } from '@mysten/sui.js/
 import { NetworkName } from '../types.js';
 import { sleep } from './misc_utils.js';
 
+/**
+ * Validate a Sui address and return its normalized form, or `null` if invalid.
+ */
 export function validateAndNormalizeSuiAddress(address: string): string | null {
     const normalizedAddr = normalizeSuiAddress(address);
     if (!isValidSuiAddress(normalizedAddr)) {
@@ -50,6 +53,9 @@ export function getActiveAddressKeypair(): Ed25519Keypair {
     return signer;
 }
 
+/**
+ * Get the active Sui environment from `sui client active-env`.
+ */
 export function getActiveEnv(): NetworkName {
     const activeEnv = execSync('sui client active-env', { encoding: 'utf8' }).trim();
     return activeEnv as NetworkName;
