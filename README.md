@@ -2,7 +2,7 @@
 
 Sui command line tools and TypeScript utilities for airdrops, data gathering, and more.
 
-![Polymedia Commando](./img/open-graph.webp)
+![Polymedia Commando](https://assets.polymedia.app/img/commando/open-graph.webp)
 
 ## Command line tools
 
