@@ -25,7 +25,7 @@ pnpm commando COMMAND [OPTIONS]
 See all available tools with `pnpm commando -h`:
 
 ```
-*** POLYMEDIA COMMANDO ***
+POLYMEDIA COMMANDO
 
 Usage:
   pnpm commando COMMAND [OPTIONS]
@@ -39,8 +39,8 @@ Available Commands:
   - find_nfts: Find all NFTs and their owners for a set of collections
   ...
 
-For more information on a specific command, type:
-  commando COMMAND -h
+For more information about a command:
+  pnpm commando COMMAND -h
 ```
 
 ## TypeScript utilities
@@ -58,23 +58,23 @@ import { getActiveEnv } from '@polymedia/commando';
 ```
 
 ### Sui utils
-- `function generateRandomAddress`
-- `function getActiveAddressKeypair`
-- `function getActiveEnv`
-- `function validateAndNormalizeSuiAddress`
-- `class SuiClientRotator`
+- `function generateRandomAddress` - Generate a random Sui address.
+- `function getActiveAddressKeypair` - Build a `Ed25519Keypair` object for the current active address by loading the secret key from `~/.sui/sui_config/sui.keystore`.
+- `function getActiveEnv` - Get the active Sui environment from `sui client active-env`.
+- `function validateAndNormalizeSuiAddress` - Validate a Sui address and return its normalized form, or `null` if invalid.
+- `function MultiSuiClient.executeInBatches` - Execute many `SuiClient` RPC operations in parallel using multiple endpoints.
 
 ### File utils
-- `function fileExists`
-- `function readCsvFile`
-- `function readJsonFile`
-- `function writeCsvFile`
-- `function writeJsonFile`
-- `function writeTextFile`
+- `function fileExists` - Check if a file exists in the filesystem.
+- `function readCsvFile` - Read a CSV file and parse each line into an object.
+- `function readJsonFile` - Read a JSON file and parse its contents into an object.
+- `function writeCsvFile` - Write objects into a CSV file.
+- `function writeJsonFile` - Write an object's JSON representation into a file.
+- `function writeTextFile` - Write a string into a file.
 
 ### Misc utils
-- `function apiRequestIndexer`
-- `function chunkArray`
-- `function formatNumber`
-- `function promptUser`
-- `function sleep`
+- `function apiRequestIndexer` - Make a request to the Indexer.xyz API (NFTs).
+- `function chunkArray` - Split an array into multiple chunks of a certain size.
+- `function formatNumber` - Format a number into a readable string.
+- `function promptUser` - Display a query to the user and wait for their input. Return true if the user enters `y`.
+- `function sleep` - Wait for a number of milliseconds.

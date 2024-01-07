@@ -22,7 +22,7 @@ export function validateAndNormalizeSuiAddress(address: string): string | null {
 }
 
 /**
- * Build a Ed25519Keypair object for the current active address,
+ * Build a `Ed25519Keypair` object for the current active address
  * by loading the secret key from ~/.sui/sui_config/sui.keystore
  */
 export function getActiveAddressKeypair(): Ed25519Keypair {
@@ -62,7 +62,7 @@ export function getActiveEnv(): NetworkName {
 }
 
 /**
- * A SuiClient object that exposes the URL of its RPC endpoint.
+ * A `SuiClient` object that exposes the URL of its RPC endpoint.
  */
 export type SuiClientWithEndpoint = SuiClient & {
     endpoint: string;
@@ -121,7 +121,7 @@ export class MultiSuiClient {
     }
 
     /**
-     * Executes SuiClient RPC operations in parallel using multiple endpoints.
+     * Execute many `SuiClient` RPC operations in parallel using multiple endpoints.
      * If any operation fails, it's retried by calling this function recursively.
      * @param inputs The inputs for each RPC call.
      * @param operation A function that performs the RPC operation.

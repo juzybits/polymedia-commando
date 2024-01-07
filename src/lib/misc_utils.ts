@@ -29,7 +29,7 @@ export function chunkArray<T>(array: T[], chunkSize: number): T[][] {
 }
 
 /**
- * Display a query to the user and wait for command line input. Return true if the user inputs 'y'.
+ * Display a query to the user and wait for their input. Return true if the user enters `y`.
  */
 export async function promptUser(question: string): Promise<boolean> {
     return new Promise((resolve) => {

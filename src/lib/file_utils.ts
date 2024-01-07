@@ -23,7 +23,7 @@ export function writeTextFile(filename: string, contents: string): void {
 }
 
 /**
- * A basic CSV writer.
+ * Write objects into a CSV file.
  *
  * Note that this is not a generic CSV writing solution and it will break if the input
  * CSV data contains commas or newlines.
