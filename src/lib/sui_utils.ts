@@ -11,14 +11,12 @@ import { NetworkName } from '../types.js';
 import { sleep } from './misc_utils.js';
 
 /**
- * Validate a Sui address and return its normalized form, or `null` if invalid.
+ * Generate a random Sui address (for development only)
  */
-export function validateAndNormalizeSuiAddress(address: string): string | null {
-    const normalizedAddr = normalizeSuiAddress(address);
-    if (!isValidSuiAddress(normalizedAddr)) {
-        return null;
-    }
-    return normalizedAddr;
+export function generateRandomAddress(): string {
+    const randomBytes = crypto.randomBytes(32);
+    const address = '0x' + randomBytes.toString('hex');
+    return address;
 }
 
 /**
@@ -59,6 +57,17 @@ export function getActiveAddressKeypair(): Ed25519Keypair {
 export function getActiveEnv(): NetworkName {
     const activeEnv = execSync('sui client active-env', { encoding: 'utf8' }).trim();
     return activeEnv as NetworkName;
+}
+
+/**
+ * Validate a Sui address and return its normalized form, or `null` if invalid.
+ */
+export function validateAndNormalizeSuiAddress(address: string): string | null {
+    const normalizedAddr = normalizeSuiAddress(address);
+    if (!isValidSuiAddress(normalizedAddr)) {
+        return null;
+    }
+    return normalizedAddr;
 }
 
 /**
@@ -195,13 +204,4 @@ export class MultiSuiClient {
         }
         console.timeEnd('total time');
     }
-}
-
-/**
- * Generate a random Sui address (for development only)
- */
-export function generateRandomAddress(): string {
-    const randomBytes = crypto.randomBytes(32);
-    const address = '0x' + randomBytes.toString('hex');
-    return address;
 }

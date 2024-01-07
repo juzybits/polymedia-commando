@@ -13,36 +13,6 @@ export function fileExists(filename: string): boolean {
 }
 
 /**
- * Write a string into a file.
- */
-export function writeTextFile(filename: string, contents: string): void {
-    fs.writeFileSync(
-        filename,
-        contents + '\n'
-    );
-}
-
-/**
- * Write objects into a CSV file.
- *
- * Note that this is not a generic CSV writing solution and it will break if the input
- * CSV data contains commas or newlines.
- */
-export function writeCsvFile(filename: string, data: any[][]): void {
-    const csvRows = data.map(row => {
-        return row.map(value => {
-            const escapedValue = ('' + value).replace(/"/g, '\\"');
-            return `"${escapedValue}"`;
-        }).join(',');
-    });
-
-    writeTextFile(
-        filename,
-        csvRows.join('\n')
-    );
-}
-
-/**
  * A generic function to transform a CSV line into an object.
  */
 export type ParseCsvLine<T> = (values: string[]) => T | null;
@@ -81,6 +51,35 @@ export function readCsvFile<T>(filename: string, parseLine: ParseCsvLine<T>, rev
 }
 
 /**
+ * Read a JSON file and parse its contents into an object.
+ */
+export function readJsonFile(filename: string): any {
+    const fileContent = fs.readFileSync(filename, 'utf8');
+    const jsonData = JSON.parse(fileContent);
+    return jsonData;
+}
+
+/**
+ * Write objects into a CSV file.
+ *
+ * Note that this is not a generic CSV writing solution and it will break if the input
+ * CSV data contains commas or newlines.
+ */
+export function writeCsvFile(filename: string, data: any[][]): void {
+    const csvRows = data.map(row => {
+        return row.map(value => {
+            const escapedValue = ('' + value).replace(/"/g, '\\"');
+            return `"${escapedValue}"`;
+        }).join(',');
+    });
+
+    writeTextFile(
+        filename,
+        csvRows.join('\n')
+    );
+}
+
+/**
  * Write an object's JSON representation into a file.
  */
 export function writeJsonFile(filename: string, contents: any): void {
@@ -91,10 +90,11 @@ export function writeJsonFile(filename: string, contents: any): void {
 }
 
 /**
- * Read a JSON file and parse its contents into an object.
+ * Write a string into a file.
  */
-export function readJsonFile(filename: string): any {
-    const fileContent = fs.readFileSync(filename, 'utf8');
-    const jsonData = JSON.parse(fileContent);
-    return jsonData;
+export function writeTextFile(filename: string, contents: string): void {
+    fs.writeFileSync(
+        filename,
+        contents + '\n'
+    );
 }

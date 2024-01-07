@@ -3,49 +3,6 @@
 import { createInterface } from 'readline';
 
 /**
- * Wait for a number of milliseconds.
- */
-export async function sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-/**
- * Format a number into a readable string.
- */
-export function formatNumber(num: number|BigInt): string {
-    return num.toLocaleString('en-US');
-}
-
-/**
- * Split an array into multiple chunks of a certain size.
- */
-export function chunkArray<T>(array: T[], chunkSize: number): T[][] {
-    const chunks: T[][] = [];
-    for (let i = 0; i < array.length; i += chunkSize) {
-        const chunk = array.slice(i, i + chunkSize);
-        chunks.push(chunk);
-    }
-    return chunks;
-}
-
-/**
- * Display a query to the user and wait for their input. Return true if the user enters `y`.
- */
-export async function promptUser(question: string): Promise<boolean> {
-    return new Promise((resolve) => {
-        const rl = createInterface({
-            input: process.stdin,
-            output: process.stdout
-        });
-
-        rl.question(question, (answer) => {
-            rl.close();
-            resolve(answer.toLowerCase() === 'y');
-        });
-    });
-}
-
-/**
  * Make a request to the Indexer.xyz API (NFTs).
  * To use this function, add your API credentials to `../.auth.ts`
  */
@@ -69,4 +26,48 @@ export async function apiRequestIndexer(apiUser: string, apiKey: string, query: 
         return result;
     });
     return result;
+}
+
+/**
+ * Split an array into multiple chunks of a certain size.
+ */
+export function chunkArray<T>(array: T[], chunkSize: number): T[][] {
+    const chunks: T[][] = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+        const chunk = array.slice(i, i + chunkSize);
+        chunks.push(chunk);
+    }
+    return chunks;
+}
+
+/**
+ * Format a number into a readable string.
+ */
+export function formatNumber(num: number|BigInt): string {
+    return num.toLocaleString('en-US');
+}
+
+
+/**
+ * Display a query to the user and wait for their input. Return true if the user enters `y`.
+ */
+export async function promptUser(question: string): Promise<boolean> {
+    return new Promise((resolve) => {
+        const rl = createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+
+        rl.question(question, (answer) => {
+            rl.close();
+            resolve(answer.toLowerCase() === 'y');
+        });
+    });
+}
+
+/**
+ * Wait for a number of milliseconds.
+ */
+export async function sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
