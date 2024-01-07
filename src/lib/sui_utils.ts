@@ -61,10 +61,17 @@ export function getActiveEnv(): NetworkName {
     return activeEnv as NetworkName;
 }
 
+/**
+ * A SuiClient object that exposes the URL of its RPC endpoint.
+ */
 export type SuiClientWithEndpoint = SuiClient & {
     endpoint: string;
 };
-export class SuiClientRotator {
+/**
+ * A tool to make many requests to multiple Sui RPC endpoints in parallel.
+ * @see MultiSuiClient.executeInBatches()
+ */
+export class MultiSuiClient {
     private readonly clients: SuiClientWithEndpoint[];
     private clientIdx = 0; // the index of the next client to be returned by getNextClient()
 
@@ -171,6 +178,9 @@ export class SuiClientRotator {
         return results as OutputType[];
     }
 
+    /**
+     * Test the latency of various Sui RPC endpoints.
+     */
     public async testEndpoints(): Promise<void> {
         console.log(`testing ${this.clients.length} endpoints`);
         console.time('total time');

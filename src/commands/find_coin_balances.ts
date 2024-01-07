@@ -1,6 +1,6 @@
 import { Command } from '../Commando.js';
 import { readJsonFile, writeJsonFile } from '../lib/file_utils.js';
-import { SuiClientRotator, SuiClientWithEndpoint } from '../lib/sui_utils.js';
+import { MultiSuiClient, SuiClientWithEndpoint } from '../lib/sui_utils.js';
 import { AddressAndBalance } from '../types.js';
 
 export class FindCoinBalancesCommand implements Command {
@@ -44,7 +44,7 @@ Example:
         const inputs: AddressAndBalance[] = readJsonFile(this.inputFile);
         console.log(`Fetching ${inputs.length} balances in batches...`);
 
-        const rotator = new SuiClientRotator();
+        const multiClient = new MultiSuiClient();
         const fetchBalance = (client: SuiClientWithEndpoint, input: AddressAndBalance) => {
             return client.getBalance({
                 owner: input.address,
@@ -56,7 +56,7 @@ Example:
                 throw error;
             });
         };
-        const balances = await rotator.executeInBatches(inputs, fetchBalance);
+        const balances = await multiClient.executeInBatches(inputs, fetchBalance);
 
         writeJsonFile(this.outputFile, balances);
     }

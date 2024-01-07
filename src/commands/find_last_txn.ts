@@ -1,6 +1,6 @@
 import { Command } from '../Commando.js';
 import { readJsonFile, writeJsonFile } from '../lib/file_utils.js';
-import { SuiClientRotator, SuiClientWithEndpoint } from '../lib/sui_utils.js';
+import { MultiSuiClient, SuiClientWithEndpoint } from '../lib/sui_utils.js';
 import { AddressAndBalance } from '../types.js';
 
 export class FindLastTransactionCommand implements Command {
@@ -38,8 +38,8 @@ Example:
         /* Find last transactions */
 
         const inputs: AddressAndBalance[] = readJsonFile(this.inputFile);
-        const rotator = new SuiClientRotator();
-        const lastTxns = await rotator.executeInBatches(inputs, fetchLastTxn);
+        const multiClient = new MultiSuiClient();
+        const lastTxns = await multiClient.executeInBatches(inputs, fetchLastTxn);
         writeJsonFile(this.outputFile, lastTxns);
     }
 }

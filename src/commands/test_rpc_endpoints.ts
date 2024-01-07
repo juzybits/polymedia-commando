@@ -1,5 +1,5 @@
 import { Command } from '../Commando.js';
-import { SuiClientRotator } from '../lib/sui_utils.js';
+import { MultiSuiClient } from '../lib/sui_utils.js';
 
 export class TestRpcEndpointsCommand implements Command {
     public getDescription(): string {
@@ -16,7 +16,7 @@ Usage:
 
     public async execute(_args: string[]): Promise<void>
     {
-        const rotator = new SuiClientRotator();
-        rotator.testEndpoints();
+        const multiClient = new MultiSuiClient();
+        multiClient.testEndpoints();
     }
 }
