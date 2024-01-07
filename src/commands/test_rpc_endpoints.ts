@@ -3,7 +3,7 @@ import { MultiSuiClient } from '../lib/sui_utils.js';
 
 export class TestRpcEndpointsCommand implements Command {
     public getDescription(): string {
-        return 'Test Sui RPC endpoints by calling SuiRotator.testEndpoints()';
+        return 'Test the latency of various Sui RPC endpoints';
     }
 
     public getUsage(): string {

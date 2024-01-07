@@ -16,7 +16,7 @@ export class FindNftsCommand implements Command {
     private outputDir: string = './data';
 
     public getDescription(): string {
-        return 'Find all NFTs and their owners for a set of collections';
+        return 'Find all NFTs and their owners for a set of collections via Indexer.xyz';
     }
 
     public getUsage(): string {

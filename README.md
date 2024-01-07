@@ -2,11 +2,11 @@
 
 Sui command line tools and TypeScript utilities for airdrops, data gathering, and more.
 
-![Polymedia Commando](https://assets.polymedia.app/img/commando/open-graph.webp)
+![Polymedia Commando](https://assets.polymedia.app/img/commando/open-graph.webp?x=1)
 
 ## Command line tools
 
-Tools to help with Sui airdrops (send coins to many addresses) and to gather data from different sources (Sui RPCs, Indexer.xyz, Suiscan).
+Tools to help with Sui airdrops (send coins to many addresses), gather data from different sources (Sui RPCs, Indexer.xyz, Suiscan), and more.
 
 ### How to use
 ```
@@ -35,8 +35,9 @@ Available Commands:
   - find_coin_balances: Find how much Coin<T> is owned by each address
   - find_coin_holders: Find Coin<T> holders using the Suiscan API
   - find_last_txn: Find the last transaction for each Sui address
-  - find_nft_holders: Find the list of unique NFT holders for a set of collections
-  - find_nfts: Find all NFTs and their owners for a set of collections
+  - find_nft_holders: Find NFT holders for a set of collections via Indexer.xyz
+  - find_nfts: Find all NFTs and their owners for a set of collections via Indexer.xyz
+  - test_rpc_endpoints: Test the latency of various Sui RPC endpoints
   ...
 
 For more information about a command:
@@ -45,7 +46,7 @@ For more information about a command:
 
 ## TypeScript utilities
 
-Functions and classes that you can use in your Node.js projects.
+Functions and classes for Node.js projects.
 
 ### How to use
 
