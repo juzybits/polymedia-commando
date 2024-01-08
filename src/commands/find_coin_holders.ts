@@ -6,7 +6,7 @@ const IS_DEV = false;
 
 export class FindCoinHoldersCommand implements Command {
     private coinType = '';
-    private outputFile = './data/find_coin_holders.json';
+    private outputFile = '';
     private limit = IS_DEV ? 3 : 999999;
 
     public getDescription(): string {
@@ -20,8 +20,9 @@ Usage:
   find_coin_holders <COIN_TYPE> [OUTPUT_FILE]
 
 Arguments:
-  COIN_TYPE     - Required. The T in Coin<T>
-  OUTPUT_FILE   - Optional. Path to the output file. Default is ${this.outputFile}'
+  COIN_TYPE     The type of the coin (the T in Coin<T>)
+  OUTPUT_FILE   Path to the output JSON file. It looks like this:
+                [ { address: string, balance: number }, ... ]
 
 Example:
   find_coin_holders 0x123::lol::LOL ./custom/output.json
@@ -32,8 +33,12 @@ Example:
     {
         /* Read command arguments */
 
-        this.coinType = args[0] || this.coinType;
-        this.outputFile = args[1] || this.outputFile;
+        if (args.length !== 2) {
+            console.log(this.getUsage());
+            return;
+        }
+        this.coinType = args[0];
+        this.outputFile = args[1];
         console.log(`coinType: ${this.coinType}`);
         console.log(`outputFile: ${this.outputFile}`);
 

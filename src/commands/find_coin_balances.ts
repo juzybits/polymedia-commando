@@ -19,10 +19,11 @@ Usage:
   find_coin_balances COIN_TYPE INPUT_FILE OUTPUT_FILE
 
 Arguments:
-  COIN_TYPE    - The type of the coin (the T in Coin<T>)
-  INPUT_FILE   - A JSON file like [ { address: string, balance: number }, ... ]
-                 You can use the output of \`find_coin_holders\` as the INPUT_FILE.
-  OUTPUT_FILE  - A JSON file like [ { address: string, balance: number }, ... ]
+  COIN_TYPE     The type of the coin (the T in Coin<T>)
+  INPUT_FILE    Path to the input JSON file. It looks like this:
+                [ { address: string, balance: number }, ... ]
+  OUTPUT_FILE   Path to the output JSON file. It looks like this:
+                [ { address: string, balance: number }, ... ]
 
 Example:
   find_coin_balances 0x123::lol::LOL ./custom/input.json ./custom/output.json
@@ -31,7 +32,7 @@ Example:
 
     public async execute(args: string[]): Promise<void>
     {
-        /* Read and validate inputs */
+        /* Read command arguments */
 
         if (args.length !== 3) {
             console.log(this.getUsage());

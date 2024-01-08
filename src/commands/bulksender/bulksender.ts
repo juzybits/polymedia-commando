@@ -48,10 +48,10 @@ export class BulksenderCommand implements Command {
 Usage: bulksender COIN_ID INPUT_FILE OUTPUT_FILE
 
 Arguments:
-  COIN_ID     - The Coin<T> to pay for the airdrop. Must be owned by the current active address.
-  INPUT_FILE  - A CSV with 2 columns: RECIPIENT_ADDRESS,AMOUNT_TO_SEND (without decimals)
+  COIN_ID       The Coin<T> to pay for the airdrop. Must be owned by the current active address.
+  INPUT_FILE    Path to a CSV with 2 columns: RECIPIENT_ADDRESS,AMOUNT_TO_SEND (without decimals)
                 E.g. \`0x123,25\` would send 25 SUI (25_000_000_000 MIST) to address 0x123
-  OUTPUT_FILE - A text file where details about transactions sent/failed will be logged.
+  OUTPUT_FILE   Path to a text file to log details about sent and failed transactions
 
 Example:
   bulksender 0x123 addresses_and_amounts.csv bulksender.log
