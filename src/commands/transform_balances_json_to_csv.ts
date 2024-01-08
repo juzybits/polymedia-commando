@@ -19,11 +19,11 @@ Usage:
 
 Arguments:
   DECIMALS      Number of decimals for Coin<T>
-  INPUT_FILE    Path to the input JSON file. It looks like this:
+  INPUT_FILE    JSON file with addresses and balances (with decimals). Format:
                 [ { address: string, balance: number }, ... ]
-  OUTPUT_FILE   Path to the output JSON file. It looks like this:
-                address1,balance1
-                address2,balance2
+  OUTPUT_FILE   CSV file with addresses and balances (without decimals). Format:
+                "address","balance"
+                "0xbeef","123"
 
 Example:
   transform_balances_json_to_csv balances.json balances.csv
