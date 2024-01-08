@@ -27,11 +27,12 @@ Usage:
   find_nfts [INPUT_FILE] [OUTPUT_DIR]
 
 Arguments:
-  INPUT_FILE  - Optional. Path to the input file. Default is '${this.inputFile}'
-  OUTPUT_DIR  - Optional. Path to the output directory. Default is '${this.outputDir}'
+  INPUT_FILE    Path to the input JSON file. It looks like this:
+                [ { name: string, indexerId: string, }, ... ]
+  OUTPUT_DIR    Path to the output directory
 
 Example:
-  find_nfts ./data/collections.json ./data
+  find_nfts collections.json ./data
 `;
     }
 
@@ -39,8 +40,12 @@ Example:
     {
         /* Read command arguments */
 
-        this.inputFile = args[0] || this.inputFile;
-        this.outputDir = args[1] || this.outputDir;
+        if (args.length !== 2) {
+            console.log(this.getUsage());
+            return;
+        }
+        this.inputFile = args[0];
+        this.outputDir = args[1];
         console.log(`inputFile: ${this.inputFile}`);
         console.log(`outputDir: ${this.outputDir}`);
 

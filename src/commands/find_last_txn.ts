@@ -31,7 +31,7 @@ Arguments:
                 ]
 
 Example:
-  find_last_txn ./custom/input.json ./custom/output.json
+  find_last_txn addresses.json last_txns.json
 `;
     }
 
