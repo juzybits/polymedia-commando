@@ -12,8 +12,8 @@ type Collection = {
 };
 
 export class FindNftHoldersCommand implements Command {
-    private inputFile: string = './data/nft_collections.json';
-    private outputDir: string = './data';
+    private inputFile: string = '';
+    private outputDir: string = '';
 
     public getDescription(): string {
         return 'Find NFT holders for a set of collections via Indexer.xyz';
@@ -27,11 +27,12 @@ Usage:
   find_nft_holders [INPUT_FILE] [OUTPUT_DIR]
 
 Arguments:
-  INPUT_FILE  - Optional. Path to the input file. Default is '${this.inputFile}'
-  OUTPUT_DIR  - Optional. Path to the output directory. Default is '${this.outputDir}'
+  INPUT_FILE    Path to the input JSON file. It looks like this:
+                [ { name: string, indexerId: string, }, ... ]
+  OUTPUT_DIR    Path to the output directory
 
 Example:
-  find_nft_holders ./data/collections.json ./data
+  find_nft_holders collections.json ./data
 `;
     }
 
@@ -39,8 +40,12 @@ Example:
     {
         /* Read command arguments */
 
-        this.inputFile = args[0] || this.inputFile;
-        this.outputDir = args[1] || this.outputDir;
+        if (args.length !== 2) {
+            console.log(this.getUsage());
+            return;
+        }
+        this.inputFile = args[0];
+        this.outputDir = args[1];
         console.log(`inputFile: ${this.inputFile}`);
         console.log(`outputDir: ${this.outputDir}`);
 
