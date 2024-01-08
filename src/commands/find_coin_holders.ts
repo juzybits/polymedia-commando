@@ -25,7 +25,7 @@ Arguments:
                 [ { address: string, balance: number }, ... ]
 
 Example:
-  find_coin_holders 0x123::lol::LOL ./custom/output.json
+  find_coin_holders 0x123::lol::LOL coin_holders.json
 `;
     }
 

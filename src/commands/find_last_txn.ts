@@ -18,8 +18,17 @@ Usage:
   find_last_txn [INPUT_FILE] [OUTPUT_FILE]
 
 Arguments:
-  INPUT_FILE   - Optional. Path to the input file. Default is '${this.inputFile}'
-  OUTPUT_FILE  - Optional. Path to the output file. Default is '${this.outputFile}'
+  INPUT_FILE    Path to the input JSON file. It looks like this:
+                [ { address: string, balance: number }, ... ]
+  OUTPUT_FILE   Path to the output JSON file. It looks like this:
+                [
+                    {
+                        address: string,
+                        txnId: string | null,
+                        txnTime: string | null,
+                    },
+                    ...
+                ]
 
 Example:
   find_last_txn ./custom/input.json ./custom/output.json
@@ -30,8 +39,12 @@ Example:
     {
         /* Read command arguments */
 
-        this.inputFile = args[0] || this.inputFile;
-        this.outputFile = args[1] || this.outputFile;
+        if (args.length !== 2) {
+            console.log(this.getUsage());
+            return;
+        }
+        this.inputFile = args[0];
+        this.outputFile = args[1];
         console.log(`inputFile: ${this.inputFile}`);
         console.log(`outputFile: ${this.outputFile}`);
 
@@ -44,7 +57,12 @@ Example:
     }
 }
 
-async function fetchLastTxn(client: SuiClientWithEndpoint, input: AddressAndBalance): Promise<any> {
+type LastTxn = {
+    address: string;
+    txnId: string | null;
+    txnTime: string | null;
+};
+async function fetchLastTxn(client: SuiClientWithEndpoint, input: AddressAndBalance): Promise<LastTxn> {
     return client.queryTransactionBlocks({
         filter: { FromAddress: input.address },
         options: {
@@ -62,7 +80,7 @@ async function fetchLastTxn(client: SuiClientWithEndpoint, input: AddressAndBala
         return {
             address: input.address,
             txnId: resp ? resp.digest : null,
-            txnTime: resp ? resp.timestampMs : null,
+            txnTime: resp ? (resp.timestampMs || null) : null,
         };
     }).catch(error => {
         console.error(`Error getting last transaction for address ${input.address} from rpc ${client.endpoint}: ${error}`, error);

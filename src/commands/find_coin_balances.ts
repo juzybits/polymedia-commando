@@ -5,8 +5,8 @@ import { AddressAndBalance } from '../types.js';
 
 export class FindCoinBalancesCommand implements Command {
     private coinType = '';
-    private inputFile = './data/find_coin_holders.json';
-    private outputFile = './data/find_coin_balances.json';
+    private inputFile = '';
+    private outputFile = '';
 
     public getDescription(): string {
         return 'Find how much Coin<T> is owned by each address';
@@ -26,7 +26,7 @@ Arguments:
                 [ { address: string, balance: number }, ... ]
 
 Example:
-  find_coin_balances 0x123::lol::LOL ./custom/input.json ./custom/output.json
+  find_coin_balances 0x123::lol::LOL coin_holders.json coin_balances.json
 `;
     }
 
