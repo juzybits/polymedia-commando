@@ -34,21 +34,9 @@ const RATE_LIMIT_DELAY = 500;
 const GAS_PER_ADDRESS = 0.0013092459;
 
 export class BulksenderCommand implements Command {
-    /**
-     * The Coin<T> to pay for the airdrop. Must be owned by the current `sui client active-address`.
-     */
     private coinId = '';
-    /**
-     * A list of airdrop recipients and amounts *WITHOUT DECIMALS*. For example, for a Coin<SUI> airdrop:
-     *      0x123,25
-     *      0x567,33
-     * would airdrop 25_000_000_000 SUI to address 0x123 (5 * 10^9 MIST)
-     */
-    private inputFile = './data/bulksender.in.csv';
-    /**
-     * A log file with details about transactions sent/failed.
-     */
-    private outputFile = './data/bulksender.out.csv';
+    private inputFile = '';
+    private outputFile = '';
 
     public getDescription(): string {
         return 'Send Coin<T> to a list of addresses';
@@ -57,15 +45,16 @@ export class BulksenderCommand implements Command {
     public getUsage(): string {
         return `${this.getDescription()}
 
-Usage: bulksender <COIN_ID> [INPUT_FILE] [OUTPUT_FILE]
+Usage: bulksender COIN_ID INPUT_FILE OUTPUT_FILE
 
 Arguments:
-  COIN_ID     - Required. The Coin<T> object to pay for the airdrop
-  INPUT_FILE  - Optional. Path to the input file. Default is ${this.inputFile}
-  OUTPUT_FILE - Optional. Path to the output file. Default is ${this.outputFile}
+  COIN_ID     - The Coin<T> to pay for the airdrop. Must be owned by the current active address.
+  INPUT_FILE  - A CSV with 2 columns: RECIPIENT_ADDRESS,AMOUNT_TO_SEND (without decimals)
+                E.g. \`0x123,25\` would send 25 SUI (25_000_000_000 MIST) to address 0x123
+  OUTPUT_FILE - A text file where details about transactions sent/failed will be logged.
 
 Example:
-  bulksender 0x1234abdc ./custom/input.csv ./custom/output.csv
+  bulksender 0x123 addresses_and_amounts.csv bulksender.log
 `;
     }
 
@@ -74,9 +63,13 @@ Example:
         try {
             /* Read and validate inputs */
 
+            if (args.length !== 3) {
+                console.log(this.getUsage());
+                return;
+            }
             this.coinId = args[0];
-            this.inputFile = args[1] || this.inputFile;
-            this.outputFile = args[2] || this.outputFile;
+            this.inputFile = args[1];
+            this.outputFile = args[2];
             console.log(`Input file: ${this.inputFile}`);
             console.log(`Output file: ${this.outputFile}`);
 
@@ -149,6 +142,7 @@ Example:
             const batches = chunkArray(addressAmountPairs, BATCH_SIZE);
             console.log(`Airdrop will be done in ${batches.length} batches`);
             console.log(`Gas estimate: ${formatNumber(GAS_PER_ADDRESS*addressAmountPairs.length)} SUI`);
+            // TODO: abort if current gas is lower than gas estimate
             const totalAmountNoDecimals = addressAmountPairs.reduce((sum, pair) => sum + pair.amount, BigInt(0));
             const totalAmountDecimals = totalAmountNoDecimals * decimalMultiplier;
             console.log(`Total amount to be sent: ${formatNumber(totalAmountNoDecimals)} (${totalAmountDecimals})`);
