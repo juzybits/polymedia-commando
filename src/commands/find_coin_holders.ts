@@ -17,7 +17,7 @@ export class FindCoinHoldersCommand implements Command {
         return `${this.getDescription()}
 
 Usage:
-  find_coin_holders <COIN_TYPE> [OUTPUT_FILE]
+  find_coin_holders COIN_TYPE OUTPUT_FILE
 
 Arguments:
   COIN_TYPE     The type of the coin (the T in Coin<T>)

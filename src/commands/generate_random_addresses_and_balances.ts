@@ -15,7 +15,7 @@ Usage:
   generate_random_addresses_and_balances <AMOUNT>>
 
 Arguments:
-  AMOUNT - Required. The amount of address-balance pairs to generate
+  AMOUNT    The amount of address-balance pairs to generate
 
 Example:
   generate_random_addresses_and_balances 5000

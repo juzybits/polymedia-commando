@@ -24,7 +24,7 @@ export class FindNftHoldersCommand implements Command {
 It outputs one file per collection: find_nft_holders.[collection].txt
 
 Usage:
-  find_nft_holders [INPUT_FILE] [OUTPUT_DIR]
+  find_nft_holders INPUT_FILE OUTPUT_DIR
 
 Arguments:
   INPUT_FILE    Path to the input JSON file. It looks like this:

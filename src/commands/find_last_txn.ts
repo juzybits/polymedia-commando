@@ -15,7 +15,7 @@ export class FindLastTransactionCommand implements Command {
         return `${this.getDescription()}
 
 Usage:
-  find_last_txn [INPUT_FILE] [OUTPUT_FILE]
+  find_last_txn INPUT_FILE OUTPUT_FILE
 
 Arguments:
   INPUT_FILE    Path to the input JSON file. It looks like this:

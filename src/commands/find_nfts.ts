@@ -24,7 +24,7 @@ export class FindNftsCommand implements Command {
 It outputs one file per collection: find_nfts.[collection].json
 
 Usage:
-  find_nfts [INPUT_FILE] [OUTPUT_DIR]
+  find_nfts INPUT_FILE OUTPUT_DIR
 
 Arguments:
   INPUT_FILE    Path to the input JSON file. It looks like this:
