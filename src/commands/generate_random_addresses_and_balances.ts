@@ -12,7 +12,7 @@ export class GenerateRandomAddressesAndBalancesCommand implements Command {
         return `${this.getDescription()}
 
 Usage:
-  generate_random_addresses_and_balances <AMOUNT>>
+  generate_random_addresses_and_balances AMOUNT
 
 Arguments:
   AMOUNT    The amount of address-balance pairs to generate
@@ -26,7 +26,11 @@ Example:
     {
         /* Read command arguments */
 
-        this.amount = Number(args[0]) || this.amount;
+        if (args.length !== 1) {
+            console.log(this.getUsage());
+            return;
+        }
+        this.amount = Number(args[0]);
 
         /* Generate random addresses and balances */
 
