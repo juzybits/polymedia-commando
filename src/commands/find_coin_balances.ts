@@ -16,12 +16,13 @@ export class FindCoinBalancesCommand implements Command {
         return `${this.getDescription()}
 
 Usage:
-  find_coin_balances <COIN_TYPE> [INPUT_FILE] [OUTPUT_FILE]
+  find_coin_balances COIN_TYPE INPUT_FILE OUTPUT_FILE
 
 Arguments:
-  COIN_TYPE    - Required. The T in Coin<T>
-  INPUT_FILE   - Optional. Path to the input file. Default is '${this.inputFile}'
-  OUTPUT_FILE  - Optional. Path to the output file. Default is '${this.outputFile}'
+  COIN_TYPE    - The type of the coin (the T in Coin<T>)
+  INPUT_FILE   - A JSON file like [ { address: string, balance: number }, ... ]
+                 You can use the output of \`find_coin_holders\` as the INPUT_FILE.
+  OUTPUT_FILE  - A JSON file like [ { address: string, balance: number }, ... ]
 
 Example:
   find_coin_balances 0x123::lol::LOL ./custom/input.json ./custom/output.json
@@ -30,11 +31,15 @@ Example:
 
     public async execute(args: string[]): Promise<void>
     {
-        /* Read command arguments */
+        /* Read and validate inputs */
 
-        this.coinType = args[0] || this.coinType;
-        this.inputFile = args[1] || this.inputFile;
-        this.outputFile = args[2] || this.outputFile;
+        if (args.length !== 3) {
+            console.log(this.getUsage());
+            return;
+        }
+        this.coinType = args[0];
+        this.inputFile = args[1];
+        this.outputFile = args[2];
         console.log(`coinType: ${this.coinType}`);
         console.log(`inputFile: ${this.inputFile}`);
         console.log(`outputFile: ${this.outputFile}`);
