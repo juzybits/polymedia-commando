@@ -21,15 +21,17 @@ export class FindNftHoldersCommand implements Command {
 
     public getUsage(): string {
         return `${this.getDescription()}
-It outputs one file per collection: find_nft_holders.[collection].txt
+\nIt outputs one TXT file per collection: find_nft_holders.[collection].txt
 
 Usage:
   find_nft_holders INPUT_FILE OUTPUT_DIR
 
 Arguments:
-  INPUT_FILE    Path to the input JSON file. It looks like this:
+  INPUT_FILE    JSON file with collection names and Indexer.xyz IDs. Format:
                 [ { name: string, indexerId: string, }, ... ]
-  OUTPUT_DIR    Path to the output directory
+  OUTPUT_DIR    Output directory to write the TXT files. File format:
+                holder_address_1
+                holder_address_2
 
 Example:
   find_nft_holders collections.json ./data

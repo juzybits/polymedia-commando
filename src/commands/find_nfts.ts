@@ -21,7 +21,7 @@ export class FindNftsCommand implements Command {
 
     public getUsage(): string {
         return `${this.getDescription()}
-\nIt outputs one file per collection: find_nfts.[collection].json
+\nIt outputs one JSON file per collection: find_nfts.[collection].json
 
 Usage:
   find_nfts INPUT_FILE OUTPUT_DIR
