@@ -18,9 +18,9 @@ Usage:
   find_last_txn INPUT_FILE OUTPUT_FILE
 
 Arguments:
-  INPUT_FILE    Path to the input JSON file. It looks like this:
+  INPUT_FILE    JSON file with addresses and balances. Format:
                 [ { address: string, balance: number }, ... ]
-  OUTPUT_FILE   Path to the output JSON file. It looks like this:
+  OUTPUT_FILE   JSON file with addresses and their last transaction ID and time. Format:
                 [
                     {
                         address: string,
