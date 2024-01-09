@@ -21,15 +21,23 @@ export class FindNftsCommand implements Command {
 
     public getUsage(): string {
         return `${this.getDescription()}
-It outputs one file per collection: find_nfts.[collection].json
+\nIt outputs one file per collection: find_nfts.[collection].json
 
 Usage:
   find_nfts INPUT_FILE OUTPUT_DIR
 
 Arguments:
-  INPUT_FILE    Path to the input JSON file. It looks like this:
+  INPUT_FILE    JSON file with collection names and Indexer.xyz IDs. Format:
                 [ { name: string, indexerId: string, }, ... ]
-  OUTPUT_DIR    Path to the output directory
+  OUTPUT_DIR    Output directory to write the JSON files. File format:
+                [
+                    {
+                        owner: string,
+                        name: string,
+                        token_id: string,
+                    },
+                    ...
+                ]
 
 Example:
   find_nfts collections.json ./data
@@ -53,7 +61,7 @@ Example:
 
         const collections: Collection[] = readJsonFile(this.inputFile);
         for (const collection of collections) {
-            const nfts = new Array<any>();
+            const nfts: NftAndOwner[] = [];
             let nullHolders = 0;
             while (true) {
                 const offset = nfts.length + nullHolders;
@@ -80,7 +88,12 @@ Example:
     }
 }
 
-async function fetchNfts(collectionId: string, offset: number): Promise<any[]> {
+type NftAndOwner = {
+    owner: string;
+    name: string;
+    token_id: string;
+};
+async function fetchNfts(collectionId: string, offset: number): Promise<NftAndOwner[]> {
     const query = `
     query {
         sui {
