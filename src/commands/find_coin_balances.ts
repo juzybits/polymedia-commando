@@ -15,14 +15,17 @@ export class FindCoinBalancesCommand implements Command {
     public getUsage(): string {
         return `${this.getDescription()}
 
+This script is designed to process the output of \`find_coin_holders\`, which contains
+inaccurate balances, and fetch the correct balances directly from Sui RPC servers.
+
 Usage:
   find_coin_balances COIN_TYPE INPUT_FILE OUTPUT_FILE
 
 Arguments:
   COIN_TYPE     The type of the coin (the T in Coin<T>)
-  INPUT_FILE    Path to the input JSON file. It looks like this:
+  INPUT_FILE    JSON file with addresses and (ignored) balances. Format:
                 [ { address: string, balance: number }, ... ]
-  OUTPUT_FILE   Path to the output JSON file. It looks like this:
+  OUTPUT_FILE   JSON file with addresses and (correct) balances. Format:
                 [ { address: string, balance: number }, ... ]
 
 Example:

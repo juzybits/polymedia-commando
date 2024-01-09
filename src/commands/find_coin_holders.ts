@@ -16,12 +16,16 @@ export class FindCoinHoldersCommand implements Command {
     public getUsage(): string {
         return `${this.getDescription()}
 
+Note that Suiscan returns inaccurate results: addresses that held the Coin at some point
+but no longer hold it are still included in the results, with their old balances.
+To get the correct balances, feed the output of this script into \`find_coin_balances\`.
+
 Usage:
   find_coin_holders COIN_TYPE OUTPUT_FILE
 
 Arguments:
   COIN_TYPE     The type of the coin (the T in Coin<T>)
-  OUTPUT_FILE   Path to the output JSON file. It looks like this:
+  OUTPUT_FILE   JSON file with addresses and (inaccurate) balances. Format:
                 [ { address: string, balance: number }, ... ]
 
 Example:
