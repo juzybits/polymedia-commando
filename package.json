@@ -4,7 +4,7 @@
     "name": "@polymedia/commando",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://github.com/juzybits/polymedia-commando",
-    "description": "Sui command line tools and TypeScript utilities for airdrops, data gathering, and more",
+    "description": "Sui command line tools for airdrops, data gathering, and more",
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
