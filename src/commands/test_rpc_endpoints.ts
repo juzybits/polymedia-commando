@@ -1,5 +1,5 @@
+import { MultiSuiClient } from '@polymedia/suits';
 import { Command } from '../Commando.js';
-import { MultiSuiClient } from '../lib/sui_utils.js';
 
 export class TestRpcEndpointsCommand implements Command {
     public getDescription(): string {

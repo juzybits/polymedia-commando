@@ -1,7 +1,7 @@
+import { MultiSuiClient, SuiClientWithEndpoint } from '@polymedia/suits';
 import { Command } from '../Commando.js';
-import { readJsonFile, writeJsonFile } from '../lib/file_utils.js';
-import { MultiSuiClient, SuiClientWithEndpoint } from '../lib/sui_utils.js';
 import { AddressAndBalance } from '../types.js';
+import { readJsonFile, writeJsonFile } from '../utils.js';
 
 export class FindLastTransactionCommand implements Command {
     private inputFile: string = './data/find_coin_holders.json';

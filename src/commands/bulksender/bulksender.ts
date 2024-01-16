@@ -1,11 +1,17 @@
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
+import {
+    chunkArray,
+    formatNumber,
+    getActiveAddressKeypair,
+    getActiveEnv,
+    NetworkName,
+    sleep,
+    validateAndNormalizeSuiAddress,
+} from '@polymedia/suits';
 import { appendFileSync } from 'fs';
-import { fileExists, readCsvFile } from '../../lib/file_utils.js';
-import { chunkArray, formatNumber, promptUser, sleep } from '../../lib/misc_utils.js';
-import { getActiveAddressKeypair, getActiveEnv, validateAndNormalizeSuiAddress } from '../../lib/sui_utils.js';
-import { NetworkName } from '../../types.js';
 import { Command } from '../../Commando.js';
+import { fileExists, promptUser, readCsvFile } from '../../utils.js';
 
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function

@@ -1,8 +1,7 @@
+import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from '@polymedia/suits';
 import * as Auth from '../.auth.js';
 import { Command } from '../Commando.js';
-import { readJsonFile, writeJsonFile } from '../lib/file_utils.js';
-import { apiRequestIndexer, sleep } from '../lib/misc_utils.js';
-import { validateAndNormalizeSuiAddress } from '../lib/sui_utils.js';
+import { readJsonFile, writeJsonFile } from '../utils.js';
 
 // Note: it took ~23 minutes to fetch 39,653 NFTs from 9 collections
 

@@ -1,7 +1,7 @@
 import { Command } from '../Commando.js';
-import { readJsonFile, writeJsonFile } from '../lib/file_utils.js';
-import { MultiSuiClient, SuiClientWithEndpoint } from '../lib/sui_utils.js';
+import { readJsonFile, writeJsonFile } from '../utils.js';
 import { AddressAndBalance } from '../types.js';
+import { MultiSuiClient, SuiClientWithEndpoint } from '@polymedia/suits';
 
 export class FindCoinBalancesCommand implements Command {
     private coinType = '';
