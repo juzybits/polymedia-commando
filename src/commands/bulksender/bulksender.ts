@@ -27,7 +27,7 @@ const BATCH_SIZE = 500;
  * The public RPC rate limit is 100 requests per 30 seconds according to
  * https://docs.sui.io/references/sui-api/rpc-best-practices
  */
-const RATE_LIMIT_DELAY = 500;
+const RATE_LIMIT_DELAY = 334;
 /**
  * To estimate total gas costs
  */
@@ -140,7 +140,7 @@ Example:
             const addressAmountPairs = readCsvFile<AddressAmountPair>(this.inputFile, parseCsvLine);
             console.log(`\nFound ${addressAmountPairs.length} addresses in ${this.inputFile}`);
             const batches = chunkArray(addressAmountPairs, BATCH_SIZE);
-            console.log(`Airdrop will be done in ${batches.length} batches`);
+            console.log(`Airdrop will be done in ${batches.length} transaction blocks`);
             console.log(`Gas estimate: ${formatNumber(GAS_PER_ADDRESS*addressAmountPairs.length)} SUI`);
             // TODO: abort if current gas is lower than gas estimate
             const totalAmountNoDecimals = addressAmountPairs.reduce((sum, pair) => sum + pair.amount, BigInt(0));
