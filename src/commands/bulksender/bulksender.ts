@@ -111,7 +111,7 @@ Example:
                 throw new Error(`Your active address doesn't own COIN_ID`);
             }
 
-            // Get COIN_ID type (the `T` in `Coin<T>`)
+            // Get the Coin type (the `T` in `Coin<T>`)
             const coinTypeFull = coinObject.data.content.type; // e.g. "0x2::coin::Coin<0x2::sui::SUI>"
             const match = coinTypeFull.match(/<([^>]+)>/); // extract "0x2::sui::SUI" from the full type
             if (!match) {
@@ -164,7 +164,7 @@ Example:
             let totalGas = 0;
             let batchNumber = 0;
             try {
-                const packageId = PACKAGE_IDS.get(networkName) as NetworkName;
+                const packageId = PACKAGE_IDS.get(networkName);
                 for (const batch of batches) {
                     batchNumber++;
                     const batchAmount = batch.reduce((total, pair) => total + pair.amount, BigInt(0));
@@ -225,7 +225,7 @@ Example:
     /**
      * Output looks like this:
      * ```
-     * 2023-12-06T09:42:05.963Z - Sending to batch 1 (180 addresses): 0x326c, 0x445e, ...
+     * 2023-12-06T09:42:05.963Z - Sending to batch 1 (500 addresses): 0x326c, 0x445e, ...
      * ```
      */
     private logTransactionStart(batchAmount: bigint, batchNumber: number, batch: AddressAmountPair[]) {
