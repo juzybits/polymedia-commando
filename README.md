@@ -6,7 +6,7 @@ Sui command line tools to help with Sui airdrops (send coins to many addresses),
 
 ## Installation
 
-Clone the repo:
+Clone and install the repo:
 
 ```
 git clone https://github.com/juzybits/polymedia-commando.git
@@ -49,3 +49,27 @@ Available Commands:
 For more information about a command:
   pnpm commando COMMAND -h
 ```
+
+## TypeScript utilities
+
+In addition to the command line tools, the `@polymedia/commando` NPM package
+provides some utility functions for Node.js projects.
+
+### Usage
+
+```
+# 1) Add the package to your project:
+pnpm add @polymedia/commando
+
+# 2) Use it in your code:
+import { readCsvFile } from '@polymedia/commando';
+```
+
+### Functions
+- `promptUser` - Display a query to the user and wait for their input. Return true if the user enters `y`.
+- `fileExists` - Check if a file exists in the filesystem.
+- `readCsvFile` - Read a CSV file and parse each line into an object.
+- `readJsonFile` - Read a JSON file and parse its contents into an object.
+- `writeCsvFile` - Write objects into a CSV file.
+- `writeJsonFile` - Write an object's JSON representation into a file.
+- `writeTextFile` - Write a string into a file.
