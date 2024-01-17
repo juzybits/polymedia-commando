@@ -3,12 +3,14 @@ import { TransactionBlock } from '@mysten/sui.js/transactions';
 import {
     chunkArray,
     formatNumber,
-    getActiveAddressKeypair,
-    getActiveEnv,
     NetworkName,
     sleep,
     validateAndNormalizeSuiAddress,
 } from '@polymedia/suits';
+import {
+    getActiveAddressKeypair,
+    getActiveEnv,
+} from '@polymedia/suits/node';
 import { appendFileSync } from 'fs';
 import { Command } from '../../Commando.js';
 import { fileExists, promptUser, readCsvFile } from '../../utils.js';

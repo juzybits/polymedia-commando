@@ -9,13 +9,13 @@ dependencies:
     specifier: ^0.49.1
     version: 0.49.1
   '@polymedia/suits':
-    specifier: ^0.0.2
-    version: 0.0.2
+    specifier: ^0.0.5
+    version: 0.0.5
 
 devDependencies:
   '@types/node':
-    specifier: ^20.11.4
-    version: 20.11.4
+    specifier: ^20.11.5
+    version: 20.11.5
   typescript:
     specifier: ^5.3.3
     version: 5.3.3
@@ -53,8 +53,8 @@ packages:
     engines: {node: '>= 16'}
     dev: false
 
-  /@polymedia/suits@0.0.2:
-    resolution: {integrity: sha512-MqQN93MMIst+kDfKGTLAYr5rqBOMJEynS0xvDkEg5dgAcHqroZPVlxgRrIjrCiLNJbt3FVg2YU2/Q+WyEZk3KQ==}
+  /@polymedia/suits@0.0.5:
+    resolution: {integrity: sha512-DMVIf1hV6wJSjIr7oNj3ho9suT2JJRBuRgL5rtc59B5llMgfUr6VZfIMeh5cSWQm6BY6mRCHwkxv/MjM9TYgyg==}
     dependencies:
       '@mysten/sui.js': 0.49.1
     dev: false
@@ -82,8 +82,8 @@ packages:
     resolution: {integrity: sha512-bprE8+K5V+DPX7q2e2K57ImqNBdfGHDIWaGI5xHxZoxbKOuQZn4wzPiUxOAHnsUr3w3xHrWXwN7gnG/iIuEMIg==}
     dev: false
 
-  /@types/node@20.11.4:
-    resolution: {integrity: sha512-6I0fMH8Aoy2lOejL3s4LhyIYX34DPwY8bl5xlNjBvUEk8OHrcuzsFt+Ied4LvJihbtXPM+8zUqdydfIti86v9g==}
+  /@types/node@20.11.5:
+    resolution: {integrity: sha512-g557vgQjUUfN76MZAN/dt1z3dzcUsimuysco0KeluHgrPdJXkP/XdAURgyO2W9fZWHRtRBiVKzKn8vyOAwlG+w==}
     dependencies:
       undici-types: 5.26.5
     dev: true
