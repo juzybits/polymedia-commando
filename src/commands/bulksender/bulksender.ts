@@ -7,13 +7,11 @@ import {
     sleep,
     validateAndNormalizeSuiAddress,
 } from '@polymedia/suits';
-import {
-    getActiveAddressKeypair,
-    getActiveEnv,
-} from '@polymedia/suits/node';
 import { appendFileSync } from 'fs';
 import { Command } from '../../Commando.js';
-import { fileExists, promptUser, readCsvFile } from '../../utils.js';
+import { fileExists, readCsvFile } from '../../utils-file.js';
+import { promptUser } from '../../utils-misc.js';
+import { getActiveAddressKeypair, getActiveEnv } from '../../utils-sui.js';
 
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function

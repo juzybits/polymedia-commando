@@ -11,5 +11,4 @@ build/
 
 # App specific
 .auth.ts
-config.ts
 data/

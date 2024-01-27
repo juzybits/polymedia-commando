@@ -1,5 +1,5 @@
 import { Command } from '../Commando.js';
-import { writeJsonFile } from '../utils.js';
+import { writeJsonFile } from '../utils-file.js';
 import { AddressAndBalance } from '../types.js';
 
 const IS_DEV = false;

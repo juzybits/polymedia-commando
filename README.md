@@ -50,26 +50,36 @@ For more information about a command:
   pnpm commando COMMAND -h
 ```
 
-## TypeScript utilities
+## Node.js utilities
 
-In addition to the command line tools, the `@polymedia/commando` NPM package
-provides some utility functions for Node.js projects.
+The `@polymedia/commando` NPM package provides some utility functions for Node.js projects.
 
 ### Usage
 
-```
-# 1) Add the package to your project:
+Add the package to your project:
+```bash
 pnpm add @polymedia/commando
-
-# 2) Use it in your code:
-import { readCsvFile } from '@polymedia/commando';
 ```
 
-### Functions
-- `promptUser` - Display a query to the user and wait for their input. Return true if the user enters `y`.
+Use it in your code, for example:
+```typescript
+import { getActiveEnv } from '@polymedia/commando';
+```
+
+## Sui functions
+
+- `function getActiveAddressKeypair` - Build a `Ed25519Keypair` object for the current active address by loading the secret key from `~/.sui/sui_config/sui.keystore`.
+- `function getActiveEnv` - Get the active Sui environment from `sui client active-env`.
+
+### File functions
+
 - `fileExists` - Check if a file exists in the filesystem.
 - `readCsvFile` - Read a CSV file and parse each line into an object.
 - `readJsonFile` - Read a JSON file and parse its contents into an object.
 - `writeCsvFile` - Write objects into a CSV file.
 - `writeJsonFile` - Write an object's JSON representation into a file.
 - `writeTextFile` - Write a string into a file.
+
+## Misc functions
+
+- `promptUser` - Display a query to the user and wait for their input. Return true if the user enters `y`.

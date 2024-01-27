@@ -1,4 +1,4 @@
-import { MultiSuiClient } from '@polymedia/suits';
+import { SuiMultiClient } from '@polymedia/suits';
 import { Command } from '../Commando.js';
 
 export class TestRpcEndpointsCommand implements Command {
@@ -16,7 +16,7 @@ Usage:
 
     public async execute(_args: string[]): Promise<void>
     {
-        const multiClient = new MultiSuiClient();
+        const multiClient = new SuiMultiClient();
         multiClient.testEndpoints();
     }
 }

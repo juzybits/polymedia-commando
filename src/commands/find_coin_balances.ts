@@ -1,7 +1,7 @@
+import { SuiClientWithEndpoint, SuiMultiClient } from '@polymedia/suits';
 import { Command } from '../Commando.js';
-import { readJsonFile, writeJsonFile } from '../utils.js';
 import { AddressAndBalance } from '../types.js';
-import { MultiSuiClient, SuiClientWithEndpoint } from '@polymedia/suits';
+import { readJsonFile, writeJsonFile } from '../utils-file.js';
 
 export class FindCoinBalancesCommand implements Command {
     private coinType = '';
@@ -53,7 +53,7 @@ Example:
         const inputs: AddressAndBalance[] = readJsonFile(this.inputFile);
         console.log(`Fetching ${inputs.length} balances in batches...`);
 
-        const multiClient = new MultiSuiClient();
+        const multiClient = new SuiMultiClient();
         const fetchBalance = (client: SuiClientWithEndpoint, input: AddressAndBalance) => {
             return client.getBalance({
                 owner: input.address,
