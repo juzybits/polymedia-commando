@@ -26,8 +26,10 @@ Usage:
   find_nfts INPUT_FILE OUTPUT_DIR
 
 Arguments:
-  INPUT_FILE    JSON file with collection names and Indexer.xyz IDs. Format:
+  INPUT_FILE    JSON file with collection names and Indexer.xyz collection IDs. Format:
                 [ { name: string, indexerId: string, }, ... ]
+                * You can find collection IDs on https://www.indexer.xyz: search for
+                the collection you want, click "Code", and look for "collection_id".
   OUTPUT_DIR    Output directory to write the JSON files. File format:
                 [
                     {
