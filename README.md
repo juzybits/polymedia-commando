@@ -2,7 +2,7 @@
 
 Sui command line tools to help with Sui airdrops (send coins to many addresses), gather data from different sources (Sui RPCs, Indexer.xyz, Suiscan), and more.
 
-![Polymedia Commando](https://assets.polymedia.app/img/commando/open-graph.webp?x=1)
+![Polymedia Commando](https://assets.polymedia.app/img/commando/open-graph.webp)
 
 ## Installation
 

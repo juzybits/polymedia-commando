@@ -1,4 +1,4 @@
-import { generateRandomAddressDevOnly } from '@polymedia/suits';
+import { generateRandomAddress } from '@polymedia/suits';
 import { Command } from '../Commando.js';
 
 export class GenerateRandomAddressesAndBalancesCommand implements Command {
@@ -35,7 +35,7 @@ Example:
         /* Generate random addresses and balances */
 
         for (let index = 0; index < this.amount; index++) {
-            const address = generateRandomAddressDevOnly();
+            const address = generateRandomAddress();
             const amount = Math.floor(Math.random() * (1_000_000 - 1_000 + 1)) + 1_000;
             console.log(`${address},${amount}`);
         }
