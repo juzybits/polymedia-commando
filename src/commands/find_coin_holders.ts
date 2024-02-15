@@ -53,10 +53,7 @@ Example:
         .then((response: Response) => {
             if (!response.ok)
                 throw new Error(`HTTP error: ${response.status}`);
-            return response.json();
-        })
-        .then((result: ApiResponse) => {
-            return result;
+            return response.json() as Promise<ApiResponse>;
         });
 
         const isValidResponse =
