@@ -99,7 +99,7 @@ async function fetchHolders(collectionId: string, offset: number): Promise<any[]
         }
     }
     `;
-    const result = await apiRequestIndexer(Auth.INDEXER_API_USER, Auth.INDEXER_API_KEY, query);
+    const result = await apiRequestIndexer<any>(Auth.INDEXER_API_USER, Auth.INDEXER_API_KEY, query);
     if (!result?.data?.sui?.nfts) {
         throw new Error(`[fetchHolders] unexpected result: ${JSON.stringify(result)}`);
     }

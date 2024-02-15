@@ -55,7 +55,6 @@ export function readCsvFile<T>(filename: string, parseLine: ParseCsvLine<T>, rev
  */
 export function readJsonFile<T>(filename: string): T {
     const fileContent = fs.readFileSync(filename, 'utf8');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const jsonData: T = JSON.parse(fileContent);
     return jsonData;
 }

@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "@mysten/sui.js": "^0.50.1",
-        "@polymedia/suits": "^0.0.18"
+        "@polymedia/suits": "^0.0.19"
     },
     "devDependencies": {
         "@types/node": "^20.11.19",

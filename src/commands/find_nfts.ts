@@ -112,7 +112,7 @@ async function fetchNfts(collectionId: string, offset: number): Promise<NftAndOw
         }
     }
     `;
-    const result = await apiRequestIndexer(Auth.INDEXER_API_USER, Auth.INDEXER_API_KEY, query);
+    const result = await apiRequestIndexer<any>(Auth.INDEXER_API_USER, Auth.INDEXER_API_KEY, query);
     if (!result?.data?.sui?.nfts) {
         throw new Error(`[fetchNfts] unexpected result: ${JSON.stringify(result)}`);
     }
