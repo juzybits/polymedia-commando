@@ -70,6 +70,8 @@ import { getActiveEnv } from '@polymedia/commando';
 
 - `function getActiveAddressKeypair` - Build a `Ed25519Keypair` object for the current active address by loading the secret key from `~/.sui/sui_config/sui.keystore`.
 - `function getActiveEnv` - Get the active Sui environment from `sui client active-env`.
+- `function setupSuiTransaction` - Initialize objects to execute Sui transactions blocks using the current Sui active network and address.
+- `function executeSuiTransaction` - Execute a transaction block with `showEffects` and `showObjectChanges` set to `true`.
 
 ### File functions
 
@@ -82,4 +84,5 @@ import { getActiveEnv } from '@polymedia/commando';
 
 ## Misc functions
 
+- `parseArguments` - Parse command line arguments and show usage instructions.
 - `promptUser` - Display a query to the user and wait for their input. Return true if the user enters `y`.
