@@ -11,7 +11,16 @@ module.exports = {
     plugins: [],
     rules: {
         '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-        '@typescript-eslint/no-floating-promises': 'off',
+        '@typescript-eslint/prefer-nullish-coalescing': ['error', { 'ignoreConditionalTests': true }],
+        // Allow while(true) loops
+        '@typescript-eslint/no-unnecessary-condition': 'off',
+        'no-constant-condition': 'off',
+        // Chill with the any checks
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
     },
     parserOptions: {
         ecmaVersion: 'latest',
@@ -20,8 +29,5 @@ module.exports = {
         tsconfigRootDir: __dirname,
     },
     settings: {
-        react: {
-            version: 'detect'
-        }
     },
 }
