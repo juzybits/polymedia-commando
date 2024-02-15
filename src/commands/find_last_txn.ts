@@ -50,7 +50,7 @@ Example:
 
         /* Find last transactions */
 
-        const inputs: AddressAndBalance[] = readJsonFile(this.inputFile);
+        const inputs = readJsonFile<AddressAndBalance[]>(this.inputFile);
         const multiClient = new SuiMultiClient();
         const lastTxns = await multiClient.executeInBatches(inputs, fetchLastTxn);
         writeJsonFile(this.outputFile, lastTxns);

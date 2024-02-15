@@ -54,7 +54,7 @@ Example:
 
         /* Find NFT holders */
 
-        const collections: Collection[] = readJsonFile(this.inputFile);
+        const collections = readJsonFile<Collection[]>(this.inputFile);
         for (const collection of collections) {
             const holders = new Set<string>();
             let offset = 0;

@@ -60,7 +60,7 @@ Example:
 
         /* Find all NFTs and their owners */
 
-        const collections: Collection[] = readJsonFile(this.inputFile);
+        const collections = readJsonFile<Collection[]>(this.inputFile);
         for (const collection of collections) {
             const nfts: NftAndOwner[] = [];
             let nullHolders = 0;

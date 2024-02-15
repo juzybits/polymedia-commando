@@ -48,7 +48,7 @@ Example:
 
         /* Find how much Coin<T> is owned by each address */
 
-        const inputs: AddressAndBalance[] = readJsonFile(this.inputFile);
+        const inputs = readJsonFile<AddressAndBalance[]>(this.inputFile);
         const lines: (string|number)[][] = [];
         lines.push(['address', 'balance']);
         for (const input of inputs) {

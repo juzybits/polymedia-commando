@@ -50,7 +50,7 @@ Example:
 
         /* Find how much Coin<T> is owned by each address */
 
-        const inputs: AddressAndBalance[] = readJsonFile(this.inputFile);
+        const inputs = readJsonFile<AddressAndBalance[]>(this.inputFile);
         console.log(`Fetching ${inputs.length} balances in batches...`);
 
         const multiClient = new SuiMultiClient();
