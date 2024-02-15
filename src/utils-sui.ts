@@ -1,5 +1,4 @@
 import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
 import { homedir } from 'os';
 import path from 'path';
 
@@ -9,6 +8,7 @@ import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { fromB64 } from '@mysten/sui.js/utils';
 import { NetworkName } from '@polymedia/suits';
+import { readJsonFile } from './utils-file.js';
 
 /**
  * Build a `Ed25519Keypair` object for the current active address
@@ -18,11 +18,8 @@ export function getActiveAddressKeypair(): Ed25519Keypair {
     const sender = execSync('sui client active-address', { encoding: 'utf8' }).trim();
 
     const signer = (() => {
-        const fileContent = readFileSync(
-            path.join(homedir(), '.sui', 'sui_config', 'sui.keystore'),
-            'utf8'
-        );
-        const keystore = JSON.parse(fileContent);
+        const keystorePath = path.join(homedir(), '.sui', 'sui_config', 'sui.keystore');
+        const keystore = readJsonFile<string[]>(keystorePath);
 
         for (const priv of keystore) {
             const raw = fromB64(priv);
