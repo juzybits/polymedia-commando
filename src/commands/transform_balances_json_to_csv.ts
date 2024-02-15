@@ -30,14 +30,14 @@ Example:
 `;
     }
 
-    public async execute(args: string[]): Promise<void>
+    public execute(args: string[]): Promise<void>
     {
         /* Read command arguments */
 
         if (args.length !== 3) {
-          console.log(this.getUsage());
-          return;
-      }
+            console.log(this.getUsage());
+            return Promise.resolve();
+        }
         this.decimals = Number(args[0]);
         this.inputFile = args[1];
         this.outputFile = args[2];
@@ -59,6 +59,7 @@ Example:
         }
         writeCsvFile(this.outputFile, lines);
 
+        return Promise.resolve();
     }
 
 }

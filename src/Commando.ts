@@ -11,7 +11,7 @@ import { TransformBalancesJsonToCsvCommand } from './commands/transform_balances
 /**
  * Interface defining the structure of a command in the Commando framework.
  */
-export interface Command {
+export type Command = {
     /** Returns a short description of the command. */
     getDescription(): string;
     /** Returns detailed usage information for the command. */

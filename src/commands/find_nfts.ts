@@ -11,8 +11,8 @@ type Collection = {
 };
 
 export class FindNftsCommand implements Command {
-    private inputFile: string = './data/nft_collections.json';
-    private outputDir: string = './data';
+    private inputFile = './data/nft_collections.json';
+    private outputDir = './data';
 
     public getDescription(): string {
         return 'Find all NFTs and their owners for a set of collections via Indexer.xyz';
@@ -71,7 +71,7 @@ Example:
                 if (results.length === 0) { // no more nfts
                     break;
                 }
-                for (let item of results) {
+                for (const item of results) {
                     const address = item.owner && validateAndNormalizeSuiAddress(item.owner);
                     if (address) {
                         item.owner = address;
@@ -84,7 +84,7 @@ Example:
             }
             console.log(`skipped ${nullHolders} null ${collection.name} holders`);
             const filePath = `${this.outputDir}/find_nfts.${collection.name}.json`;
-            await writeJsonFile(filePath, nfts);
+            writeJsonFile(filePath, nfts);
         }
     }
 }

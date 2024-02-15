@@ -1,5 +1,3 @@
-/* Sui utils */
-
 import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
 import { homedir } from 'os';

@@ -4,8 +4,8 @@ import { AddressAndBalance } from '../types.js';
 import { readJsonFile, writeJsonFile } from '../utils-file.js';
 
 export class FindLastTransactionCommand implements Command {
-    private inputFile: string = './data/find_coin_holders.json';
-    private outputFile: string = './data/find_last_txn.json';
+    private inputFile = './data/find_coin_holders.json';
+    private outputFile = './data/find_last_txn.json';
 
     public getDescription(): string {
         return 'Find the last transaction for each Sui address';
@@ -80,7 +80,7 @@ async function fetchLastTxn(client: SuiClientWithEndpoint, input: AddressAndBala
         return {
             address: input.address,
             txnId: resp ? resp.digest : null,
-            txnTime: resp ? (resp.timestampMs || null) : null,
+            txnTime: resp ? (resp.timestampMs ?? null) : null,
         };
     }).catch(error => {
         console.error(`Error getting last transaction for address ${input.address} from rpc ${client.endpoint}: ${error}`, error);

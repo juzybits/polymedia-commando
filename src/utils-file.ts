@@ -20,7 +20,7 @@ export type ParseCsvLine<T> = (values: string[]) => T | null;
 /**
  * Read a CSV file and parse each line into an object.
  */
-export function readCsvFile<T>(filename: string, parseLine: ParseCsvLine<T>, reverse: boolean = false): T[] {
+export function readCsvFile<T>(filename: string, parseLine: ParseCsvLine<T>, reverse = false): T[] {
     const results: T[] = [];
     const fileContent = fs.readFileSync(filename, 'utf8');
 

@@ -11,8 +11,8 @@ type Collection = {
 };
 
 export class FindNftHoldersCommand implements Command {
-    private inputFile: string = '';
-    private outputDir: string = '';
+    private inputFile = '';
+    private outputDir = '';
 
     public getDescription(): string {
         return 'Find NFT holders for a set of collections via Indexer.xyz';
@@ -64,7 +64,7 @@ Example:
                 if (results.length === 0) { // no more holders
                     break;
                 }
-                for (let item of results) {
+                for (const item of results) {
                     offset++;
                     const address = item.owner && validateAndNormalizeSuiAddress(item.owner);
                     if (address) {
@@ -78,7 +78,7 @@ Example:
 
             const filePath = `${this.outputDir}/find_nft_holders.${collection.name}.txt`;
             const contents = [...holders].join('\n');
-            await writeTextFile(filePath, contents);
+            writeTextFile(filePath, contents);
         }
     }
 }

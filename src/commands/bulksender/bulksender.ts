@@ -16,7 +16,7 @@ import { getActiveAddressKeypair, getActiveEnv } from '../../utils-sui.js';
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function
  */
-const PACKAGE_IDS: Map<NetworkName, string> = new Map([
+const PACKAGE_IDS = new Map<NetworkName, string> ([
     ['localnet', ''],
     ['devnet', ''],
     ['testnet', '0x7f541b25c64aa2d0330a64dfaeb7c0e35924b6633069b8047125e038728d15d6'],

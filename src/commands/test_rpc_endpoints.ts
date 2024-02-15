@@ -14,9 +14,9 @@ Usage:
 `;
     }
 
-    public async execute(_args: string[]): Promise<void>
+    public async execute(): Promise<void>
     {
         const multiClient = new SuiMultiClient();
-        multiClient.testEndpoints();
+        await multiClient.testEndpoints();
     }
 }

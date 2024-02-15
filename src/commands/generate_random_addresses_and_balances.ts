@@ -22,13 +22,13 @@ Example:
 `;
     }
 
-    public async execute(args: string[]): Promise<void>
+    public execute(args: string[]): Promise<void>
     {
         /* Read command arguments */
 
         if (args.length !== 1) {
             console.log(this.getUsage());
-            return;
+            return Promise.resolve();
         }
         this.amount = Number(args[0]);
 
@@ -39,5 +39,6 @@ Example:
             const amount = Math.floor(Math.random() * (1_000_000 - 1_000 + 1)) + 1_000;
             console.log(`${address},${amount}`);
         }
+        return Promise.resolve();
     }
 }
