@@ -1,4 +1,6 @@
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 /**
  * Check if a file exists in the filesystem.
@@ -10,6 +12,14 @@ export function fileExists(filename: string): boolean {
     } catch (error) {
         return false;
     }
+}
+
+/**
+ * Extract the file name from a module URL, without path or extension.
+ */
+export function getFileName(importMetaUrl: string): string {
+    const __filename = fileURLToPath(importMetaUrl);
+    return path.basename(__filename, path.extname(__filename));
 }
 
 /**

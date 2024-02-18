@@ -76,6 +76,7 @@ import { getActiveEnv } from '@polymedia/commando';
 ### File functions
 
 - `fileExists` - Check if a file exists in the filesystem.
+- `getFileName` - Extract the file name from a module URL, without path or extension.
 - `readCsvFile` - Read a CSV file and parse each line into an object.
 - `readJsonFile` - Read a JSON file and parse its contents into an object.
 - `writeCsvFile` - Write objects into a CSV file.
