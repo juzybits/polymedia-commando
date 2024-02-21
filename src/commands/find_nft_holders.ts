@@ -1,5 +1,4 @@
 import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from '@polymedia/suits';
-import * as Auth from '../.auth.js';
 import { Command } from '../Commando.js';
 import { readJsonFile, writeTextFile } from '../utils-file.js';
 
@@ -41,6 +40,16 @@ Example:
 
     public async execute(args: string[]): Promise<void>
     {
+        /* Read API credentials */
+
+        const indexerApiUser = process.env.INDEXER_API_USER;
+        const indexerApiKey = process.env.INDEXER_API_KEY;
+
+        if (!indexerApiUser || !indexerApiKey) {
+            console.error('Error: Missing required environment variables.');
+            return;
+        }
+
         /* Read command arguments */
 
         if (args.length !== 2) {
@@ -60,7 +69,7 @@ Example:
             let offset = 0;
             while (true) {
                 console.log(`fetching ${collection.name} holders from ${offset}`);
-                const results = await fetchHolders(collection.indexerId, offset);
+                const results = await fetchHolders(collection.indexerId, offset, indexerApiUser, indexerApiKey);
                 if (results.length === 0) { // no more holders
                     break;
                 }
@@ -83,7 +92,12 @@ Example:
     }
 }
 
-async function fetchHolders(collectionId: string, offset: number): Promise<any[]> {
+async function fetchHolders(
+    collectionId: string,
+    offset: number,
+    indexerApiUser: string,
+    indexerApiKey: string,
+): Promise<any[]> {
     const query = `
     query {
         sui {
@@ -99,7 +113,7 @@ async function fetchHolders(collectionId: string, offset: number): Promise<any[]
         }
     }
     `;
-    const result = await apiRequestIndexer<any>(Auth.INDEXER_API_USER, Auth.INDEXER_API_KEY, query);
+    const result = await apiRequestIndexer<any>(indexerApiUser, indexerApiKey, query);
     if (!result?.data?.sui?.nfts) {
         throw new Error(`[fetchHolders] unexpected result: ${JSON.stringify(result)}`);
     }

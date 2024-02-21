@@ -14,10 +14,10 @@ cd polymedia-commando
 pnpm install
 ```
 
-Create `.auth.js` (add your Indexer.xyz credentials if you'll fetch NFT data):
+Create `.env` and add your Indexer.xyz credentials if you'll fetch NFT data:
 
 ```
-cp src/.auth.example.ts src/.auth.ts
+cp .env.example .env
 ```
 
 ## Usage

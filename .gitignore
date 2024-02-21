@@ -10,5 +10,5 @@ node_modules/
 build/
 
 # App specific
-.auth.ts
+.env
 data/

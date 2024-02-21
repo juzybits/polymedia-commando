@@ -1,5 +1,4 @@
 import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from '@polymedia/suits';
-import * as Auth from '../.auth.js';
 import { Command } from '../Commando.js';
 import { readJsonFile, writeJsonFile } from '../utils-file.js';
 
@@ -47,6 +46,16 @@ Example:
 
     public async execute(args: string[]): Promise<void>
     {
+        /* Read API credentials */
+
+        const indexerApiUser = process.env.INDEXER_API_USER;
+        const indexerApiKey = process.env.INDEXER_API_KEY;
+
+        if (!indexerApiUser || !indexerApiKey) {
+            console.error('Error: Missing required environment variables.');
+            return;
+        }
+
         /* Read command arguments */
 
         if (args.length !== 2) {
@@ -67,7 +76,7 @@ Example:
             while (true) {
                 const offset = nfts.length + nullHolders;
                 console.log(`fetching ${collection.name} nfts from ${offset}`);
-                const results = await fetchNfts(collection.indexerId, offset);
+                const results = await fetchNfts(collection.indexerId, offset, indexerApiUser, indexerApiKey);
                 if (results.length === 0) { // no more nfts
                     break;
                 }
@@ -94,7 +103,12 @@ type NftAndOwner = {
     name: string;
     token_id: string;
 };
-async function fetchNfts(collectionId: string, offset: number): Promise<NftAndOwner[]> {
+async function fetchNfts(
+    collectionId: string,
+    offset: number,
+    indexerApiUser: string,
+    indexerApiKey: string,
+): Promise<NftAndOwner[]> {
     const query = `
     query {
         sui {
@@ -112,7 +126,7 @@ async function fetchNfts(collectionId: string, offset: number): Promise<NftAndOw
         }
     }
     `;
-    const result = await apiRequestIndexer<any>(Auth.INDEXER_API_USER, Auth.INDEXER_API_KEY, query);
+    const result = await apiRequestIndexer<any>(indexerApiUser, indexerApiKey, query);
     if (!result?.data?.sui?.nfts) {
         throw new Error(`[fetchNfts] unexpected result: ${JSON.stringify(result)}`);
     }
