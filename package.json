@@ -1,6 +1,6 @@
 {
     "private": false,
-    "version": "0.0.16",
+    "version": "0.0.17",
     "name": "@polymedia/commando",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://github.com/juzybits/polymedia-commando",
@@ -17,9 +17,10 @@
     ],
     "scripts": {
         "commando": "tsc -p tsconfig.esm.json && node dist/esm/main.js",
-        "build": "rm -rf dist/ && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
+        "build": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
+        "clean": "rm -rf dist/ node_modules/",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-        "prepublishOnly": "pnpm build"
+        "prepublishOnly": "rm -rf dist/ && pnpm build"
     },
     "dependencies": {
         "@mysten/sui.js": "^0.50.1",
@@ -38,10 +39,7 @@
         "access": "public"
     },
     "files": [
-        "dist/",
-        "src/",
-        "LICENSE",
-        "README.md"
+        "dist/"
     ],
     "types": "./dist/cjs/index.d.ts",
     "main": "./dist/cjs/index.js",
