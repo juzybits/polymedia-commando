@@ -9,8 +9,8 @@ dependencies:
     specifier: ^0.50.1
     version: 0.50.1
   '@polymedia/suits':
-    specifier: ^0.0.22
-    version: 0.0.22
+    specifier: ^0.0.24
+    version: 0.0.24
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
@@ -171,8 +171,8 @@ packages:
       fastq: 1.17.1
     dev: true
 
-  /@polymedia/suits@0.0.22:
-    resolution: {integrity: sha512-4rsTywZ20BHXmUafTjvZfrAhe41jZhwhzIohMhZXJhvHcGyPHm4wwdlm37PFMJdTCJrY0jFrNwghxqdhpw2bBg==}
+  /@polymedia/suits@0.0.24:
+    resolution: {integrity: sha512-lrgb9YoGYPXilY7y0A1wV6SW5MQxJrQfNQ7BWO/TKOJkKNWbPzP/5YUGO914LKR+NLH2JPlVXxv3wzy+yVltNg==}
     dependencies:
       '@mysten/sui.js': 0.50.1
     dev: false
