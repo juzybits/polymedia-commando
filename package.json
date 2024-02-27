@@ -1,6 +1,6 @@
 {
     "private": false,
-    "version": "0.0.17",
+    "version": "0.0.18",
     "name": "@polymedia/commando",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://github.com/juzybits/polymedia-commando",
@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@mysten/sui.js": "^0.50.1",
-        "@polymedia/suits": "^0.0.24",
+        "@polymedia/suits": "^0.0.26",
         "dotenv": "^16.4.5"
     },
     "devDependencies": {
