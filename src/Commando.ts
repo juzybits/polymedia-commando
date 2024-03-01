@@ -5,6 +5,7 @@ import { FindLastTransactionCommand } from './commands/find-last-txn.js';
 import { FindNftHoldersCommand } from './commands/find-nft-holders.js';
 import { FindNftsCommand } from './commands/find-nfts.js';
 import { GenerateAddressesAndBalancesCommand } from './commands/generate-addresses-and-balances.js';
+import { SendCoinAmountCommand } from './commands/send-coin-amount.js';
 import { TestRpcEndpointsCommand } from './commands/test-rpc-endpoints.js';
 import { TransformBalancesJsonToCsvCommand } from './commands/transform-balances-json-to-csv.js';
 
@@ -35,6 +36,7 @@ export class Commando {
         this.registerCommand('find-nft-holders', new FindNftHoldersCommand());
         this.registerCommand('find-nfts', new FindNftsCommand());
         this.registerCommand('generate-addresses-and-balances', new GenerateAddressesAndBalancesCommand());
+        this.registerCommand('send-coin-amount', new SendCoinAmountCommand());
         this.registerCommand('test-rpc-endpoints', new TestRpcEndpointsCommand());
         this.registerCommand('transform-balances-json-to-csv', new TransformBalancesJsonToCsvCommand());
     }

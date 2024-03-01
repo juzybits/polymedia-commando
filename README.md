@@ -43,6 +43,7 @@ Available Commands:
   - find-last-txn: Find the last transaction for each Sui address
   - find-nft-holders: Find NFT holders for a set of collections via Indexer.xyz
   - find-nfts: Find all NFTs and their owners for a set of collections via Indexer.xyz
+  - send-coin-amount: Send an amount of Coin<T> to a recipient
   - test-rpc-endpoints: Test the latency of various Sui RPC endpoints
   ...
 
