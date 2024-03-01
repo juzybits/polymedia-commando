@@ -19,10 +19,10 @@ export class FindNftHoldersCommand implements Command {
 
     public getUsage(): string {
         return `${this.getDescription()}
-\nIt outputs one TXT file per collection: find_nft_holders.[collection].txt
+\nIt outputs one TXT file per collection: find-nft-holders.[collection].txt
 
 Usage:
-  find_nft_holders INPUT_FILE OUTPUT_DIR
+  find-nft-holders INPUT_FILE OUTPUT_DIR
 
 Arguments:
   INPUT_FILE    JSON file with collection names and Indexer.xyz collection IDs. Format:
@@ -34,7 +34,7 @@ Arguments:
                 holder_address_2
 
 Example:
-  find_nft_holders collections.json ./data
+  find-nft-holders collections.json ./data
 `;
     }
 
@@ -85,7 +85,7 @@ Example:
                 await sleep(580); // avoid hitting the 100 req/min rate limit
             }
 
-            const filePath = `${this.outputDir}/find_nft_holders.${collection.name}.txt`;
+            const filePath = `${this.outputDir}/find-nft-holders.${collection.name}.txt`;
             const contents = [...holders].join('\n');
             writeTextFile(filePath, contents);
         }

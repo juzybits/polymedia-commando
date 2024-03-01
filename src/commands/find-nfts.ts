@@ -10,7 +10,7 @@ type Collection = {
 };
 
 export class FindNftsCommand implements Command {
-    private inputFile = './data/nft_collections.json';
+    private inputFile = './data/nft-collections.json';
     private outputDir = './data';
 
     public getDescription(): string {
@@ -19,10 +19,10 @@ export class FindNftsCommand implements Command {
 
     public getUsage(): string {
         return `${this.getDescription()}
-\nIt outputs one JSON file per collection: find_nfts.[collection].json
+\nIt outputs one JSON file per collection: find-nfts.[collection].json
 
 Usage:
-  find_nfts INPUT_FILE OUTPUT_DIR
+  find-nfts INPUT_FILE OUTPUT_DIR
 
 Arguments:
   INPUT_FILE    JSON file with collection names and Indexer.xyz collection IDs. Format:
@@ -40,7 +40,7 @@ Arguments:
                 ]
 
 Example:
-  find_nfts collections.json ./data
+  find-nfts collections.json ./data
 `;
     }
 
@@ -92,7 +92,7 @@ Example:
                 await sleep(580); // avoid hitting the 100 req/min rate limit
             }
             console.log(`skipped ${nullHolders} null ${collection.name} holders`);
-            const filePath = `${this.outputDir}/find_nfts.${collection.name}.json`;
+            const filePath = `${this.outputDir}/find-nfts.${collection.name}.json`;
             writeJsonFile(filePath, nfts);
         }
     }

@@ -5,8 +5,8 @@ import { readJsonFile, writeJsonFile } from '../utils-file.js';
 import { getActiveEnv } from '../utils-sui.js';
 
 export class FindLastTransactionCommand implements Command {
-    private inputFile = './data/find_coin_holders.json';
-    private outputFile = './data/find_last_txn.json';
+    private inputFile = './data/find-coin-holders.json';
+    private outputFile = './data/find-last-txn.json';
 
     public getDescription(): string {
         return 'Find the last transaction for each Sui address';
@@ -16,7 +16,7 @@ export class FindLastTransactionCommand implements Command {
         return `${this.getDescription()}
 
 Usage:
-  find_last_txn INPUT_FILE OUTPUT_FILE
+  find-last-txn INPUT_FILE OUTPUT_FILE
 
 Arguments:
   INPUT_FILE    JSON file with addresses and balances. Format:
@@ -32,7 +32,7 @@ Arguments:
                 ]
 
 Example:
-  find_last_txn addresses.json last_txns.json
+  find-last-txn addresses.json last_txns.json
 `;
     }
 

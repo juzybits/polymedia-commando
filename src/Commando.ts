@@ -1,12 +1,12 @@
 import { BulksenderCommand } from './commands/bulksender/bulksender.js';
-import { FindCoinBalancesCommand } from './commands/find_coin_balances.js';
-import { FindCoinHoldersCommand } from './commands/find_coin_holders.js';
-import { FindLastTransactionCommand } from './commands/find_last_txn.js';
-import { FindNftHoldersCommand } from './commands/find_nft_holders.js';
-import { FindNftsCommand } from './commands/find_nfts.js';
-import { GenerateRandomAddressesAndBalancesCommand } from './commands/generate_random_addresses_and_balances.js';
-import { TestRpcEndpointsCommand } from './commands/test_rpc_endpoints.js';
-import { TransformBalancesJsonToCsvCommand } from './commands/transform_balances_json_to_csv.js';
+import { FindCoinBalancesCommand } from './commands/find-coin-balances.js';
+import { FindCoinHoldersCommand } from './commands/find-coin-holders.js';
+import { FindLastTransactionCommand } from './commands/find-last-txn.js';
+import { FindNftHoldersCommand } from './commands/find-nft-holders.js';
+import { FindNftsCommand } from './commands/find-nfts.js';
+import { GenerateAddressesAndBalancesCommand } from './commands/generate-addresses-and-balances.js';
+import { TestRpcEndpointsCommand } from './commands/test-rpc-endpoints.js';
+import { TransformBalancesJsonToCsvCommand } from './commands/transform-balances-json-to-csv.js';
 
 /**
  * Interface defining the structure of a command in the Commando framework.
@@ -29,14 +29,14 @@ export class Commando {
     constructor() {
         this.commands = {};
         this.registerCommand('bulksender', new BulksenderCommand());
-        this.registerCommand('find_coin_balances', new FindCoinBalancesCommand());
-        this.registerCommand('find_coin_holders', new FindCoinHoldersCommand());
-        this.registerCommand('find_last_txn', new FindLastTransactionCommand());
-        this.registerCommand('find_nft_holders', new FindNftHoldersCommand());
-        this.registerCommand('find_nfts', new FindNftsCommand());
-        this.registerCommand('generate_random_addresses_and_balances', new GenerateRandomAddressesAndBalancesCommand());
-        this.registerCommand('test_rpc_endpoints', new TestRpcEndpointsCommand());
-        this.registerCommand('transform_balances_json_to_csv', new TransformBalancesJsonToCsvCommand());
+        this.registerCommand('find-coin-balances', new FindCoinBalancesCommand());
+        this.registerCommand('find-coin-holders', new FindCoinHoldersCommand());
+        this.registerCommand('find-last-txn', new FindLastTransactionCommand());
+        this.registerCommand('find-nft-holders', new FindNftHoldersCommand());
+        this.registerCommand('find-nfts', new FindNftsCommand());
+        this.registerCommand('generate-addresses-and-balances', new GenerateAddressesAndBalancesCommand());
+        this.registerCommand('test-rpc-endpoints', new TestRpcEndpointsCommand());
+        this.registerCommand('transform-balances-json-to-csv', new TransformBalancesJsonToCsvCommand());
     }
 
     /**

@@ -20,7 +20,7 @@ This script is designed to process the output of \`find_coin_holders\`, which co
 inaccurate balances, and fetch the correct balances directly from Sui RPC servers.
 
 Usage:
-  find_coin_balances COIN_TYPE INPUT_FILE OUTPUT_FILE
+  find-coin-balances COIN_TYPE INPUT_FILE OUTPUT_FILE
 
 Arguments:
   COIN_TYPE     The type of the coin (the T in Coin<T>)
@@ -30,7 +30,7 @@ Arguments:
                 [ { address: string, balance: number }, ... ]
 
 Example:
-  find_coin_balances 0x123::lol::LOL coin_holders.json coin_balances.json
+  find-coin-balances 0x123::lol::LOL coin_holders.json coin_balances.json
 `;
     }
 

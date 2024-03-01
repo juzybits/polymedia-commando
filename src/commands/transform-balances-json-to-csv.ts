@@ -15,7 +15,7 @@ export class TransformBalancesJsonToCsvCommand implements Command {
         return `${this.getDescription()}
 
 Usage:
-  transform_balances_json_to_csv DECIMALS INPUT_FILE OUTPUT_FILE
+  transform-balances-json-to-csv DECIMALS INPUT_FILE OUTPUT_FILE
 
 Arguments:
   DECIMALS      Number of decimals for Coin<T>
@@ -26,7 +26,7 @@ Arguments:
                 "0xbeef","123"
 
 Example:
-  transform_balances_json_to_csv balances.json balances.csv
+  transform-balances-json-to-csv balances.json balances.csv
 `;
     }
 

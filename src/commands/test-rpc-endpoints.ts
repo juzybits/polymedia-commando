@@ -11,7 +11,7 @@ export class TestRpcEndpointsCommand implements Command {
         return `${this.getDescription()}
 
 Usage:
-  test_rpc_endpoints
+  test-rpc-endpoints
 `;
     }
 

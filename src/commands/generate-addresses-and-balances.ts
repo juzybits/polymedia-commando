@@ -1,24 +1,24 @@
 import { generateRandomAddress } from '@polymedia/suits';
 import { Command } from '../Commando.js';
 
-export class GenerateRandomAddressesAndBalancesCommand implements Command {
+export class GenerateAddressesAndBalancesCommand implements Command {
     private amount = 0;
 
     public getDescription(): string {
-        return 'Generate random Sui addresses and balances';
+        return 'Generate random Sui addresses and balances (for testing)';
     }
 
     public getUsage(): string {
         return `${this.getDescription()}
 
 Usage:
-  generate_random_addresses_and_balances AMOUNT
+  generate-addresses-and-balances AMOUNT
 
 Arguments:
   AMOUNT    The amount of address-balance pairs to generate
 
 Example:
-  generate_random_addresses_and_balances 5000
+  generate-addresses-and-balances 5000
 `;
     }
 

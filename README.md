@@ -38,12 +38,12 @@ Usage:
 
 Available Commands:
   - bulksender: Send Coin<T> to a list of addresses
-  - find_coin_balances: Find how much Coin<T> is owned by each address
-  - find_coin_holders: Find Coin<T> holders using the Suiscan API
-  - find_last_txn: Find the last transaction for each Sui address
-  - find_nft_holders: Find NFT holders for a set of collections via Indexer.xyz
-  - find_nfts: Find all NFTs and their owners for a set of collections via Indexer.xyz
-  - test_rpc_endpoints: Test the latency of various Sui RPC endpoints
+  - find-coin-balances: Find how much Coin<T> is owned by each address
+  - find-coin-holders: Find Coin<T> holders using the Suiscan API
+  - find-last-txn: Find the last transaction for each Sui address
+  - find-nft-holders: Find NFT holders for a set of collections via Indexer.xyz
+  - find-nfts: Find all NFTs and their owners for a set of collections via Indexer.xyz
+  - test-rpc-endpoints: Test the latency of various Sui RPC endpoints
   ...
 
 For more information about a command:
