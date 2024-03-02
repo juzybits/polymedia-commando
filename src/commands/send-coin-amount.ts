@@ -4,7 +4,7 @@ import { executeSuiTransaction, setupSuiTransaction } from '../utils-sui.js';
 import { promptUser } from '../utils-misc.js';
 
 export class SendCoinAmountCommand implements Command {
-    private amount = BigInt(0);
+    private amount = 0;
     private coinType = '';
     private recipient = '';
 
@@ -36,7 +36,7 @@ Example:
             console.log(this.getUsage());
             return;
         }
-        this.amount = BigInt(args[0]);
+        this.amount = Number(args[0]);
         this.coinType = args[1];
         this.recipient = args[2];
 
@@ -48,7 +48,7 @@ Example:
             console.error(`Error: CoinMetadata not found for ${this.coinType}`);
             return;
         }
-        const amountWithDecimals = this.amount * BigInt(10**coinMeta.decimals);
+        const amountWithDecimals = BigInt(this.amount * 10**coinMeta.decimals);
 
         /* Check if the user has enough balance */
 
