@@ -78,10 +78,10 @@ Example:
 
         const [coin] = await getCoinOfValue(
             suiClient,
+            txb,
             ownerAddress,
             this.coinType,
             amountWithDecimals,
-            txb,
         );
         txb.transferObjects([coin], txb.pure(this.recipient));
 
