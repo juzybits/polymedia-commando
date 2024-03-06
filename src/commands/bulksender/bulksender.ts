@@ -140,7 +140,7 @@ Example:
             // Get COIN_ID balance
             const coinBalanceDecimals = BigInt((coinObject.data.content.fields as any).balance);
             const coinBalanceNoDecimals = coinBalanceDecimals / decimalMultiplier;
-            console.log(`COIN_ID balance: ${formatNumber(coinBalanceNoDecimals)} (${coinBalanceDecimals})`);
+            console.log(`COIN_ID balance: ${formatNumber(Number(coinBalanceNoDecimals))} ${coinSymbol}`);
 
             // Read addresses and amounts from input file
             const addressAmountPairs = readCsvFile<AddressAmountPair>(this.inputFile, parseCsvLine);
@@ -151,7 +151,7 @@ Example:
             // TODO: abort if current gas is lower than gas estimate
             const totalAmountNoDecimals = addressAmountPairs.reduce((sum, pair) => sum + pair.amount, BigInt(0));
             const totalAmountDecimals = totalAmountNoDecimals * decimalMultiplier;
-            console.log(`Total amount to be sent: ${formatNumber(totalAmountNoDecimals)} (${totalAmountDecimals})`);
+            console.log(`Total amount to be sent: ${formatNumber(Number(totalAmountNoDecimals))} ${coinSymbol}`);
 
             // Abort if COIN_ID doesn't have enough balance
             if (totalAmountDecimals > coinBalanceDecimals) {
