@@ -61,7 +61,7 @@ Example:
                 coinType: this.coinType,
             }).then(balance => {
                 return { address: input.address, balance: balance.totalBalance };
-            }).catch(error => {
+            }).catch((error: unknown) => {
                 console.error(`Error getting balance for address ${input.address} from rpc ${client.endpoint}: ${error}`);
                 throw error;
             });

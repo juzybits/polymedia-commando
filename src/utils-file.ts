@@ -78,7 +78,7 @@ export function readJsonFile<T>(filename: string): T {
 export function writeCsvFile(filename: string, data: any[][]): void {
     const csvRows = data.map(row => {
         return row.map(value => {
-            const escapedValue = ('' + value).replace(/"/g, '\\"');
+            const escapedValue = ('' + String(value)).replace(/"/g, '\\"');
             return `"${escapedValue}"`;
         }).join(',');
     });

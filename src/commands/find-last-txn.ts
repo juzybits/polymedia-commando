@@ -83,7 +83,7 @@ async function fetchLastTxn(client: SuiClientWithEndpoint, input: AddressAndBala
             txnId: resp ? resp.digest : null,
             txnTime: resp ? (resp.timestampMs ?? null) : null,
         };
-    }).catch(error => {
+    }).catch((error: unknown) => {
         console.error(`Error getting last transaction for address ${input.address} from rpc ${client.endpoint}: ${error}`, error);
         throw error;
     });

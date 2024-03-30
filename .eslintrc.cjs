@@ -12,6 +12,7 @@ module.exports = {
     rules: {
         '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
         '@typescript-eslint/prefer-nullish-coalescing': ['error', { 'ignoreConditionalTests': true }],
+        '@typescript-eslint/restrict-template-expressions': 'off',
         // Allow while(true) loops
         '@typescript-eslint/no-unnecessary-condition': 'off',
         'no-constant-condition': 'off',
