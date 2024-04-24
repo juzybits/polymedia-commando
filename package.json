@@ -1,6 +1,6 @@
 {
     "private": false,
-    "version": "0.0.25",
+    "version": "0.0.26",
     "name": "@polymedia/commando",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://github.com/juzybits/polymedia-commando",
@@ -23,16 +23,16 @@
         "prepublishOnly": "rm -rf dist/ && pnpm build"
     },
     "dependencies": {
-        "@mysten/sui.js": "^0.51.1",
-        "@polymedia/suits": "^0.0.38",
+        "@mysten/sui.js": "^0.51.2",
+        "@polymedia/suits": "^0.0.40",
         "dotenv": "^16.4.5"
     },
     "devDependencies": {
-        "@types/node": "^20.12.2",
-        "@typescript-eslint/eslint-plugin": "^7.4.0",
-        "@typescript-eslint/parser": "^7.4.0",
+        "@types/node": "^20.12.7",
+        "@typescript-eslint/eslint-plugin": "^7.7.1",
+        "@typescript-eslint/parser": "^7.7.1",
         "eslint": "^8.57.0",
-        "typescript": "^5.4.3"
+        "typescript": "^5.4.5"
     },
     "type": "module",
     "sideEffects": false,
