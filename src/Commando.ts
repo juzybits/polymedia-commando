@@ -1,14 +1,14 @@
-import { BulksenderCommand } from './commands/bulksender/bulksender.js';
-import { FindCoinBalancesCommand } from './commands/find-coin-balances.js';
-import { FindCoinHoldersCommand } from './commands/find-coin-holders.js';
-import { FindLastTransactionCommand } from './commands/find-last-txn.js';
-import { FindNftHoldersCommand } from './commands/find-nft-holders.js';
-import { FindNftsCommand } from './commands/find-nfts.js';
-import { GenerateAddressesAndBalancesCommand } from './commands/generate-addresses-and-balances.js';
-import { GetBalanceCommand } from './commands/get-balance.js';
-import { SendCoinAmountCommand } from './commands/send-coin-amount.js';
-import { TestRpcEndpointsCommand } from './commands/test-rpc-endpoints.js';
-import { TransformBalancesJsonToCsvCommand } from './commands/transform-balances-json-to-csv.js';
+import { BulksenderCommand } from "./commands/bulksender/bulksender.js";
+import { FindCoinBalancesCommand } from "./commands/find-coin-balances.js";
+import { FindCoinHoldersCommand } from "./commands/find-coin-holders.js";
+import { FindLastTransactionCommand } from "./commands/find-last-txn.js";
+import { FindNftHoldersCommand } from "./commands/find-nft-holders.js";
+import { FindNftsCommand } from "./commands/find-nfts.js";
+import { GenerateAddressesAndBalancesCommand } from "./commands/generate-addresses-and-balances.js";
+import { GetBalanceCommand } from "./commands/get-balance.js";
+import { SendCoinAmountCommand } from "./commands/send-coin-amount.js";
+import { TestRpcEndpointsCommand } from "./commands/test-rpc-endpoints.js";
+import { TransformBalancesJsonToCsvCommand } from "./commands/transform-balances-json-to-csv.js";
 
 /**
  * Interface defining the structure of a command in the Commando framework.
@@ -20,7 +20,7 @@ export type Command = {
     getUsage(): string;
     /** Executes the command logic. */
     execute(args: string[]): Promise<void>;
-}
+};
 
 /**
  * The main class responsible for managing and executing commands.
@@ -30,17 +30,17 @@ export class Commando {
 
     constructor() {
         this.commands = {};
-        this.registerCommand('bulksender', new BulksenderCommand());
-        this.registerCommand('find-coin-balances', new FindCoinBalancesCommand());
-        this.registerCommand('find-coin-holders', new FindCoinHoldersCommand());
-        this.registerCommand('find-last-txn', new FindLastTransactionCommand());
-        this.registerCommand('find-nft-holders', new FindNftHoldersCommand());
-        this.registerCommand('find-nfts', new FindNftsCommand());
-        this.registerCommand('generate-addresses-and-balances', new GenerateAddressesAndBalancesCommand());
-        this.registerCommand('get-balance', new GetBalanceCommand());
-        this.registerCommand('send-coin-amount', new SendCoinAmountCommand());
-        this.registerCommand('test-rpc-endpoints', new TestRpcEndpointsCommand());
-        this.registerCommand('transform-balances-json-to-csv', new TransformBalancesJsonToCsvCommand());
+        this.registerCommand("bulksender", new BulksenderCommand());
+        this.registerCommand("find-coin-balances", new FindCoinBalancesCommand());
+        this.registerCommand("find-coin-holders", new FindCoinHoldersCommand());
+        this.registerCommand("find-last-txn", new FindLastTransactionCommand());
+        this.registerCommand("find-nft-holders", new FindNftHoldersCommand());
+        this.registerCommand("find-nfts", new FindNftsCommand());
+        this.registerCommand("generate-addresses-and-balances", new GenerateAddressesAndBalancesCommand());
+        this.registerCommand("get-balance", new GetBalanceCommand());
+        this.registerCommand("send-coin-amount", new SendCoinAmountCommand());
+        this.registerCommand("test-rpc-endpoints", new TestRpcEndpointsCommand());
+        this.registerCommand("transform-balances-json-to-csv", new TransformBalancesJsonToCsvCommand());
     }
 
     /**
@@ -57,7 +57,7 @@ export class Commando {
         const commandName = process.argv[2];
 
         // Show general help
-        if (!commandName || commandName === '-h' || commandName === '--help') {
+        if (!commandName || commandName === "-h" || commandName === "--help") {
             this.printGeneralHelp();
             return;
         }
@@ -71,7 +71,7 @@ export class Commando {
         }
 
         // Show command usage
-        if (args.includes('-h') || args.includes('--help')) {
+        if (args.includes("-h") || args.includes("--help")) {
             console.log(command.getUsage());
             return;
         }
@@ -85,19 +85,19 @@ export class Commando {
     }
 
     private printGeneralHelp(): void {
-        console.log('POLYMEDIA COMMANDO');
-        console.log('  Sui command line tools and TypeScript utilities.');
-        console.log('\nUsage:');
-        console.log('  pnpm commando COMMAND [OPTIONS]\n');
+        console.log("POLYMEDIA COMMANDO");
+        console.log("  Sui command line tools and TypeScript utilities.");
+        console.log("\nUsage:");
+        console.log("  pnpm commando COMMAND [OPTIONS]\n");
 
-        console.log('Available Commands:');
+        console.log("Available Commands:");
         for (const commandName in this.commands) {
             const command = this.commands[commandName];
             console.log(`  - ${commandName}: ${command.getDescription()}`);
         }
 
-        console.log('\nFor more information about a command:');
-        console.log('  pnpm commando COMMAND -h');
+        console.log("\nFor more information about a command:");
+        console.log("  pnpm commando COMMAND -h");
     }
 
 }

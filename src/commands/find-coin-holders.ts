@@ -1,16 +1,16 @@
-import { Command } from '../Commando.js';
-import { writeJsonFile } from '../utils-file.js';
-import { AddressAndBalance } from '../types.js';
+import { Command } from "../Commando.js";
+import { writeJsonFile } from "../utils-file.js";
+import { AddressAndBalance } from "../types.js";
 
 const IS_DEV = false;
 
 export class FindCoinHoldersCommand implements Command {
-    private coinType = '';
-    private outputFile = '';
+    private coinType = "";
+    private outputFile = "";
     private limit = IS_DEV ? 3 : 999999;
 
     public getDescription(): string {
-        return 'Find Coin<T> holders using the Suiscan API';
+        return "Find Coin<T> holders using the Suiscan API";
     }
 
     public getUsage(): string {
@@ -64,7 +64,7 @@ Example:
             (resp.totalElements === resp.numberOfElements || IS_DEV) // all holders are included in this one page
         ;
         if (!isValidResponse) {
-            console.error('Error: Unexpected response:\n'+
+            console.error("Error: Unexpected response:\n"+
                 `resp.first: ${resp.first}\n` +
                 `resp.last: ${resp.last}\n` +
                 `resp.totalPages: ${resp.totalPages}\n` +

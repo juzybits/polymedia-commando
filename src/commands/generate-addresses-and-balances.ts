@@ -1,11 +1,11 @@
-import { generateRandomAddress } from '@polymedia/suits';
-import { Command } from '../Commando.js';
+import { generateRandomAddress } from "@polymedia/suits";
+import { Command } from "../Commando.js";
 
 export class GenerateAddressesAndBalancesCommand implements Command {
     private amount = 0;
 
     public getDescription(): string {
-        return 'Generate random Sui addresses and balances (for testing)';
+        return "Generate random Sui addresses and balances (for testing)";
     }
 
     public getUsage(): string {

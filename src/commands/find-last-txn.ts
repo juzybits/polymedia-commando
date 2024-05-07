@@ -1,15 +1,15 @@
-import { SuiMultiClient, SuiClientWithEndpoint } from '@polymedia/suits';
-import { Command } from '../Commando.js';
-import { AddressAndBalance } from '../types.js';
-import { readJsonFile, writeJsonFile } from '../utils-file.js';
-import { getActiveEnv } from '../utils-sui.js';
+import { SuiMultiClient, SuiClientWithEndpoint } from "@polymedia/suits";
+import { Command } from "../Commando.js";
+import { AddressAndBalance } from "../types.js";
+import { readJsonFile, writeJsonFile } from "../utils-file.js";
+import { getActiveEnv } from "../utils-sui.js";
 
 export class FindLastTransactionCommand implements Command {
-    private inputFile = './data/find-coin-holders.json';
-    private outputFile = './data/find-last-txn.json';
+    private inputFile = "./data/find-coin-holders.json";
+    private outputFile = "./data/find-last-txn.json";
 
     public getDescription(): string {
-        return 'Find the last transaction for each Sui address';
+        return "Find the last transaction for each Sui address";
     }
 
     public getUsage(): string {
@@ -75,7 +75,7 @@ async function fetchLastTxn(client: SuiClientWithEndpoint, input: AddressAndBala
             showRawInput: true, // only to get timestampMs
         },
         limit: 1,
-        order: 'descending',
+        order: "descending",
     }).then(paginatedResp => {
         const resp = paginatedResp.data.length ? paginatedResp.data[0] : null;
         return {

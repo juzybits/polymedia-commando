@@ -1,26 +1,26 @@
-import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
-import { TransactionBlock } from '@mysten/sui.js/transactions';
+import { getFullnodeUrl, SuiClient } from "@mysten/sui.js/client";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
 import {
     chunkArray,
     formatNumber,
     NetworkName,
     sleep,
     validateAndNormalizeSuiAddress,
-} from '@polymedia/suits';
-import { appendFileSync } from 'fs';
-import { Command } from '../../Commando.js';
-import { fileExists, readCsvFile } from '../../utils-file.js';
-import { promptUser } from '../../utils-misc.js';
-import { getActiveAddressKeypair, getActiveEnv } from '../../utils-sui.js';
+} from "@polymedia/suits";
+import { appendFileSync } from "fs";
+import { Command } from "../../Commando.js";
+import { fileExists, readCsvFile } from "../../utils-file.js";
+import { promptUser } from "../../utils-misc.js";
+import { getActiveAddressKeypair, getActiveEnv } from "../../utils-sui.js";
 
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function
  */
 const PACKAGE_IDS = new Map<NetworkName, string> ([
-    ['localnet', ''],
-    ['devnet', ''],
-    ['testnet', '0x7f541b25c64aa2d0330a64dfaeb7c0e35924b6633069b8047125e038728d15d6'],
-    ['mainnet', '0x026b2b422e630c79c961fdb5d63821547ec8fb2ad5b7095189c440e1bdbba9f1'],
+    ["localnet", ""],
+    ["devnet", ""],
+    ["testnet", "0x7f541b25c64aa2d0330a64dfaeb7c0e35924b6633069b8047125e038728d15d6"],
+    ["mainnet", "0x026b2b422e630c79c961fdb5d63821547ec8fb2ad5b7095189c440e1bdbba9f1"],
 ]);
 /**
  * How many addresses to include in each transaction block.
@@ -40,12 +40,12 @@ const RATE_LIMIT_DELAY = 334;
 const GAS_PER_ADDRESS = 0.0013092459;
 
 export class BulksenderCommand implements Command {
-    private coinId = '';
-    private inputFile = '';
-    private outputFile = '';
+    private coinId = "";
+    private inputFile = "";
+    private outputFile = "";
 
     public getDescription(): string {
-        return 'Send Coin<T> to a list of addresses';
+        return "Send Coin<T> to a list of addresses";
     }
 
     public getUsage(): string {
@@ -97,7 +97,7 @@ Example:
             // Get the keypair for the current `sui client active-address`
             const signer = getActiveAddressKeypair();
             const activeAddress = signer.toSuiAddress();
-            console.log(`Active address: ${activeAddress}`)
+            console.log(`Active address: ${activeAddress}`);
 
             // Abort if COIN_ID doesn't exist
             console.log(`\nCOIN_ID: ${this.coinId}`);
@@ -108,13 +108,13 @@ Example:
                     showOwner: true,
                 },
             });
-            if (coinObject.error || coinObject.data?.content?.dataType !== 'moveObject') {
-                throw new Error(`COIN_ID object doesn't exist on this network`);
+            if (coinObject.error || coinObject.data?.content?.dataType !== "moveObject") {
+                throw new Error("COIN_ID object doesn't exist on this network");
             }
 
             // Abort if the user doesn't own COIN_ID
             if (activeAddress !== (coinObject.data as any).owner.AddressOwner) {
-                throw new Error(`Your active address doesn't own COIN_ID`);
+                throw new Error("Your active address doesn't own COIN_ID");
             }
 
             // Get the Coin type (the `T` in `Coin<T>`)
@@ -129,7 +129,7 @@ Example:
             // Get COIN_ID symbol and decimals
             const coinMetadata = await suiClient.getCoinMetadata({ coinType });
             if (!coinMetadata) {
-                throw new Error(`Failed to get CoinMetadata for COIN_ID type`);
+                throw new Error("Failed to get CoinMetadata for COIN_ID type");
             }
             const coinSymbol = coinMetadata.symbol;
             const coinDecimals = coinMetadata.decimals;
@@ -155,13 +155,13 @@ Example:
 
             // Abort if COIN_ID doesn't have enough balance
             if (totalAmountDecimals > coinBalanceDecimals) {
-                throw new Error(`Total amount to be sent is bigger than COIN_ID balance`);
+                throw new Error("Total amount to be sent is bigger than COIN_ID balance");
             }
 
             // Get user confirmation before proceeding
-            const userConfirmed = await promptUser('\nDoes this look okay? (y/n) ');
+            const userConfirmed = await promptUser("\nDoes this look okay? (y/n) ");
             if (!userConfirmed) {
-                console.log('Execution aborted by the user.');
+                console.log("Execution aborted by the user.");
                 return;
             }
 
@@ -197,7 +197,7 @@ Example:
                         }
                     });
 
-                    if (result.effects?.status.status !== 'success') {
+                    if (result.effects?.status.status !== "success") {
                         throw new Error(`Transaction status was '${result.effects?.status.status}': ${result.digest}`);
                     }
 
@@ -212,11 +212,11 @@ Example:
                     totalGas += Number(gas.computationCost) + Number(gas.storageCost) - Number(gas.storageRebate);
 
                     // Wait a bit to stay below the public RPC rate limit
-                    if (networkName !== 'localnet') {
+                    if (networkName !== "localnet") {
                         await sleep(RATE_LIMIT_DELAY);
                     }
                 }
-                console.log('\nDone!')
+                console.log("\nDone!");
                 console.log(`Gas used: ${totalGas / 1_000_000_000} SUI\n`);
             }
             catch (error) {
@@ -237,7 +237,7 @@ Example:
     private logTransactionStart(batchAmount: bigint, batchNumber: number, batch: AddressAmountPair[]) {
         const shortText = `Sending ${batchAmount} to batch ${batchNumber} (${batch.length} addresses)`;
         console.log(shortText);
-        const addresses = batch.map(pair => pair.address.substring(0, 6)).join(', ');
+        const addresses = batch.map(pair => pair.address.substring(0, 6)).join(", ");
         const longText = `${shortText}: ${addresses}`;
         this.logText(longText);
     }
@@ -252,7 +252,7 @@ Example:
 type AddressAmountPair = {
     address: string;
     amount: bigint;
-}
+};
 
 /**
  * It expects the 1st column to be the owner address and the 2nd column to be the amount to be sent.

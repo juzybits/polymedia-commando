@@ -1,16 +1,16 @@
-import { SuiClientWithEndpoint, SuiMultiClient } from '@polymedia/suits';
-import { Command } from '../Commando.js';
-import { AddressAndBalance } from '../types.js';
-import { readJsonFile, writeJsonFile } from '../utils-file.js';
-import { getActiveEnv } from '../utils-sui.js';
+import { SuiClientWithEndpoint, SuiMultiClient } from "@polymedia/suits";
+import { Command } from "../Commando.js";
+import { AddressAndBalance } from "../types.js";
+import { readJsonFile, writeJsonFile } from "../utils-file.js";
+import { getActiveEnv } from "../utils-sui.js";
 
 export class FindCoinBalancesCommand implements Command {
-    private coinType = '';
-    private inputFile = '';
-    private outputFile = '';
+    private coinType = "";
+    private inputFile = "";
+    private outputFile = "";
 
     public getDescription(): string {
-        return 'Find how much Coin<T> is owned by each address';
+        return "Find how much Coin<T> is owned by each address";
     }
 
     public getUsage(): string {

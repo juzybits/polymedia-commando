@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 /**
  * Check if a file exists in the filesystem.
@@ -32,10 +32,10 @@ export type ParseCsvLine<T> = (values: string[]) => T | null;
  */
 export function readCsvFile<T>(filename: string, parseLine: ParseCsvLine<T>, reverse = false): T[] {
     const results: T[] = [];
-    const fileContent = fs.readFileSync(filename, 'utf8');
+    const fileContent = fs.readFileSync(filename, "utf8");
 
     // Split the content into lines and optionally reverse the array
-    let lines = fileContent.split('\n');
+    let lines = fileContent.split("\n");
     if (reverse) {
         lines = lines.reverse();
     }
@@ -48,8 +48,8 @@ export function readCsvFile<T>(filename: string, parseLine: ParseCsvLine<T>, rev
         }
 
         // Split the line by commas and remove quotes from each value
-        const values = trimmedLine.split(',').map(value =>
-            value.replace(/^"|"$/g, '').replace(/\\"/g, '"').trim()
+        const values = trimmedLine.split(",").map(value =>
+            value.replace(/^"|"$/g, "").replace(/\\"/g, '"').trim()
         );
         const parsedLine = parseLine(values);
         if (parsedLine !== null) {
@@ -64,7 +64,7 @@ export function readCsvFile<T>(filename: string, parseLine: ParseCsvLine<T>, rev
  * Read a JSON file and parse its contents into an object.
  */
 export function readJsonFile<T>(filename: string): T {
-    const fileContent = fs.readFileSync(filename, 'utf8');
+    const fileContent = fs.readFileSync(filename, "utf8");
     const jsonData: T = JSON.parse(fileContent);
     return jsonData;
 }
@@ -78,14 +78,14 @@ export function readJsonFile<T>(filename: string): T {
 export function writeCsvFile(filename: string, data: any[][]): void {
     const csvRows = data.map(row => {
         return row.map(value => {
-            const escapedValue = ('' + String(value)).replace(/"/g, '\\"');
+            const escapedValue = ("" + String(value)).replace(/"/g, '\\"');
             return `"${escapedValue}"`;
-        }).join(',');
+        }).join(",");
     });
 
     writeTextFile(
         filename,
-        csvRows.join('\n')
+        csvRows.join("\n")
     );
 }
 
@@ -105,6 +105,6 @@ export function writeJsonFile(filename: string, contents: any): void {
 export function writeTextFile(filename: string, contents: string): void {
     fs.writeFileSync(
         filename,
-        contents + '\n'
+        contents + "\n"
     );
 }

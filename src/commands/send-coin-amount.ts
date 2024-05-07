@@ -1,15 +1,15 @@
-import { formatNumber, getCoinOfValue } from '@polymedia/suits';
-import { Command } from '../Commando.js';
-import { executeSuiTransaction, setupSuiTransaction } from '../utils-sui.js';
-import { promptUser } from '../utils-misc.js';
+import { formatNumber, getCoinOfValue } from "@polymedia/suits";
+import { Command } from "../Commando.js";
+import { executeSuiTransaction, setupSuiTransaction } from "../utils-sui.js";
+import { promptUser } from "../utils-misc.js";
 
 export class SendCoinAmountCommand implements Command {
     private amount = 0;
-    private coinType = '';
-    private recipient = '';
+    private coinType = "";
+    private recipient = "";
 
     public getDescription(): string {
-        return 'Send an amount of Coin<T> to a recipient (handles coin merging and splitting)';
+        return "Send an amount of Coin<T> to a recipient (handles coin merging and splitting)";
     }
 
     public getUsage(): string {
@@ -68,9 +68,9 @@ Example:
 
         console.log(`amount: ${formatNumber(this.amount)} ${coinMeta.symbol}`);
         console.log(`recipient: ${this.recipient}`);
-        const userConfirmed = await promptUser('\nDoes this look okay? (y/n) ');
+        const userConfirmed = await promptUser("\nDoes this look okay? (y/n) ");
         if (!userConfirmed) {
-            console.log('Execution aborted by the user.');
+            console.log("Execution aborted by the user.");
             return;
         }
 

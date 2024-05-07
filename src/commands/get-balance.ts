@@ -1,13 +1,13 @@
-import { shortenSuiAddress } from '@polymedia/suits';
-import { Command } from '../Commando.js';
-import { setupSuiTransaction } from '../utils-sui.js';
+import { shortenSuiAddress } from "@polymedia/suits";
+import { Command } from "../Commando.js";
+import { setupSuiTransaction } from "../utils-sui.js";
 
 export class GetBalanceCommand implements Command {
-    private coinType = '';
+    private coinType = "";
     private addresses: string[] = [];
 
     public getDescription(): string {
-        return 'Get the total Coin<T> balance owned by one or more addresses.';
+        return "Get the total Coin<T> balance owned by one or more addresses.";
     }
 
     public getUsage(): string {
@@ -49,7 +49,7 @@ Example:
         for (const owner of this.addresses) {
             const resp = await suiClient.getBalance({ owner, coinType: this.coinType });
             const addressPretty = shortenSuiAddress(owner);
-            const balancePretty = (Number(resp.totalBalance) / 10**coinMeta.decimals).toLocaleString('en-US');
+            const balancePretty = (Number(resp.totalBalance) / 10**coinMeta.decimals).toLocaleString("en-US");
             console.log(`${addressPretty}: ${balancePretty} ${coinMeta.symbol}`);
         }
     }

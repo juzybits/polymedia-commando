@@ -1,6 +1,6 @@
-import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from '@polymedia/suits';
-import { Command } from '../Commando.js';
-import { readJsonFile, writeJsonFile } from '../utils-file.js';
+import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polymedia/suits";
+import { Command } from "../Commando.js";
+import { readJsonFile, writeJsonFile } from "../utils-file.js";
 
 // Note: it took ~23 minutes to fetch 39,653 NFTs from 9 collections
 
@@ -10,11 +10,11 @@ type Collection = {
 };
 
 export class FindNftsCommand implements Command {
-    private inputFile = './data/nft-collections.json';
-    private outputDir = './data';
+    private inputFile = "./data/nft-collections.json";
+    private outputDir = "./data";
 
     public getDescription(): string {
-        return 'Find all NFTs and their owners for a set of collections via Indexer.xyz';
+        return "Find all NFTs and their owners for a set of collections via Indexer.xyz";
     }
 
     public getUsage(): string {
@@ -52,7 +52,7 @@ Example:
         const indexerApiKey = process.env.INDEXER_API_KEY;
 
         if (!indexerApiUser || !indexerApiKey) {
-            console.error('Error: Missing required environment variables.');
+            console.error("Error: Missing required environment variables.");
             return;
         }
 

@@ -1,4 +1,4 @@
-import { createInterface } from 'readline';
+import { createInterface } from "readline";
 
 /**
  * Parse command line arguments and show usage instructions.
@@ -8,7 +8,7 @@ export function parseArguments(
     usageMessage: string
 ): string[] | null {
     const args = process.argv.slice(2); // skip `node` and the script name
-    if (args.length !== expectedArgs || args.includes('-h') || args.includes('--help')) {
+    if (args.length !== expectedArgs || args.includes("-h") || args.includes("--help")) {
         console.log(usageMessage);
         return null;
     }
@@ -27,7 +27,7 @@ export async function promptUser(question: string): Promise<boolean> {
 
         rl.question(question, (answer) => {
             rl.close();
-            resolve(answer.toLowerCase() === 'y');
+            resolve(answer.toLowerCase() === "y");
         });
     });
 }

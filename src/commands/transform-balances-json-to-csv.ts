@@ -1,14 +1,14 @@
-import { Command } from '../Commando.js';
-import { readJsonFile, writeCsvFile } from '../utils-file.js';
-import { AddressAndBalance } from '../types.js';
+import { Command } from "../Commando.js";
+import { readJsonFile, writeCsvFile } from "../utils-file.js";
+import { AddressAndBalance } from "../types.js";
 
 export class TransformBalancesJsonToCsvCommand implements Command {
     private decimals = 0;
-    private inputFile = '';
-    private outputFile = '';
+    private inputFile = "";
+    private outputFile = "";
 
     public getDescription(): string {
-        return 'Transform a .json file containing addresses and balances into a .csv file';
+        return "Transform a .json file containing addresses and balances into a .csv file";
     }
 
     public getUsage(): string {
@@ -50,7 +50,7 @@ Example:
 
         const inputs = readJsonFile<AddressAndBalance[]>(this.inputFile);
         const lines: (string|number)[][] = [];
-        lines.push(['address', 'balance']);
+        lines.push(["address", "balance"]);
         for (const input of inputs) {
             if (input.balance == 0) {
                 continue;

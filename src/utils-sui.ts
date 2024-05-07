@@ -1,24 +1,24 @@
-import { execSync } from 'child_process';
-import { homedir } from 'os';
-import path from 'path';
+import { execSync } from "child_process";
+import { homedir } from "os";
+import path from "path";
 
-import { getFullnodeUrl, SuiClient, SuiTransactionBlockResponse } from '@mysten/sui.js/client';
-import { Signer } from '@mysten/sui.js/cryptography';
-import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
-import { TransactionBlock } from '@mysten/sui.js/transactions';
-import { fromB64 } from '@mysten/sui.js/utils';
-import { NetworkName } from '@polymedia/suits';
-import { readJsonFile } from './utils-file.js';
+import { getFullnodeUrl, SuiClient, SuiTransactionBlockResponse } from "@mysten/sui.js/client";
+import { Signer } from "@mysten/sui.js/cryptography";
+import { Ed25519Keypair } from "@mysten/sui.js/keypairs/ed25519";
+import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { fromB64 } from "@mysten/sui.js/utils";
+import { NetworkName } from "@polymedia/suits";
+import { readJsonFile } from "./utils-file.js";
 
 /**
  * Build a `Ed25519Keypair` object for the current active address
  * by loading the secret key from ~/.sui/sui_config/sui.keystore
  */
 export function getActiveAddressKeypair(): Ed25519Keypair {
-    const sender = execSync('sui client active-address', { encoding: 'utf8' }).trim();
+    const sender = execSync("sui client active-address", { encoding: "utf8" }).trim();
 
     const signer = (() => {
-        const keystorePath = path.join(homedir(), '.sui', 'sui_config', 'sui.keystore');
+        const keystorePath = path.join(homedir(), ".sui", "sui_config", "sui.keystore");
         const keystore = readJsonFile<string[]>(keystorePath);
 
         for (const priv of keystore) {
@@ -43,7 +43,7 @@ export function getActiveAddressKeypair(): Ed25519Keypair {
  * Get the active Sui environment from `sui client active-env`.
  */
 export function getActiveEnv(): NetworkName {
-    const activeEnv = execSync('sui client active-env', { encoding: 'utf8' }).trim();
+    const activeEnv = execSync("sui client active-env", { encoding: "utf8" }).trim();
     return activeEnv as NetworkName;
 }
 

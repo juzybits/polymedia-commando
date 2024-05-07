@@ -1,7 +1,7 @@
 module.exports = {
     root: true,
     env: { node: true },
-    ignorePatterns: [ "dist", ".eslintrc.cjs" ],
+    ignorePatterns: [ "dist", "node_modules" ],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         ecmaVersion: "latest",
