@@ -1,4 +1,4 @@
-import { generateRandomAddress } from "@polymedia/suits";
+import { generateRandomAddress } from "@polymedia/suitcase-core";
 import { Command } from "../Commando.js";
 
 export class GenerateAddressesAndBalancesCommand implements Command {

@@ -1,6 +1,6 @@
-import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polymedia/suits";
+import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
+import { readJsonFile, writeTextFile } from "@polymedia/suitcase-node";
 import { Command } from "../Commando.js";
-import { readJsonFile, writeTextFile } from "../utils-file.js";
 
 // Note: it took ~6.5 minutes to fetch 10,703 holders from 11 collections
 

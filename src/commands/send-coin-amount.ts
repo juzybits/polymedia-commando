@@ -1,7 +1,6 @@
-import { formatNumber, getCoinOfValue } from "@polymedia/suits";
+import { formatNumber, getCoinOfValue } from "@polymedia/suitcase-core";
+import { executeSuiTransaction, promptUser, setupSuiTransaction } from "@polymedia/suitcase-node";
 import { Command } from "../Commando.js";
-import { executeSuiTransaction, setupSuiTransaction } from "../utils-sui.js";
-import { promptUser } from "../utils-misc.js";
 
 export class SendCoinAmountCommand implements Command {
     private amount = 0;

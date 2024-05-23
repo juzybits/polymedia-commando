@@ -1,8 +1,7 @@
-import { SuiMultiClient, SuiClientWithEndpoint } from "@polymedia/suits";
+import { SuiClientWithEndpoint, SuiMultiClient } from "@polymedia/suitcase-core";
+import { getActiveEnv, readJsonFile, writeJsonFile } from "@polymedia/suitcase-node";
 import { Command } from "../Commando.js";
 import { AddressAndBalance } from "../types.js";
-import { readJsonFile, writeJsonFile } from "../utils-file.js";
-import { getActiveEnv } from "../utils-sui.js";
 
 export class FindLastTransactionCommand implements Command {
     private inputFile = "./data/find-coin-holders.json";

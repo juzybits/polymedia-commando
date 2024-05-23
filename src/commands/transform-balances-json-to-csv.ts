@@ -1,5 +1,5 @@
+import { readJsonFile, writeCsvFile } from "@polymedia/suitcase-node";
 import { Command } from "../Commando.js";
-import { readJsonFile, writeCsvFile } from "../utils-file.js";
 import { AddressAndBalance } from "../types.js";
 
 export class TransformBalancesJsonToCsvCommand implements Command {

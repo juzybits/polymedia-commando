@@ -11,9 +11,12 @@ importers:
       '@mysten/sui.js':
         specifier: ^0.54.1
         version: 0.54.1(svelte@4.2.17)(typescript@5.4.5)
-      '@polymedia/suits':
-        specifier: ^0.0.42
-        version: 0.0.42(svelte@4.2.17)(typescript@5.4.5)
+      '@polymedia/suitcase-core':
+        specifier: ^0.0.1
+        version: 0.0.1(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))
+      '@polymedia/suitcase-node':
+        specifier: ^0.0.1
+        version: 0.0.1(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -168,8 +171,15 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@polymedia/suits@0.0.42':
-    resolution: {integrity: sha512-hq3ywZVKanEPmlxUGbpCqwrwTESimSJnL9Pk8uCF4xeoznno6duY9TiMypxbwJm0cZAx3/+apK6JE96XUR4yiw==}
+  '@polymedia/suitcase-core@0.0.1':
+    resolution: {integrity: sha512-ZQOoZO6TZ8Qa9gPHAkMNIh23Ku6CYpq5zjvh74yaF304ri1si0sBQzh7Q53N6KZNTIg7ZCcZNChCAlJPFqUj2Q==}
+    peerDependencies:
+      '@mysten/sui.js': ^0.54.1
+
+  '@polymedia/suitcase-node@0.0.1':
+    resolution: {integrity: sha512-rNQob80Q5MW9VGviDgdekM42CplW25H4fJgyT28ArMjb0ctwpGlBr+CjXdTP/XHGI8CxnzwHEcNPn4EzeabKbg==}
+    peerDependencies:
+      '@mysten/sui.js': ^0.54.1
 
   '@scure/base@1.1.6':
     resolution: {integrity: sha512-ok9AWwhcgYuGG3Zfhyqg+zwl+Wn5uE+dwC0NV/2qQkx4dABbb/bx96vWu8NSj+BNjjSjno+JRYRjle1jV08k3g==}
@@ -967,12 +977,15 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@polymedia/suits@0.0.42(svelte@4.2.17)(typescript@5.4.5)':
+  '@polymedia/suitcase-core@0.0.1(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))':
     dependencies:
       '@mysten/sui.js': 0.54.1(svelte@4.2.17)(typescript@5.4.5)
-    transitivePeerDependencies:
-      - svelte
-      - typescript
+
+  '@polymedia/suitcase-node@0.0.1(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))':
+    dependencies:
+      '@mysten/sui.js': 0.54.1(svelte@4.2.17)(typescript@5.4.5)
+      '@polymedia/suitcase-core': 0.0.1(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))
+      dotenv: 16.4.5
 
   '@scure/base@1.1.6': {}
 
