@@ -18,7 +18,7 @@
     "scripts": {
         "commando": "tsc -p tsconfig.esm.json && node dist/esm/main.js",
         "build": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
-        "clean": "rm -rf dist/ node_modules/",
+        "clean": "rm -rf dist/ node_modules/ .turbo/ src/commands/bulksender/sui/build/",
         "lint": "eslint src/ --report-unused-disable-directives --max-warnings 0",
         "prepublishOnly": "rm -rf dist/ && pnpm build"
     },
