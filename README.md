@@ -44,7 +44,8 @@ Available Commands:
   - find-nft-holders: Find NFT holders for a set of collections via Indexer.xyz
   - find-nfts: Find all NFTs and their owners for a set of collections via Indexer.xyz
   - get-balance: Get the total Coin<T> balance owned by one or more addresses.
-  - send-coin-amount: Send an amount of Coin<T> to a recipient
+  - request-sui-from-faucet: Get SUI from the faucet on localnet/devnet/testnet
+  - send-coin-amount: Send an amount of Coin<T> to a recipient (handles coin merging and splitting)
   - test-rpc-endpoints: Test the latency of various Sui RPC endpoints
   ...
 

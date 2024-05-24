@@ -9,7 +9,7 @@ import {
 } from "@polymedia/suitcase-core";
 import {
     fileExists,
-    getActiveAddressKeypair,
+    getActiveKeypair,
     getActiveEnv,
     promptUser,
     readCsvFile,
@@ -99,7 +99,7 @@ Example:
             const suiClient = new SuiClient({ url: getFullnodeUrl(networkName)});
 
             // Get the keypair for the current `sui client active-address`
-            const signer = getActiveAddressKeypair();
+            const signer = getActiveKeypair();
             const activeAddress = signer.toSuiAddress();
             console.log(`Active address: ${activeAddress}`);
 
