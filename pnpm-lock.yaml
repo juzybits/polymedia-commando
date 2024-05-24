@@ -12,11 +12,11 @@ importers:
         specifier: ^0.54.1
         version: 0.54.1(svelte@4.2.17)(typescript@5.4.5)
       '@polymedia/suitcase-core':
-        specifier: ^0.0.1
-        version: 0.0.1(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))
+        specifier: ^0.0.2
+        version: 0.0.2(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))
       '@polymedia/suitcase-node':
-        specifier: ^0.0.1
-        version: 0.0.1(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))
+        specifier: ^0.0.2
+        version: 0.0.2(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -171,13 +171,13 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@polymedia/suitcase-core@0.0.1':
-    resolution: {integrity: sha512-ZQOoZO6TZ8Qa9gPHAkMNIh23Ku6CYpq5zjvh74yaF304ri1si0sBQzh7Q53N6KZNTIg7ZCcZNChCAlJPFqUj2Q==}
+  '@polymedia/suitcase-core@0.0.2':
+    resolution: {integrity: sha512-qYJZjG0xL2tDMraQY474imtw/Uh1sZQTtxObNRyKqtXqrkrW6JNwkelbG4C/QJsLTwoTy1HBd5oPKSEizAt88w==}
     peerDependencies:
       '@mysten/sui.js': ^0.54.1
 
-  '@polymedia/suitcase-node@0.0.1':
-    resolution: {integrity: sha512-rNQob80Q5MW9VGviDgdekM42CplW25H4fJgyT28ArMjb0ctwpGlBr+CjXdTP/XHGI8CxnzwHEcNPn4EzeabKbg==}
+  '@polymedia/suitcase-node@0.0.2':
+    resolution: {integrity: sha512-ttH8PvjQ19TY0uHkgmjOua7yHTWuq836kguSwGw52vo/BjsA97DPWW4jWQL9+97BNW3gHcv7Rzh600s9zEadkA==}
     peerDependencies:
       '@mysten/sui.js': ^0.54.1
 
@@ -292,11 +292,11 @@ packages:
     resolution: {integrity: sha512-9ntIVgsi6gg6FIq9xjEO4VQJvwOqA3jaBFQJ/6TK5AvEup2+cECI6Fh7QiBxmfMHXU0V0J4RyPeOU1VDNzl9cg==}
     engines: {node: ^18.18.0 || >=20.0.0}
 
-  '@volar/language-core@2.2.4':
-    resolution: {integrity: sha512-7As47GndxGxsqqYnbreLrfB5NDUeQioPM2LJKUuB4/34c0NpEJ2byVl3c9KYdjIdiEstWZ9JLtLKNTaPWb5jtA==}
+  '@volar/language-core@2.2.5':
+    resolution: {integrity: sha512-2htyAuxRrAgETmFeUhT4XLELk3LiEcqoW/B8YUXMF6BrGWLMwIR09MFaZYvrA2UhbdAeSyeQ726HaWSWkexUcQ==}
 
-  '@volar/source-map@2.2.4':
-    resolution: {integrity: sha512-m92FLpR9vB1YEZfiZ+bfgpLrToL/DNkOrorWVep3pffHrwwI4Tx2oIQN+sqHJfKkiT5N3J1owC+8crhAEinfjg==}
+  '@volar/source-map@2.2.5':
+    resolution: {integrity: sha512-wrOEIiZNf4E+PWB0AxyM4tfhkfldPsb3bxg8N6FHrxJH2ohar7aGu48e98bp3pR9HUA7P/pR9VrLmkTrgCCnWQ==}
 
   '@vue/compiler-core@3.4.27':
     resolution: {integrity: sha512-E+RyqY24KnyDXsCuQrI+mlcdW3ALND6U7Gqa/+bVwbcpcR3BRRIckFoz7Qyd4TTlnugtwuI7YgjbvsLmxb+yvg==}
@@ -633,8 +633,8 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  micromatch@4.0.6:
-    resolution: {integrity: sha512-Y4Ypn3oujJYxJcMacVgcs92wofTHxp9FzfDpQON4msDefoC0lb3ETvQLOdLcbhSwU1bz8HrL/1sygfBIHudrkQ==}
+  micromatch@4.0.7:
+    resolution: {integrity: sha512-LPP/3KorzCwBxfeUuZmaR6bG2kdeHSbe0P2tY3FLRU4vYrjYz5hI4QZwV0njUx3jeuKe67YukQ1LSPZBKDqO/Q==}
     engines: {node: '>=8.6'}
 
   minimatch@3.1.2:
@@ -692,6 +692,10 @@ packages:
 
   periscopic@3.1.0:
     resolution: {integrity: sha512-vKiQ8RRtkl9P+r/+oefh25C3fhybptkHKCZSPlcXiJux2tJF55GnEj3BVn4A5gKfq9NWWXXrxkHBwVPUfH0opw==}
+
+  picomatch@2.3.1:
+    resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
+    engines: {node: '>=8.6'}
 
   picomatch@4.0.2:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
@@ -977,15 +981,14 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@polymedia/suitcase-core@0.0.1(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))':
+  '@polymedia/suitcase-core@0.0.2(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))':
     dependencies:
       '@mysten/sui.js': 0.54.1(svelte@4.2.17)(typescript@5.4.5)
 
-  '@polymedia/suitcase-node@0.0.1(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))':
+  '@polymedia/suitcase-node@0.0.2(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))':
     dependencies:
       '@mysten/sui.js': 0.54.1(svelte@4.2.17)(typescript@5.4.5)
-      '@polymedia/suitcase-core': 0.0.1(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))
-      dotenv: 16.4.5
+      '@polymedia/suitcase-core': 0.0.2(@mysten/sui.js@0.54.1(svelte@4.2.17)(typescript@5.4.5))
 
   '@scure/base@1.1.6': {}
 
@@ -1143,11 +1146,11 @@ snapshots:
       '@typescript-eslint/types': 7.10.0
       eslint-visitor-keys: 3.4.3
 
-  '@volar/language-core@2.2.4':
+  '@volar/language-core@2.2.5':
     dependencies:
-      '@volar/source-map': 2.2.4
+      '@volar/source-map': 2.2.5
 
-  '@volar/source-map@2.2.4':
+  '@volar/source-map@2.2.5':
     dependencies:
       muggle-string: 0.4.1
 
@@ -1166,7 +1169,7 @@ snapshots:
 
   '@vue/language-core@2.0.19(typescript@5.4.5)':
     dependencies:
-      '@volar/language-core': 2.2.4
+      '@volar/language-core': 2.2.5
       '@vue/compiler-dom': 3.4.27
       '@vue/shared': 3.4.27
       computeds: 0.0.1
@@ -1370,7 +1373,7 @@ snapshots:
       '@nodelib/fs.walk': 1.2.8
       glob-parent: 5.1.2
       merge2: 1.4.1
-      micromatch: 4.0.6
+      micromatch: 4.0.7
 
   fast-json-stable-stringify@2.1.0: {}
 
@@ -1501,10 +1504,10 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  micromatch@4.0.6:
+  micromatch@4.0.7:
     dependencies:
       braces: 3.0.3
-      picomatch: 4.0.2
+      picomatch: 2.3.1
 
   minimatch@3.1.2:
     dependencies:
@@ -1564,6 +1567,8 @@ snapshots:
       '@types/estree': 1.0.5
       estree-walker: 3.0.3
       is-reference: 3.0.2
+
+  picomatch@2.3.1: {}
 
   picomatch@4.0.2: {}
 
