@@ -1,5 +1,6 @@
 import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
-import { readJsonFile, writeTextFile } from "@polymedia/suitcase-node";
+import { readJsonFile } from "@polymedia/suitcase-node";
+import fs from "fs";
 import { Command } from "../Commando.js";
 
 // Note: it took ~6.5 minutes to fetch 10,703 holders from 11 collections
@@ -87,7 +88,7 @@ Example:
 
             const filePath = `${this.outputDir}/find-nft-holders.${collection.name}.txt`;
             const contents = [...holders].join("\n");
-            writeTextFile(filePath, contents);
+            fs.writeFileSync(filePath, contents + "\n");
         }
     }
 }

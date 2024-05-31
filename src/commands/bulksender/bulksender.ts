@@ -1,5 +1,6 @@
-import { getFullnodeUrl, SuiClient } from "@mysten/sui.js/client";
-import { TransactionBlock } from "@mysten/sui.js/transactions";
+import { bcs } from "@mysten/sui/bcs";
+import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
+import { Transaction } from "@mysten/sui/transactions";
 import {
     chunkArray,
     formatNumber,
@@ -9,8 +10,8 @@ import {
 } from "@polymedia/suitcase-core";
 import {
     fileExists,
-    getActiveKeypair,
     getActiveEnv,
+    getActiveKeypair,
     promptUser,
     readCsvFile,
 } from "@polymedia/suitcase-node";
@@ -180,21 +181,25 @@ Example:
                     const batchAmount = batch.reduce((total, pair) => total + pair.amount, BigInt(0));
                     this.logTransactionStart(batchAmount, batchNumber, batch);
 
-                    const txb = new TransactionBlock();
-                    const payCoin = txb.splitCoins(this.coinId, [batchAmount * decimalMultiplier]);
-                    txb.moveCall({
+                    const tx = new Transaction();
+                    const payCoin = tx.splitCoins(this.coinId, [batchAmount * decimalMultiplier]);
+                    tx.moveCall({
                         target: `${packageId}::bulksender::send`,
                         typeArguments: [ coinType ],
                         arguments: [
                             payCoin,
-                            txb.pure(batch.map(pair => pair.amount * decimalMultiplier)),
-                            txb.pure(batch.map(pair => pair.address)),
+                            tx.pure(bcs.vector(bcs.U64).serialize(
+                                batch.map(pair => pair.amount * decimalMultiplier)
+                            )),
+                            tx.pure(bcs.vector(bcs.Address).serialize(
+                                batch.map(pair => pair.address)
+                            )),
                         ],
                     });
 
-                    const result = await suiClient.signAndExecuteTransactionBlock({
+                    const result = await suiClient.signAndExecuteTransaction({
                         signer,
-                        transactionBlock: txb,
+                        transaction: tx,
                         options: {
                             showEffects: true,
                             showObjectChanges: true,

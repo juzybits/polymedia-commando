@@ -41,7 +41,7 @@ Example:
 
         /* Calculate amount with decimals */
 
-        const { suiClient, txb, signer } = setupSuiTransaction();
+        const { suiClient, tx, signer } = setupSuiTransaction();
         const coinMeta = await suiClient.getCoinMetadata({coinType: this.coinType});
         if (!coinMeta) {
             console.error(`Error: CoinMetadata not found for ${this.coinType}`);
@@ -77,14 +77,14 @@ Example:
 
         const [coin] = await getCoinOfValue(
             suiClient,
-            txb,
+            tx,
             ownerAddress,
             this.coinType,
             amountWithDecimals,
         );
-        txb.transferObjects([coin], txb.pure(this.recipient));
+        tx.transferObjects([coin], this.recipient);
 
-        const resp = await executeSuiTransaction(suiClient, txb, signer);
+        const resp = await executeSuiTransaction(suiClient, tx, signer);
         console.log(resp);
     }
 }

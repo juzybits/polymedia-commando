@@ -56,5 +56,7 @@ Example:
         for (const recipient of this.recipients) {
             requestSuiFromFaucet(network, recipient);
         }
+
+        return Promise.resolve();
     }
 }
