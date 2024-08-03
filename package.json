@@ -16,41 +16,27 @@
         "commando"
     ],
     "scripts": {
-        "commando": "tsc -p tsconfig.esm.json && node dist/esm/main.js",
-        "build": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
-        "clean": "rm -rf dist/ node_modules/ .turbo/ src/commands/bulksender/sui/build/",
+        "commando": "tsc -b && node dist/main.js",
+        "build": "tsc -b",
+        "clean": "rm -rf dist/ node_modules/ .turbo/ .wrangler/ src/commands/bulksender/sui/build/",
+        "dev": "tsc --watch",
         "lint": "eslint src/ --report-unused-disable-directives --max-warnings 0",
-        "prepublishOnly": "rm -rf dist/ && pnpm build"
+        "typecheck": "tsc -b"
     },
     "dependencies": {
-        "@mysten/sui": "^1.0.3",
-        "@polymedia/suitcase-core": "^0.0.6",
-        "@polymedia/suitcase-node": "^0.0.6",
+        "@mysten/sui": "^1.4.0",
+        "@polymedia/suitcase-core": "^0.0.11",
+        "@polymedia/suitcase-node": "^0.0.11",
         "dotenv": "^16.4.5"
     },
     "devDependencies": {
-        "@eslint/js": "^9.3.0",
-        "@stylistic/eslint-plugin": "^2.1.0",
-        "@types/node": "^20.12.13",
-        "eslint": "^9.3.0",
-        "typescript": "^5.4.5",
-        "typescript-eslint": "^7.11.0"
+        "@eslint/js": "^9.8.0",
+        "@stylistic/eslint-plugin": "^2.6.1",
+        "@types/node": "^22.1.0",
+        "eslint": "^9.8.0",
+        "typescript": "^5.5.4",
+        "typescript-eslint": "^8.0.0"
     },
     "type": "module",
-    "sideEffects": false,
-    "publishConfig": {
-        "access": "public"
-    },
-    "files": [
-        "dist/"
-    ],
-    "types": "./dist/cjs/index.d.ts",
-    "main": "./dist/cjs/index.js",
-    "module": "./dist/esm/index.js",
-    "exports": {
-        ".": {
-            "require": "./dist/cjs/index.js",
-            "import": "./dist/esm/index.js"
-        }
-    }
+    "sideEffects": false
 }
