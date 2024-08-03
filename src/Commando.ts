@@ -57,7 +57,8 @@ export class Commando {
     }
 
     async run(): Promise<void> {
-        const args = process.argv.slice(3); // skip 'pnpm' and 'commando'
+        console.log(process.argv);
+        const args = process.argv.slice(3); // skip "node" and "zui"/"main.js"
         const commandName = process.argv[2];
 
         // Show general help
@@ -92,7 +93,7 @@ export class Commando {
         console.log("POLYMEDIA COMMANDO");
         console.log("  Sui command line tools and TypeScript utilities.");
         console.log("\nUsage:");
-        console.log("  pnpm commando COMMAND [OPTIONS]\n");
+        console.log("  zui COMMAND [OPTIONS]\n");
 
         console.log("Available Commands:");
         for (const commandName in this.commands) {
@@ -101,7 +102,7 @@ export class Commando {
         }
 
         console.log("\nFor more information about a command:");
-        console.log("  pnpm commando COMMAND -h");
+        console.log("  zui COMMAND -h");
     }
 
 }

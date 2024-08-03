@@ -1,17 +1,23 @@
-# Polymedia Commando
+# Polymedia Commando (`zui`)
 
 Sui command line tools to help with Sui airdrops (send coins to many addresses), gather data from different sources (Sui RPCs, Indexer.xyz, Suiscan), and more.
 
 ![Polymedia Commando](https://assets.polymedia.app/img/commando/open-graph.webp)
 
-## Installation
+## Installation method 1: install globally
 
-Clone and install the repo:
+```
+npm install -g @polymedia/commando
+zui -h
+```
+
+## Installation method 2: clone the repo
 
 ```
 git clone https://github.com/juzybits/polymedia-commando.git
 cd polymedia-commando
 pnpm install
+pnpm zui -h
 ```
 
 Create `.env` and add your Indexer.xyz credentials if you'll fetch NFT data:
@@ -25,16 +31,16 @@ cp .env.example .env
 Tools can be used as follows:
 
 ```
-pnpm commando COMMAND [OPTIONS]
+zui COMMAND [OPTIONS]
 ```
 
-See all available tools with `pnpm commando -h`:
+See all available tools with `zui -h`:
 
 ```
 POLYMEDIA COMMANDO
 
 Usage:
-  pnpm commando COMMAND [OPTIONS]
+  zui COMMAND [OPTIONS]
 
 Available Commands:
   - bulksender: Send Coin<T> to a list of addresses
@@ -51,5 +57,5 @@ Available Commands:
   ...
 
 For more information about a command:
-  pnpm commando COMMAND -h
+  zui COMMAND -h
 ```
