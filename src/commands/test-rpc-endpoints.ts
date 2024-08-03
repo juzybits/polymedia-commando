@@ -1,6 +1,6 @@
 import { SuiMultiClient } from "@polymedia/suitcase-core";
 import { getActiveEnv } from "@polymedia/suitcase-node";
-import { Command } from "../Commando.js";
+import { Command } from "../Zui.js";
 
 export class TestRpcEndpointsCommand implements Command {
     public getDescription(): string {

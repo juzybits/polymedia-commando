@@ -16,7 +16,7 @@ import {
     readCsvFile,
 } from "@polymedia/suitcase-node";
 import { appendFileSync } from "fs";
-import { Command } from "../../Commando.js";
+import { Command } from "../../Zui.js";
 
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function

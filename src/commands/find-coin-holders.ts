@@ -1,5 +1,5 @@
 import { writeJsonFile } from "@polymedia/suitcase-node";
-import { Command } from "../Commando.js";
+import { Command } from "../Zui.js";
 import { AddressAndBalance } from "../types.js";
 
 const IS_DEV = false;

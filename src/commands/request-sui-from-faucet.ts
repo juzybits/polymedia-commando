@@ -1,5 +1,5 @@
 import { getActiveAddress, getActiveEnv } from "@polymedia/suitcase-node";
-import { Command } from "../Commando.js";
+import { Command } from "../Zui.js";
 import { requestSuiFromFaucet, shortenSuiAddress, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
 
 export class RequestSuiFromFaucetCommand implements Command {

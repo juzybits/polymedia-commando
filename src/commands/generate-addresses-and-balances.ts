@@ -1,5 +1,5 @@
 import { generateRandomAddress } from "@polymedia/suitcase-core";
-import { Command } from "../Commando.js";
+import { Command } from "../Zui.js";
 
 export class GenerateAddressesAndBalancesCommand implements Command {
     private amount = 0;

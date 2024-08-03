@@ -1,4 +1,4 @@
-# Polymedia Commando (`zui`)
+# Polymedia Commando (Sui command line tools)
 
 Sui command line tools to help with Sui airdrops (send coins to many addresses), gather data from different sources (Sui RPCs, Indexer.xyz, Suiscan), and more.
 
@@ -7,7 +7,7 @@ Sui command line tools to help with Sui airdrops (send coins to many addresses),
 ## Installation method 1: install globally
 
 ```
-npm install -g @polymedia/commando
+npm install -g @polymedia/zui
 zui -h
 ```
 
@@ -37,8 +37,6 @@ zui COMMAND [OPTIONS]
 See all available tools with `zui -h`:
 
 ```
-POLYMEDIA COMMANDO
-
 Usage:
   zui COMMAND [OPTIONS]
 

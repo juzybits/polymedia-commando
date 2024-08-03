@@ -13,7 +13,7 @@ import { TestRpcEndpointsCommand } from "./commands/test-rpc-endpoints.js";
 import { TransformBalancesJsonToCsvCommand } from "./commands/transform-balances-json-to-csv.js";
 
 /**
- * Interface defining the structure of a command in the Commando framework.
+ * Interface defining the structure of a command in the Zui framework.
  */
 export type Command = {
     /** Returns a short description of the command. */
@@ -27,7 +27,7 @@ export type Command = {
 /**
  * The main class responsible for managing and executing commands.
  */
-export class Commando {
+export class Zui {
     private commands: Record<string, Command>;
 
     constructor() {
@@ -48,7 +48,7 @@ export class Commando {
     }
 
     /**
-     * Registers a new command with the Commando framework.
+     * Registers a new command with the Zui framework.
      * @param name - The name of the command.
      * @param command - The command object.
      */
@@ -57,7 +57,6 @@ export class Commando {
     }
 
     async run(): Promise<void> {
-        console.log(process.argv);
         const args = process.argv.slice(3); // skip "node" and "zui"/"main.js"
         const commandName = process.argv[2];
 
@@ -90,8 +89,7 @@ export class Commando {
     }
 
     private printGeneralHelp(): void {
-        console.log("POLYMEDIA COMMANDO");
-        console.log("  Sui command line tools and TypeScript utilities.");
+        console.log("\nPOLYMEDIA ZUI: Sui command line tools");
         console.log("\nUsage:");
         console.log("  zui COMMAND [OPTIONS]\n");
 

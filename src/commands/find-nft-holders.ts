@@ -1,7 +1,7 @@
 import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
 import { readJsonFile } from "@polymedia/suitcase-node";
 import fs from "fs";
-import { Command } from "../Commando.js";
+import { Command } from "../Zui.js";
 
 // Note: it took ~6.5 minutes to fetch 10,703 holders from 11 collections
 

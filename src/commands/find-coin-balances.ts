@@ -1,6 +1,6 @@
 import { SuiClientWithEndpoint, SuiMultiClient } from "@polymedia/suitcase-core";
 import { getActiveEnv, readJsonFile, writeJsonFile } from "@polymedia/suitcase-node";
-import { Command } from "../Commando.js";
+import { Command } from "../Zui.js";
 import { AddressAndBalance } from "../types.js";
 
 export class FindCoinBalancesCommand implements Command {

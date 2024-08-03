@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import dotenv from "dotenv";
-import { Commando } from "./Commando.js";
+import { Zui } from "./Zui.js";
 
 dotenv.config();
 
-const commando = new Commando();
-void commando.run();
+const zui = new Zui();
+void zui.run();

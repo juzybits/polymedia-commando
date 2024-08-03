@@ -1,6 +1,6 @@
 import { shortenSuiAddress } from "@polymedia/suitcase-core";
 import { setupSuiTransaction } from "@polymedia/suitcase-node";
-import { Command } from "../Commando.js";
+import { Command } from "../Zui.js";
 
 export class GetBalanceCommand implements Command {
     private coinType = "";

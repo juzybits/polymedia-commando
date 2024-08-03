@@ -1,7 +1,7 @@
 {
     "private": false,
-    "version": "0.0.29",
-    "name": "@polymedia/commando",
+    "version": "0.0.1",
+    "name": "@polymedia/zui",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://github.com/juzybits/polymedia-commando",
     "description": "Sui command line tools for airdrops, data gathering, and more",
@@ -13,7 +13,8 @@
     "keywords": [
         "polymedia",
         "sui",
-        "commando"
+        "commando",
+        "zui"
     ],
     "scripts": {
         "zui": "tsc -b && node dist/main.js",

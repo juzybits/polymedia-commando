@@ -6,5 +6,5 @@ A tool to airdrop Coin\<T\> to many Sui addresses.
 
 See:
 ```
-pnpm commando bulksender -h
+zui bulksender -h
 ```
