@@ -124,7 +124,7 @@ Example:
 
             // Get the Coin type (the `T` in `Coin<T>`)
             const coinTypeFull = coinObject.data.content.type; // e.g. "0x2::coin::Coin<0x2::sui::SUI>"
-            const match = coinTypeFull.match(/<([^>]+)>/); // extract "0x2::sui::SUI" from the full type
+            const match = /<([^>]+)>/.exec(coinTypeFull); // extract "0x2::sui::SUI" from the full type
             if (!match) {
                 throw new Error(`Failed to parse the Coin type from the object type: ${coinTypeFull}`);
             }

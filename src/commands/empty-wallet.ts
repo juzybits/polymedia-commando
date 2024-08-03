@@ -58,14 +58,15 @@ Example:
                 const objIds = pagObjRes.data
                     .filter(obj => obj.data?.type !== "0x2::coin::Coin<0x2::sui::SUI>")
                     .map(obj => obj.data!.objectId);
-
+                if (objIds.length === 0) {
+                    continue;
+                }
                 const tx = new Transaction();
                 tx.transferObjects(objIds, recipientAddr);
-
                 const txRes = await executeSuiTransaction(suiClient, tx, signer);
                 console.log(`page: ${page}, objects: ${objIds.length}, tx status: ${txRes.effects!.status.status}`);
             }
-        } while (pagObjRes.hasNextPage)
+        } while (pagObjRes.hasNextPage);
 
     }
 }
