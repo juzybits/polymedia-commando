@@ -38,6 +38,7 @@ Usage:
 
 Available Commands:
   - bulksender: Send Coin<T> to a list of addresses
+  - empty-wallet: Send all objects in your wallet to a random address (except Coin<SUI>)
   - find-coin-balances: Find how much Coin<T> is owned by each address
   - find-coin-holders: Find Coin<T> holders using the Suiscan API
   - find-last-txn: Find the last transaction for each Sui address

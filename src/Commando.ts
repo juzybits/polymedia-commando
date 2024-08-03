@@ -1,4 +1,5 @@
 import { BulksenderCommand } from "./commands/bulksender/bulksender.js";
+import { EmptyWalletCommand } from "./commands/empty-wallet.js";
 import { FindCoinBalancesCommand } from "./commands/find-coin-balances.js";
 import { FindCoinHoldersCommand } from "./commands/find-coin-holders.js";
 import { FindLastTransactionCommand } from "./commands/find-last-txn.js";
@@ -32,6 +33,7 @@ export class Commando {
     constructor() {
         this.commands = {};
         this.registerCommand("bulksender", new BulksenderCommand());
+        this.registerCommand("empty-wallet", new EmptyWalletCommand());
         this.registerCommand("find-coin-balances", new FindCoinBalancesCommand());
         this.registerCommand("find-coin-holders", new FindCoinHoldersCommand());
         this.registerCommand("find-last-txn", new FindLastTransactionCommand());
