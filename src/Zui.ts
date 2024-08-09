@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import { BulksenderCommand } from "./commands/bulksender/bulksender.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
 import { faucet } from "./commands/faucet.js";
-import { FindCoinHoldersCommand } from "./commands/find-coin-holders.js";
+import { findCoinHolders } from "./commands/find-coin-holders.js";
 import { FindLastTransactionCommand } from "./commands/find-last-txn.js";
 import { FindNftHoldersCommand } from "./commands/find-nft-holders.js";
 import { FindNftsCommand } from "./commands/find-nfts.js";
@@ -59,11 +59,11 @@ program
 program
     .command("find-coin-holders")
     .description("Find Coin<T> holders using the Suiscan API")
-    .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
-    .option("-o, --output-file <outputFile>", "JSON file with addresses and (inaccurate) balances")
-    .action((opts) => {
-        const command = new FindCoinHoldersCommand();
-        command.execute([opts.coinType, opts.outputFile]);
+    .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
+    .requiredOption("-o, --output-file <outputFile>", "JSON file with addresses and balances")
+    .option("-l, --limit <limit>", "Get at most this many holders")
+    .action(async (opts) => {
+        await findCoinHolders(opts.coinType, opts.outputFile, opts.limit);
     });
 
 program

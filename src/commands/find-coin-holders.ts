@@ -1,63 +1,31 @@
 import { writeJsonFile } from "@polymedia/suitcase-node";
 import { AddressAndBalance } from "../types.js";
 
-const IS_DEV = false;
-
-export class FindCoinHoldersCommand
+export async function findCoinHolders(
+    coinType: string,
+    outputFile: string,
+    limit = 999_999_999,
+): Promise<void>
 {
-    private coinType = "";
-    private outputFile = "";
-    private limit = IS_DEV ? 3 : 999999;
+    /* Fetch holders */
 
-    public async execute(args: string[]): Promise<void>
-    {
-        /* Read command arguments */
+    const urlHolders = `https://suiscan.xyz/api/sui-backend/mainnet/api/coins/${coinType}/holders?sortBy=AMOUNT&orderBy=DESC&searchStr=&page=0&size=${limit}`;
+    const resp: ApiResponse = await fetch(urlHolders)
+    .then((response: Response) => {
+        if (!response.ok)
+            throw new Error(`HTTP error: ${response.status}`);
+        return response.json() as Promise<ApiResponse>;
+    });
 
-        this.coinType = args[0];
-        this.outputFile = args[1];
-        console.log(`coinType: ${this.coinType}`);
-        console.log(`outputFile: ${this.outputFile}`);
-
-        /* Fetch holders */
-
-        const urlHolders = `https://suiscan.xyz/api/sui-backend/mainnet/api/coins/${this.coinType}/holders?sortBy=AMOUNT&orderBy=DESC&searchStr=&page=0&size=${this.limit}`;
-        const resp: ApiResponse = await fetch(urlHolders)
-        .then((response: Response) => {
-            if (!response.ok)
-                throw new Error(`HTTP error: ${response.status}`);
-            return response.json() as Promise<ApiResponse>;
+    const output = new Array<AddressAndBalance>();
+    for (const holder of resp.content) {
+        output.push({
+            address: holder.address,
+            balance: holder.amount,
         });
-
-        const isValidResponse =
-            (resp.first) && // it's the first page
-            (resp.last || IS_DEV) && // and also the last page
-            (resp.totalPages === 1 || IS_DEV) && // this is the only page
-            (!resp.empty) && // the page is not empty
-            (resp.totalElements === resp.numberOfElements || IS_DEV) // all holders are included in this one page
-        ;
-        if (!isValidResponse) {
-            console.error("Error: Unexpected response:\n"+
-                `resp.first: ${resp.first}\n` +
-                `resp.last: ${resp.last}\n` +
-                `resp.totalPages: ${resp.totalPages}\n` +
-                `resp.empty: ${resp.empty}\n` +
-                `resp.totalElements: ${resp.totalElements}\n` +
-                `resp.numberOfElements: ${resp.numberOfElements}`
-            );
-            return;
-        }
-
-        const output = new Array<AddressAndBalance>();
-        for (const holder of resp.content) {
-            output.push({
-                address: holder.address,
-                balance: holder.amount,
-            });
-        }
-
-        writeJsonFile(this.outputFile, output);
     }
 
+    writeJsonFile(outputFile, output);
 }
 
 type ApiResponse = {
