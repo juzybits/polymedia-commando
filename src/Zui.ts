@@ -13,7 +13,6 @@ import { findNfts } from "./commands/find-nfts.js";
 import { randomAddresses } from "./commands/random-addresses.js";
 import { sendCoin } from "./commands/send-coin.js";
 import { TestRpcEndpointsCommand } from "./commands/test-rpc-endpoints.js";
-import { TransformBalancesJsonToCsvCommand } from "./commands/transform-balances-json-to-csv.js";
 
 dotenv.config();
 
@@ -126,17 +125,6 @@ program
     .action(() => {
         const command = new TestRpcEndpointsCommand();
         command.execute();
-    });
-
-program
-    .command("transform-balances-json-to-csv")
-    .description("Transform a .json file containing addresses and balances into a .csv file")
-    .option("-d, --decimals <decimals>", "Number of decimals for Coin<T>")
-    .option("-i, --input-file <inputFile>", "JSON file with addresses and balances (with decimals)")
-    .option("-o, --output-file <outputFile>", "CSV file with addresses and balances (without decimals)")
-    .action((opts) => {
-        const command = new TransformBalancesJsonToCsvCommand();
-        command.execute([opts.decimals, opts.inputFile, opts.outputFile]);
     });
 
 program.parse(process.argv);
