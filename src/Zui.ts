@@ -6,7 +6,7 @@ import { bulksend } from "./commands/bulksender/bulksender.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
 import { faucet } from "./commands/faucet.js";
 import { findCoinHolders } from "./commands/find-coin-holders.js";
-import { FindLastTransactionCommand } from "./commands/find-last-txn.js";
+import { findLastTx } from "./commands/find-last-tx.js";
 import { FindNftHoldersCommand } from "./commands/find-nft-holders.js";
 import { FindNftsCommand } from "./commands/find-nfts.js";
 import { GenerateAddressesAndBalancesCommand } from "./commands/generate-addresses-and-balances.js";
@@ -66,13 +66,12 @@ program
     });
 
 program
-    .command("find-last-txn")
+    .command("find-last-tx")
     .description("Find the last transaction for each Sui address")
-    .option("-i, --input-file <inputFile>", "JSON file with addresses and balances")
-    .option("-o, --output-file <outputFile>", "JSON file with addresses and their last transaction ID and time")
-    .action((opts) => {
-        const command = new FindLastTransactionCommand();
-        command.execute([opts.inputFile, opts.outputFile]);
+    .requiredOption("-i, --input-file <inputFile>", "JSON file with an array of addresses")
+    .requiredOption("-o, --output-file <outputFile>", "JSON file with addresses and their last transaction ID and time")
+    .action(async (opts) => {
+        await findLastTx(opts.inputFile, opts.outputFile);
     });
 
 program
