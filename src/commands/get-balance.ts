@@ -1,4 +1,4 @@
-import { shortenSuiAddress } from "@polymedia/suitcase-core";
+import { shortenAddress } from "@polymedia/suitcase-core";
 import { setupSuiTransaction } from "@polymedia/suitcase-node";
 import { Command } from "../Zui.js";
 
@@ -48,7 +48,7 @@ Example:
 
         for (const owner of this.addresses) {
             const resp = await suiClient.getBalance({ owner, coinType: this.coinType });
-            const addressPretty = shortenSuiAddress(owner);
+            const addressPretty = shortenAddress(owner);
             const balancePretty = (Number(resp.totalBalance) / 10**coinMeta.decimals).toLocaleString("en-US");
             console.log(`${addressPretty}: ${balancePretty} ${coinMeta.symbol}`);
         }

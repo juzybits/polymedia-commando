@@ -1,6 +1,6 @@
 import { getActiveAddress, getActiveEnv } from "@polymedia/suitcase-node";
 import { Command } from "../Zui.js";
-import { requestSuiFromFaucet, shortenSuiAddress, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
+import { requestSuiFromFaucet, shortenAddress, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
 
 export class FaucetCommand implements Command {
     private recipients: string[] = [];
@@ -50,7 +50,7 @@ Example:
 
         /* Use the faucet */
 
-        const recipientList = this.recipients.map(r => shortenSuiAddress(r)).join(", ");
+        const recipientList = this.recipients.map(r => shortenAddress(r)).join(", ");
         console.log(`Sending SUI on ${network} to ${recipientList}`);
 
         for (const recipient of this.recipients) {
