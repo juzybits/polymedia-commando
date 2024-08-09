@@ -29,6 +29,7 @@
         "@mysten/sui": "^1.5.0",
         "@polymedia/suitcase-core": "^0.0.13",
         "@polymedia/suitcase-node": "^0.0.13",
+        "commander": "^12.1.0",
         "dotenv": "^16.4.5"
     },
     "devDependencies": {
