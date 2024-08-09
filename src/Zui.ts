@@ -3,7 +3,7 @@
 import { Command } from "commander";
 import dotenv from "dotenv";
 import { BulksenderCommand } from "./commands/bulksender/bulksender.js";
-import { EmptyWalletCommand } from "./commands/empty-wallet.js";
+import { emptyWallet } from "./commands/empty-wallet.js";
 import { faucet } from "./commands/faucet.js";
 import { FindCoinHoldersCommand } from "./commands/find-coin-holders.js";
 import { FindLastTransactionCommand } from "./commands/find-last-txn.js";
@@ -33,17 +33,16 @@ program
     .command("faucet")
     .description("Get SUI from the faucet on localnet/devnet/testnet")
     .option("-a, --address <addresses...>", "One or more Sui addresses where SUI should be sent")
-    .action(async (options) => {
-        await faucet(options.address || []);
+    .action(async (opts) => {
+        await faucet(opts.address || []);
     });
 
 program
     .command("empty-wallet")
     .description("Send all objects in your wallet to a random address (except Coin<SUI>)")
     .option("-r, --recipient <recipient>", "The address where the objects will be sent")
-    .action((options) => {
-        const command = new EmptyWalletCommand();
-        command.execute([options.recipient]);
+    .action(async (opts) => {
+        await emptyWallet(opts.recipient);
     });
 
 program
@@ -52,9 +51,9 @@ program
     .option("-c, --coin-id <coinId>", "The Coin<T> to pay for the airdrop")
     .option("-i, --input-file <inputFile>", "Path to a CSV with recipient addresses and amounts")
     .option("-o, --output-file <outputFile>", "Path to a text file to log transaction details")
-    .action((options) => {
+    .action((opts) => {
         const command = new BulksenderCommand();
-        command.execute([options.coinId, options.inputFile, options.outputFile]);
+        command.execute([opts.coinId, opts.inputFile, opts.outputFile]);
     });
 
 program
@@ -62,9 +61,9 @@ program
     .description("Find Coin<T> holders using the Suiscan API")
     .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
     .option("-o, --output-file <outputFile>", "JSON file with addresses and (inaccurate) balances")
-    .action((options) => {
+    .action((opts) => {
         const command = new FindCoinHoldersCommand();
-        command.execute([options.coinType, options.outputFile]);
+        command.execute([opts.coinType, opts.outputFile]);
     });
 
 program
@@ -72,9 +71,9 @@ program
     .description("Find the last transaction for each Sui address")
     .option("-i, --input-file <inputFile>", "JSON file with addresses and balances")
     .option("-o, --output-file <outputFile>", "JSON file with addresses and their last transaction ID and time")
-    .action((options) => {
+    .action((opts) => {
         const command = new FindLastTransactionCommand();
-        command.execute([options.inputFile, options.outputFile]);
+        command.execute([opts.inputFile, opts.outputFile]);
     });
 
 program
@@ -82,9 +81,9 @@ program
     .description("Find NFT holders for a set of collections via Indexer.xyz")
     .option("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
     .option("-d, --output-dir <outputDir>", "Output directory to write the TXT files")
-    .action((options) => {
+    .action((opts) => {
         const command = new FindNftHoldersCommand();
-        command.execute([options.inputFile, options.outputDir]);
+        command.execute([opts.inputFile, opts.outputDir]);
     });
 
 program
@@ -92,18 +91,18 @@ program
     .description("Find all NFTs and their owners for a set of collections via Indexer.xyz")
     .option("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
     .option("-d, --output-dir <outputDir>", "Output directory to write the JSON files")
-    .action((options) => {
+    .action((opts) => {
         const command = new FindNftsCommand();
-        command.execute([options.inputFile, options.outputDir]);
+        command.execute([opts.inputFile, opts.outputDir]);
     });
 
 program
     .command("generate-addresses-and-balances")
     .description("Generate random Sui addresses and balances (for testing)")
     .option("-a, --amount <amount>", "The amount of address-balance pairs to generate")
-    .action((options) => {
+    .action((opts) => {
         const command = new GenerateAddressesAndBalancesCommand();
-        command.execute([options.amount]);
+        command.execute([opts.amount]);
     });
 
 program
@@ -111,9 +110,9 @@ program
     .description("Get the total Coin<T> balance owned by one or more addresses.")
     .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
     .option("-a, --addresses <addresses...>", "The Sui address or addresses to query the balance for")
-    .action((options) => {
+    .action((opts) => {
         const command = new GetBalanceCommand();
-        command.execute([options.coinType, ...options.addresses]);
+        command.execute([opts.coinType, ...opts.addresses]);
     });
 
 program
@@ -122,9 +121,9 @@ program
     .option("-a, --amount <amount>", "The amount to send, without decimals")
     .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
     .option("-r, --recipient <recipient>", "The address of the recipient")
-    .action((options) => {
+    .action((opts) => {
         const command = new SendCoinAmountCommand();
-        command.execute([options.amount, options.coinType, options.recipient]);
+        command.execute([opts.amount, opts.coinType, opts.recipient]);
     });
 
 program
@@ -141,9 +140,9 @@ program
     .option("-d, --decimals <decimals>", "Number of decimals for Coin<T>")
     .option("-i, --input-file <inputFile>", "JSON file with addresses and balances (with decimals)")
     .option("-o, --output-file <outputFile>", "CSV file with addresses and balances (without decimals)")
-    .action((options) => {
+    .action((opts) => {
         const command = new TransformBalancesJsonToCsvCommand();
-        command.execute([options.decimals, options.inputFile, options.outputFile]);
+        command.execute([opts.decimals, opts.inputFile, opts.outputFile]);
     });
 
 program.parse(process.argv);
