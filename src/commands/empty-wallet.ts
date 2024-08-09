@@ -1,11 +1,10 @@
 import { PaginatedObjectsResponse } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { executeSuiTransaction, setupSuiTransaction } from "@polymedia/suitcase-node";
-import { ZuiCommand } from "../types.js";
 
 const DEFAULT_RECIPIENT = "0xc67b4231d7f64be622d4534c590570fc2fdea1a70a7cbf72ddfeba16d11fd22e";
 
-export class EmptyWalletCommand implements ZuiCommand
+export class EmptyWalletCommand
 {
     public async execute(args: string[]): Promise<void>
     {

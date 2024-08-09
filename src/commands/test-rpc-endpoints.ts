@@ -1,8 +1,7 @@
 import { SuiMultiClient } from "@polymedia/suitcase-core";
 import { getActiveEnv } from "@polymedia/suitcase-node";
-import { ZuiCommand } from "../types.js";
 
-export class TestRpcEndpointsCommand implements ZuiCommand
+export class TestRpcEndpointsCommand
 {
     public async execute(): Promise<void>
     {

@@ -1,9 +1,8 @@
 import { SuiClientWithEndpoint, SuiMultiClient } from "@polymedia/suitcase-core";
 import { getActiveEnv, readJsonFile, writeJsonFile } from "@polymedia/suitcase-node";
-import { ZuiCommand } from "../types.js";
 import { AddressAndBalance } from "../types.js";
 
-export class FindLastTransactionCommand implements ZuiCommand
+export class FindLastTransactionCommand
 {
     private inputFile = "./data/find-coin-holders.json";
     private outputFile = "./data/find-last-txn.json";

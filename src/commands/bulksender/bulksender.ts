@@ -16,7 +16,6 @@ import {
     readCsvFile,
 } from "@polymedia/suitcase-node";
 import { appendFileSync } from "fs";
-import { ZuiCommand } from "../../types.js";
 
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function
@@ -44,7 +43,7 @@ const RATE_LIMIT_DELAY = 334;
  */
 const GAS_PER_ADDRESS = 0.0013092459;
 
-export class BulksenderCommand implements ZuiCommand
+export class BulksenderCommand
 {
     private coinId = "";
     private inputFile = "";
