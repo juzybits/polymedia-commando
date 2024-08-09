@@ -2,7 +2,7 @@ import { getActiveAddress, getActiveEnv } from "@polymedia/suitcase-node";
 import { Command } from "../Zui.js";
 import { requestSuiFromFaucet, shortenSuiAddress, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
 
-export class RequestSuiFromFaucetCommand implements Command {
+export class FaucetCommand implements Command {
     private recipients: string[] = [];
 
     public getDescription(): string {
@@ -13,14 +13,14 @@ export class RequestSuiFromFaucetCommand implements Command {
         return `${this.getDescription()}
 
 Usage:
-  request-sui-from-faucet [RECIPIENT...]
+  faucet [RECIPIENT...]
 
 Arguments:
   RECIPIENT     One or more Sui addresses where SUI should be sent.
                 If no addresses are provided, it defaults to "sui client active-address".
 
 Example:
-  request-sui-from-faucet 0x777 0x888
+  faucet 0x777 0x888
 `;
     }
 

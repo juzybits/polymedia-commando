@@ -7,7 +7,7 @@ import { FindNftHoldersCommand } from "./commands/find-nft-holders.js";
 import { FindNftsCommand } from "./commands/find-nfts.js";
 import { GenerateAddressesAndBalancesCommand } from "./commands/generate-addresses-and-balances.js";
 import { GetBalanceCommand } from "./commands/get-balance.js";
-import { RequestSuiFromFaucetCommand } from "./commands/request-sui-from-faucet.js";
+import { FaucetCommand } from "./commands/faucet.js";
 import { SendCoinAmountCommand } from "./commands/send-coin-amount.js";
 import { TestRpcEndpointsCommand } from "./commands/test-rpc-endpoints.js";
 import { TransformBalancesJsonToCsvCommand } from "./commands/transform-balances-json-to-csv.js";
@@ -34,6 +34,7 @@ export class Zui {
         this.commands = {};
         this.registerCommand("bulksender", new BulksenderCommand());
         this.registerCommand("empty-wallet", new EmptyWalletCommand());
+        this.registerCommand("faucet", new FaucetCommand());
         this.registerCommand("find-coin-balances", new FindCoinBalancesCommand());
         this.registerCommand("find-coin-holders", new FindCoinHoldersCommand());
         this.registerCommand("find-last-txn", new FindLastTransactionCommand());
@@ -41,7 +42,6 @@ export class Zui {
         this.registerCommand("find-nfts", new FindNftsCommand());
         this.registerCommand("generate-addresses-and-balances", new GenerateAddressesAndBalancesCommand());
         this.registerCommand("get-balance", new GetBalanceCommand());
-        this.registerCommand("request-sui-from-faucet", new RequestSuiFromFaucetCommand());
         this.registerCommand("send-coin-amount", new SendCoinAmountCommand());
         this.registerCommand("test-rpc-endpoints", new TestRpcEndpointsCommand());
         this.registerCommand("transform-balances-json-to-csv", new TransformBalancesJsonToCsvCommand());
