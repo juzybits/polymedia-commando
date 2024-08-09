@@ -1,6 +1,6 @@
 import { generateRandomAddress } from "@polymedia/suitcase-core";
 
-export async function randomAddresses(
+export async function randomAddr(
     amount: number,
     withBalance = false,
 ): Promise<void>

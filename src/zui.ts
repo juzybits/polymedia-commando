@@ -10,7 +10,7 @@ import { findCoinHolders } from "./commands/find-coin-holders.js";
 import { findLastTx } from "./commands/find-last-tx.js";
 import { findNftHolders } from "./commands/find-nft-holders.js";
 import { findNfts } from "./commands/find-nfts.js";
-import { randomAddresses } from "./commands/random-addresses.js";
+import { randomAddr } from "./commands/random-addr.js";
 import { sendCoin } from "./commands/send-coin.js";
 import { testRpcs } from "./commands/test-rpcs.js";
 
@@ -101,12 +101,12 @@ program
     });
 
 program
-    .command("random-addresses")
+    .command("random-addr")
     .description("Generate pseudorandom Sui addresses")
     .requiredOption("-n, --number <number>", "The amount of addresses to generate")
     .option("-b, --balance", "Include a random balance with each address")
     .action(async (opts) => {
-        await randomAddresses(opts.number, opts.balance);
+        await randomAddr(opts.number, opts.balance);
     });
 
 program
