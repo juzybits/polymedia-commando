@@ -8,58 +8,53 @@ type Collection = {
     indexerId: string;
 };
 
-export class FindNftsCommand
+export async function findNfts(
+    inputFile: string,
+    outputDir: string,
+): Promise<void>
 {
-    private inputFile = "./data/nft-collections.json";
-    private outputDir = "./data";
+    /* Read API credentials */
 
-    public async execute(args: string[]): Promise<void>
-    {
-        /* Read API credentials */
+    const indexerApiUser = process.env.INDEXER_API_USER;
+    const indexerApiKey = process.env.INDEXER_API_KEY;
 
-        const indexerApiUser = process.env.INDEXER_API_USER;
-        const indexerApiKey = process.env.INDEXER_API_KEY;
+    if (!indexerApiUser || !indexerApiKey) {
+        console.error("Error: Missing required environment variables.");
+        return;
+    }
 
-        if (!indexerApiUser || !indexerApiKey) {
-            console.error("Error: Missing required environment variables.");
-            return;
-        }
+    /* Read command arguments */
 
-        /* Read command arguments */
+    console.log(`inputFile: ${inputFile}`);
+    console.log(`outputDir: ${outputDir}`);
 
-        this.inputFile = args[0];
-        this.outputDir = args[1];
-        console.log(`inputFile: ${this.inputFile}`);
-        console.log(`outputDir: ${this.outputDir}`);
+    /* Find all NFTs and their owners */
 
-        /* Find all NFTs and their owners */
-
-        const collections = readJsonFile<Collection[]>(this.inputFile);
-        for (const collection of collections) {
-            const nfts: NftAndOwner[] = [];
-            let nullHolders = 0;
-            while (true) {
-                const offset = nfts.length + nullHolders;
-                console.log(`fetching ${collection.name} nfts from ${offset}`);
-                const results = await fetchNfts(collection.indexerId, offset, indexerApiUser, indexerApiKey);
-                if (results.length === 0) { // no more nfts
-                    break;
-                }
-                for (const item of results) {
-                    const address = item.owner && validateAndNormalizeSuiAddress(item.owner);
-                    if (address) {
-                        item.owner = address;
-                        nfts.push(item);
-                    } else {
-                        nullHolders++;
-                    }
-                }
-                await sleep(580); // avoid hitting the 100 req/min rate limit
+    const collections = readJsonFile<Collection[]>(inputFile);
+    for (const collection of collections) {
+        const nfts: NftAndOwner[] = [];
+        let nullHolders = 0;
+        while (true) {
+            const offset = nfts.length + nullHolders;
+            console.log(`fetching ${collection.name} nfts from ${offset}`);
+            const results = await fetchNfts(collection.indexerId, offset, indexerApiUser, indexerApiKey);
+            if (results.length === 0) { // no more nfts
+                break;
             }
-            console.log(`skipped ${nullHolders} null ${collection.name} holders`);
-            const filePath = `${this.outputDir}/find-nfts.${collection.name}.json`;
-            writeJsonFile(filePath, nfts);
+            for (const item of results) {
+                const address = item.owner && validateAndNormalizeSuiAddress(item.owner);
+                if (address) {
+                    item.owner = address;
+                    nfts.push(item);
+                } else {
+                    nullHolders++;
+                }
+            }
+            await sleep(580); // avoid hitting the 100 req/min rate limit
         }
+        console.log(`skipped ${nullHolders} null ${collection.name} holders`);
+        const filePath = `${outputDir}/find-nfts.${collection.name}.json`;
+        writeJsonFile(filePath, nfts);
     }
 }
 

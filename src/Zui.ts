@@ -8,7 +8,7 @@ import { faucet } from "./commands/faucet.js";
 import { findCoinHolders } from "./commands/find-coin-holders.js";
 import { findLastTx } from "./commands/find-last-tx.js";
 import { findNftHolders } from "./commands/find-nft-holders.js";
-import { FindNftsCommand } from "./commands/find-nfts.js";
+import { findNfts } from "./commands/find-nfts.js";
 import { GenerateAddressesAndBalancesCommand } from "./commands/generate-addresses-and-balances.js";
 import { GetBalanceCommand } from "./commands/get-balance.js";
 import { SendCoinAmountCommand } from "./commands/send-coin-amount.js";
@@ -86,11 +86,10 @@ program
 program
     .command("find-nfts")
     .description("Find all NFTs and their owners for a set of collections via Indexer.xyz")
-    .option("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
-    .option("-d, --output-dir <outputDir>", "Output directory to write the JSON files")
-    .action((opts) => {
-        const command = new FindNftsCommand();
-        command.execute([opts.inputFile, opts.outputDir]);
+    .requiredOption("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
+    .requiredOption("-o, --output-dir <outputDir>", "Output directory to write the JSON files")
+    .action(async (opts) => {
+        await findNfts(opts.inputFile, opts.outputDir);
     });
 
 program
