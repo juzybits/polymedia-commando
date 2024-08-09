@@ -8,7 +8,7 @@ export async function randomAddresses(
     for (let index = 0; index < amount; index++) {
         const address = generateRandomAddress();
         if (withBalance) {
-            const amount = Math.floor(Math.random() * (1_000_000 - 1_000 + 1)) + 1_000;
+            const amount = Math.random().toFixed(3);
             console.log(`${address},${amount}`);
         } else {
             console.log(address);

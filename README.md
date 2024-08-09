@@ -37,23 +37,24 @@ zui COMMAND [OPTIONS]
 See all available tools with `zui -h`:
 
 ```
-Usage:
-  zui COMMAND [OPTIONS]
+Usage: zui COMMAND [OPTIONS]
 
-Available Commands:
-  - bulksender: Send Coin<T> to a list of addresses
-  - empty-wallet: Send all objects in your wallet to a random address (except Coin<SUI>)
-  - faucet: Get SUI from the faucet on localnet/devnet/testnet
-  - find-coin-balances: Find how much Coin<T> is owned by each address
-  - find-coin-holders: Find Coin<T> holders using the Suiscan API
-  - find-last-txn: Find the last transaction for each Sui address
-  - find-nft-holders: Find NFT holders for a set of collections via Indexer.xyz
-  - find-nfts: Find all NFTs and their owners for a set of collections via Indexer.xyz
-  - get-balance: Get the total Coin<T> balance owned by one or more addresses.
-  - send-coin-amount: Send an amount of Coin<T> to a recipient (handles coin merging and splitting)
-  - test-rpc-endpoints: Test the latency of various Sui RPC endpoints
-  ...
+POLYMEDIA ZUI: Sui command line tools
 
-For more information about a command:
-  zui COMMAND -h
+Options:
+  -V, --version       output the version number
+  -h, --help          display help for command
+
+Commands:
+  balance             Get the total Coin<T> balance owned by one or more addresses.
+  bulksend            Send Coin<T> to a list of addresses
+  empty-wallet        Send all objects in your wallet to a random address (except Coin<SUI>)
+  faucet              Get SUI from the faucet on localnet/devnet/testnet
+  find-coin-holders   Find Coin<T> holders using the Suiscan API
+  find-last-tx        Find the last transaction for each Sui address
+  find-nft-holders    Find NFT holders for a set of collections via Indexer.xyz
+  find-nfts           Find all NFTs and their owners for a set of collections via Indexer.xyz
+  random-addresses    Generate pseudorandom Sui addresses
+  send-coin           Send a Coin<T> amount to a recipient
+  test-rpc-endpoints  Test the latency of various Sui RPC endpoints
 ```

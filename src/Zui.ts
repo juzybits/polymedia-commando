@@ -41,7 +41,7 @@ program
     .command("bulksend")
     .description("Send Coin<T> to a list of addresses")
     .requiredOption("-c, --coin-id <coinId>", "The Coin<T> to pay for the airdrop")
-    .requiredOption("-i, --input-file <inputFile>", "Path to a CSV with recipient addresses and amounts")
+    .requiredOption("-i, --input-file <inputFile>", "Path to a CSV with recipient addresses and coin amounts")
     .requiredOption("-o, --output-file <outputFile>", "Path to a text file to log transaction details")
     .action(async (opts) => {
         await bulksend(opts.coinId, opts.inputFile, opts.outputFile);
@@ -58,7 +58,7 @@ program
 program
     .command("faucet")
     .description("Get SUI from the faucet on localnet/devnet/testnet")
-    .option("-a, --address <addresses...>", "One or more Sui addresses where SUI should be sent")
+    .option("-a, --address <addresses...>", "Sui address(es) where SUI should be sent. Defaults to your active address.")
     .action(async (opts) => {
         await faucet(opts.address || []);
     });
@@ -102,21 +102,21 @@ program
 
 program
     .command("random-addresses")
-    .description("Generate random Sui addresses (for testing)")
-    .requiredOption("-a, --amount <amount>", "The amount of addresses to generate")
-    .option("-b, --balance", "Include random balance with each address")
+    .description("Generate pseudorandom Sui addresses")
+    .requiredOption("-n, --number <number>", "The amount of addresses to generate")
+    .option("-b, --balance", "Include a random balance with each address")
     .action(async (opts) => {
-        await randomAddresses(opts.amount, opts.balance);
+        await randomAddresses(opts.number, opts.balance);
     });
 
 program
     .command("send-coin")
-    .description("Send an amount of Coin<T> to a recipient (handles coin merging and splitting)")
-    .requiredOption("-a, --amount <amount>", "The amount to send, without decimals")
+    .description("Send a Coin<T> amount to a recipient")
+    .requiredOption("-n, --number <number>", "The number of coins to send (e.g. 0.5 for 0.5 SUI)")
     .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
     .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
     .action(async (opts) => {
-        await sendCoin(opts.amount, opts.coinType, opts.recipient);
+        await sendCoin(opts.number, opts.coinType, opts.recipient);
     });
 
 program

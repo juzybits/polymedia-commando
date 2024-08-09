@@ -2,9 +2,9 @@ import { formatNumber, getCoinOfValue } from "@polymedia/suitcase-core";
 import { executeSuiTransaction, promptUser, setupSuiTransaction } from "@polymedia/suitcase-node";
 
 export async function sendCoin(
-    amount: number,
+    numberOfCoinsToSend: number,
     coinType: string,
-    recipient: string,
+    recipientAddr: string,
 ): Promise<void>
 {
     /* Calculate amount with decimals */
@@ -15,7 +15,7 @@ export async function sendCoin(
         console.error(`Error: CoinMetadata not found for ${coinType}`);
         return;
     }
-    const amountWithDecimals = BigInt(amount * 10**coinMeta.decimals);
+    const balanceToSend = BigInt(numberOfCoinsToSend * 10**coinMeta.decimals);
 
     /* Check if the user has enough balance */
 
@@ -24,17 +24,17 @@ export async function sendCoin(
         owner: ownerAddress,
         coinType: coinType,
     });
-    const balanceWithDecimals = BigInt(balanceObj.totalBalance);
-    if (balanceWithDecimals < amountWithDecimals) {
-        const balance = Number(balanceWithDecimals) / 10**coinMeta.decimals;
+    const userBalance = BigInt(balanceObj.totalBalance);
+    if (userBalance < balanceToSend) {
+        const balance = Number(userBalance) / 10**coinMeta.decimals;
         console.error(`Error: your balance is only ${formatNumber(balance)} ${coinMeta.symbol}`);
         return;
     }
 
     /* Get user confirmation */
 
-    console.log(`amount: ${formatNumber(amount)} ${coinMeta.symbol}`);
-    console.log(`recipient: ${recipient}`);
+    console.log(`amount: ${formatNumber(numberOfCoinsToSend)} ${coinMeta.symbol}`);
+    console.log(`recipient: ${recipientAddr}`);
     const userConfirmed = await promptUser("\nDoes this look okay? (y/n) ");
     if (!userConfirmed) {
         console.log("Execution aborted by the user.");
@@ -48,9 +48,9 @@ export async function sendCoin(
         tx,
         ownerAddress,
         coinType,
-        amountWithDecimals,
+        balanceToSend,
     );
-    tx.transferObjects([coin], recipient);
+    tx.transferObjects([coin], recipientAddr);
 
     const resp = await executeSuiTransaction(suiClient, tx, signer);
     console.log(resp);
