@@ -4,43 +4,16 @@ import { AddressAndBalance } from "../types.js";
 
 const IS_DEV = false;
 
-export class FindCoinHoldersCommand implements ZuiCommand {
+export class FindCoinHoldersCommand implements ZuiCommand
+{
     private coinType = "";
     private outputFile = "";
     private limit = IS_DEV ? 3 : 999999;
-
-    public getDescription(): string {
-        return "Find Coin<T> holders using the Suiscan API";
-    }
-
-    public getUsage(): string {
-        return `${this.getDescription()}
-
-Note that Suiscan returns inaccurate results: addresses that held the Coin at some point
-but no longer hold it are still included in the results, with their old balances.
-To get the correct balances, feed the output of this script into \`find_coin_balances\`.
-
-Usage:
-  find-coin-holders COIN_TYPE OUTPUT_FILE
-
-Arguments:
-  COIN_TYPE     The type of the coin (the T in Coin<T>)
-  OUTPUT_FILE   JSON file with addresses and (inaccurate) balances. Format:
-                [ { address: string, balance: number }, ... ]
-
-Example:
-  find-coin-holders 0x123::lol::LOL coin_holders.json
-`;
-    }
 
     public async execute(args: string[]): Promise<void>
     {
         /* Read command arguments */
 
-        if (args.length !== 2) {
-            console.log(this.getUsage());
-            return;
-        }
         this.coinType = args[0];
         this.outputFile = args[1];
         console.log(`coinType: ${this.coinType}`);

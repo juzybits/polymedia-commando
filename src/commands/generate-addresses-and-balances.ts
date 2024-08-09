@@ -1,35 +1,14 @@
 import { generateRandomAddress } from "@polymedia/suitcase-core";
 import { ZuiCommand } from "../types.js";
 
-export class GenerateAddressesAndBalancesCommand implements ZuiCommand {
+export class GenerateAddressesAndBalancesCommand implements ZuiCommand
+{
     private amount = 0;
-
-    public getDescription(): string {
-        return "Generate random Sui addresses and balances (for testing)";
-    }
-
-    public getUsage(): string {
-        return `${this.getDescription()}
-
-Usage:
-  generate-addresses-and-balances AMOUNT
-
-Arguments:
-  AMOUNT    The amount of address-balance pairs to generate
-
-Example:
-  generate-addresses-and-balances 5000
-`;
-    }
 
     public execute(args: string[]): Promise<void>
     {
         /* Read command arguments */
 
-        if (args.length !== 1) {
-            console.log(this.getUsage());
-            return Promise.resolve();
-        }
         this.amount = Number(args[0]);
 
         /* Generate random addresses and balances */

@@ -2,39 +2,16 @@ import { formatNumber, getCoinOfValue } from "@polymedia/suitcase-core";
 import { executeSuiTransaction, promptUser, setupSuiTransaction } from "@polymedia/suitcase-node";
 import { ZuiCommand } from "../types.js";
 
-export class SendCoinAmountCommand implements ZuiCommand {
+export class SendCoinAmountCommand implements ZuiCommand
+{
     private amount = 0;
     private coinType = "";
     private recipient = "";
-
-    public getDescription(): string {
-        return "Send an amount of Coin<T> to a recipient (handles coin merging and splitting)";
-    }
-
-    public getUsage(): string {
-        return `${this.getDescription()}
-
-Usage:
-  send-coin AMOUNT COIN_TYPE RECIPIENT
-
-Arguments:
-  AMOUNT        The amount of to send, without decimals
-  COIN_TYPE     The type of the coin (the T in Coin<T>)
-  RECIPIENT     The address of the recipient
-
-Example:
-  send-coin 5000 0x123::lol::LOL 0x777
-`;
-    }
 
     public async execute(args: string[]): Promise<void>
     {
         /* Read command arguments */
 
-        if (args.length !== 3) {
-            console.log(this.getUsage());
-            return;
-        }
         this.amount = Number(args[0]);
         this.coinType = args[1];
         this.recipient = args[2];

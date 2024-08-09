@@ -44,40 +44,17 @@ const RATE_LIMIT_DELAY = 334;
  */
 const GAS_PER_ADDRESS = 0.0013092459;
 
-export class BulksenderCommand implements ZuiCommand {
+export class BulksenderCommand implements ZuiCommand
+{
     private coinId = "";
     private inputFile = "";
     private outputFile = "";
 
-    public getDescription(): string {
-        return "Send Coin<T> to a list of addresses";
-    }
-
-    public getUsage(): string {
-        return `${this.getDescription()}
-
-Usage: bulksender COIN_ID INPUT_FILE OUTPUT_FILE
-
-Arguments:
-  COIN_ID       The Coin<T> to pay for the airdrop. Must be owned by the current active address.
-  INPUT_FILE    Path to a CSV with 2 columns: RECIPIENT_ADDRESS,AMOUNT_TO_SEND (without decimals)
-                E.g. \`0x123,25\` would send 25 SUI (25_000_000_000 MIST) to address 0x123
-  OUTPUT_FILE   Path to a text file to log details about sent and failed transactions
-
-Example:
-  bulksender 0x123 addresses_and_amounts.csv bulksender.log
-`;
-    }
-
-    public async execute(args: string[]): Promise<void> {
-
+    public async execute(args: string[]): Promise<void>
+    {
         try {
             /* Read and validate inputs */
 
-            if (args.length !== 3) {
-                console.log(this.getUsage());
-                return;
-            }
             this.coinId = args[0];
             this.inputFile = args[1];
             this.outputFile = args[2];

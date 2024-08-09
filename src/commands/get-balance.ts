@@ -2,37 +2,15 @@ import { shortenAddress } from "@polymedia/suitcase-core";
 import { setupSuiTransaction } from "@polymedia/suitcase-node";
 import { ZuiCommand } from "../types.js";
 
-export class GetBalanceCommand implements ZuiCommand {
+export class GetBalanceCommand implements ZuiCommand
+{
     private coinType = "";
     private addresses: string[] = [];
-
-    public getDescription(): string {
-        return "Get the total Coin<T> balance owned by one or more addresses.";
-    }
-
-    public getUsage(): string {
-        return `${this.getDescription()}
-
-Usage:
-  get-balance COIN_TYPE ADDRESS [ADDRESS...]
-
-Arguments:
-  COIN_TYPE     The type of the coin (the T in Coin<T>)
-  ADDRESS       The Sui address or addresses to query the balance for
-
-Example:
-  get-balance 0x123::lol::LOL 0x777 0x888
-`;
-    }
 
     public async execute(args: string[]): Promise<void>
     {
         /* Read command arguments */
 
-        if (args.length < 2) {
-            console.log(this.getUsage());
-            return;
-        }
         [this.coinType, ...this.addresses] = args;
 
         /* Fetch CoinMetadata<T> */

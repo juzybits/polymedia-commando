@@ -2,19 +2,8 @@ import { SuiMultiClient } from "@polymedia/suitcase-core";
 import { getActiveEnv } from "@polymedia/suitcase-node";
 import { ZuiCommand } from "../types.js";
 
-export class TestRpcEndpointsCommand implements ZuiCommand {
-    public getDescription(): string {
-        return "Test the latency of various Sui RPC endpoints";
-    }
-
-    public getUsage(): string {
-        return `${this.getDescription()}
-
-Usage:
-  test-rpc-endpoints
-`;
-    }
-
+export class TestRpcEndpointsCommand implements ZuiCommand
+{
     public async execute(): Promise<void>
     {
         const network = getActiveEnv();

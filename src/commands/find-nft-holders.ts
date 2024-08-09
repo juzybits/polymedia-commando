@@ -10,34 +10,10 @@ type Collection = {
     indexerId: string;
 };
 
-export class FindNftHoldersCommand implements ZuiCommand {
+export class FindNftHoldersCommand implements ZuiCommand
+{
     private inputFile = "";
     private outputDir = "";
-
-    public getDescription(): string {
-        return "Find NFT holders for a set of collections via Indexer.xyz";
-    }
-
-    public getUsage(): string {
-        return `${this.getDescription()}
-\nIt outputs one TXT file per collection: find-nft-holders.[collection].txt
-
-Usage:
-  find-nft-holders INPUT_FILE OUTPUT_DIR
-
-Arguments:
-  INPUT_FILE    JSON file with collection names and Indexer.xyz collection IDs. Format:
-                [ { name: string, indexerId: string, }, ... ]
-                * You can find collection IDs on https://www.indexer.xyz: search for
-                the collection you want, click "Code", and look for "collection_id".
-  OUTPUT_DIR    Output directory to write the TXT files. File format:
-                holder_address_1
-                holder_address_2
-
-Example:
-  find-nft-holders collections.json ./data
-`;
-    }
 
     public async execute(args: string[]): Promise<void>
     {
@@ -53,10 +29,6 @@ Example:
 
         /* Read command arguments */
 
-        if (args.length !== 2) {
-            console.log(this.getUsage());
-            return;
-        }
         this.inputFile = args[0];
         this.outputDir = args[1];
         console.log(`inputFile: ${this.inputFile}`);

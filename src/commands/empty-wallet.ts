@@ -7,24 +7,6 @@ const DEFAULT_RECIPIENT = "0xc67b4231d7f64be622d4534c590570fc2fdea1a70a7cbf72ddf
 
 export class EmptyWalletCommand implements ZuiCommand
 {
-    public getDescription(): string {
-        return "Send all objects in your wallet to a random address (except Coin<SUI>)";
-    }
-
-    public getUsage(): string {
-        return `${this.getDescription()}
-
-Usage:
-  empty-wallet [RECIPIENT]
-
-Arguments:
-  RECIPIENT     The address where the objects will be sent. Defaults to a random address.
-
-Example:
-  empty-wallet 0xdead
-`;
-    }
-
     public async execute(args: string[]): Promise<void>
     {
         const { network, signer, suiClient } = setupSuiTransaction();

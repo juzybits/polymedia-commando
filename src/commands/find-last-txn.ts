@@ -3,46 +3,15 @@ import { getActiveEnv, readJsonFile, writeJsonFile } from "@polymedia/suitcase-n
 import { ZuiCommand } from "../types.js";
 import { AddressAndBalance } from "../types.js";
 
-export class FindLastTransactionCommand implements ZuiCommand {
+export class FindLastTransactionCommand implements ZuiCommand
+{
     private inputFile = "./data/find-coin-holders.json";
     private outputFile = "./data/find-last-txn.json";
-
-    public getDescription(): string {
-        return "Find the last transaction for each Sui address";
-    }
-
-    public getUsage(): string {
-        return `${this.getDescription()}
-
-Usage:
-  find-last-txn INPUT_FILE OUTPUT_FILE
-
-Arguments:
-  INPUT_FILE    JSON file with addresses and balances. Format:
-                [ { address: string, balance: number }, ... ]
-  OUTPUT_FILE   JSON file with addresses and their last transaction ID and time. Format:
-                [
-                    {
-                        address: string,
-                        txnId: string | null,
-                        txnTime: string | null,
-                    },
-                    ...
-                ]
-
-Example:
-  find-last-txn addresses.json last_txns.json
-`;
-    }
 
     public async execute(args: string[]): Promise<void>
     {
         /* Read command arguments */
 
-        if (args.length !== 2) {
-            console.log(this.getUsage());
-            return;
-        }
         this.inputFile = args[0];
         this.outputFile = args[1];
         console.log(`inputFile: ${this.inputFile}`);
