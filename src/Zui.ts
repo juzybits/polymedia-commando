@@ -2,6 +2,7 @@
 
 import { Command } from "commander";
 import dotenv from "dotenv";
+import { balance } from "./commands/balance.js";
 import { bulksend } from "./commands/bulksender/bulksender.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
 import { faucet } from "./commands/faucet.js";
@@ -9,7 +10,6 @@ import { findCoinHolders } from "./commands/find-coin-holders.js";
 import { findLastTx } from "./commands/find-last-tx.js";
 import { findNftHolders } from "./commands/find-nft-holders.js";
 import { findNfts } from "./commands/find-nfts.js";
-import { GetBalanceCommand } from "./commands/get-balance.js";
 import { randomAddresses } from "./commands/random-addresses.js";
 import { SendCoinAmountCommand } from "./commands/send-coin-amount.js";
 import { TestRpcEndpointsCommand } from "./commands/test-rpc-endpoints.js";
@@ -28,6 +28,15 @@ program.configureHelp({
     sortSubcommands: true,
     subcommandTerm: (cmd) => cmd.name(), // only show the name, instead of short usage.
 });
+
+program
+    .command("balance")
+    .description("Get the total Coin<T> balance owned by one or more addresses.")
+    .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
+    .requiredOption("-a, --addresses <addresses...>", "The Sui address(es) to query the balance for")
+    .action(async (opts) => {
+        await balance(opts.coinType, opts.addresses);
+    });
 
 program
     .command("bulksend")
@@ -90,16 +99,6 @@ program
     .requiredOption("-o, --output-dir <outputDir>", "Output directory to write the JSON files")
     .action(async (opts) => {
         await findNfts(opts.inputFile, opts.outputDir);
-    });
-
-program
-    .command("get-balance")
-    .description("Get the total Coin<T> balance owned by one or more addresses.")
-    .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
-    .option("-a, --addresses <addresses...>", "The Sui address or addresses to query the balance for")
-    .action((opts) => {
-        const command = new GetBalanceCommand();
-        command.execute([opts.coinType, ...opts.addresses]);
     });
 
 program
