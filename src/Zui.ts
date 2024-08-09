@@ -22,7 +22,7 @@ const program = new Command();
 program
     .name("zui")
     .description("POLYMEDIA ZUI: Sui command line tools")
-    .version("0.0.1");
+    .version("0.0.2");
 
 program.configureHelp({
     sortSubcommands: true,
