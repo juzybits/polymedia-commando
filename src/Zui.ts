@@ -7,7 +7,7 @@ import { emptyWallet } from "./commands/empty-wallet.js";
 import { faucet } from "./commands/faucet.js";
 import { findCoinHolders } from "./commands/find-coin-holders.js";
 import { findLastTx } from "./commands/find-last-tx.js";
-import { FindNftHoldersCommand } from "./commands/find-nft-holders.js";
+import { findNftHolders } from "./commands/find-nft-holders.js";
 import { FindNftsCommand } from "./commands/find-nfts.js";
 import { GenerateAddressesAndBalancesCommand } from "./commands/generate-addresses-and-balances.js";
 import { GetBalanceCommand } from "./commands/get-balance.js";
@@ -77,11 +77,10 @@ program
 program
     .command("find-nft-holders")
     .description("Find NFT holders for a set of collections via Indexer.xyz")
-    .option("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
-    .option("-d, --output-dir <outputDir>", "Output directory to write the TXT files")
-    .action((opts) => {
-        const command = new FindNftHoldersCommand();
-        command.execute([opts.inputFile, opts.outputDir]);
+    .requiredOption("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
+    .requiredOption("-o, --output-dir <outputDir>", "Output directory to write the TXT files")
+    .action(async (opts) => {
+        await findNftHolders(opts.inputFile, opts.outputDir);
     });
 
 program

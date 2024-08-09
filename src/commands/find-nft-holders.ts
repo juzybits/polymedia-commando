@@ -1,6 +1,6 @@
 import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
 import { readJsonFile } from "@polymedia/suitcase-node";
-import fs from "fs";
+import { writeFileSync } from "fs";
 
 // Note: it took ~6.5 minutes to fetch 10,703 holders from 11 collections
 
@@ -9,58 +9,51 @@ type Collection = {
     indexerId: string;
 };
 
-export class FindNftHoldersCommand
+export async function findNftHolders(
+    inputFile: string,
+    outputDir: string,
+): Promise<void>
 {
-    private inputFile = "";
-    private outputDir = "";
+    /* Read API credentials */
 
-    public async execute(args: string[]): Promise<void>
-    {
-        /* Read API credentials */
+    const indexerApiUser = process.env.INDEXER_API_USER;
+    const indexerApiKey = process.env.INDEXER_API_KEY;
 
-        const indexerApiUser = process.env.INDEXER_API_USER;
-        const indexerApiKey = process.env.INDEXER_API_KEY;
+    if (!indexerApiUser || !indexerApiKey) {
+        console.error("Error: Missing required environment variables.");
+        return;
+    }
 
-        if (!indexerApiUser || !indexerApiKey) {
-            console.error("Error: Missing required environment variables.");
-            return;
-        }
+    console.log(`inputFile: ${inputFile}`);
+    console.log(`outputDir: ${outputDir}`);
 
-        /* Read command arguments */
+    /* Find NFT holders */
 
-        this.inputFile = args[0];
-        this.outputDir = args[1];
-        console.log(`inputFile: ${this.inputFile}`);
-        console.log(`outputDir: ${this.outputDir}`);
-
-        /* Find NFT holders */
-
-        const collections = readJsonFile<Collection[]>(this.inputFile);
-        for (const collection of collections) {
-            const holders = new Set<string>();
-            let offset = 0;
-            while (true) {
-                console.log(`fetching ${collection.name} holders from ${offset}`);
-                const results = await fetchHolders(collection.indexerId, offset, indexerApiUser, indexerApiKey);
-                if (results.length === 0) { // no more holders
-                    break;
-                }
-                for (const item of results) {
-                    offset++;
-                    const address = item.owner && validateAndNormalizeSuiAddress(item.owner);
-                    if (address) {
-                        holders.add(address);
-                    } else {
-                        console.log(`skipping null ${collection.name} holder`);
-                    }
-                }
-                await sleep(580); // avoid hitting the 100 req/min rate limit
+    const collections = readJsonFile<Collection[]>(inputFile);
+    for (const collection of collections) {
+        const holders = new Set<string>();
+        let offset = 0;
+        while (true) {
+            console.log(`fetching ${collection.name} holders from ${offset}`);
+            const results = await fetchHolders(collection.indexerId, offset, indexerApiUser, indexerApiKey);
+            if (results.length === 0) { // no more holders
+                break;
             }
-
-            const filePath = `${this.outputDir}/find-nft-holders.${collection.name}.txt`;
-            const contents = [...holders].join("\n");
-            fs.writeFileSync(filePath, contents + "\n");
+            for (const item of results) {
+                offset++;
+                const address = item.owner && validateAndNormalizeSuiAddress(item.owner);
+                if (address) {
+                    holders.add(address);
+                } else {
+                    console.log(`skipping null ${collection.name} holder`);
+                }
+            }
+            await sleep(580); // avoid hitting the 100 req/min rate limit
         }
+
+        const filePath = `${outputDir}/find-nft-holders.${collection.name}.txt`;
+        const contents = [...holders].join("\n");
+        writeFileSync(filePath, contents + "\n");
     }
 }
 
