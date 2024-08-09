@@ -12,7 +12,7 @@ import { findNftHolders } from "./commands/find-nft-holders.js";
 import { findNfts } from "./commands/find-nfts.js";
 import { randomAddresses } from "./commands/random-addresses.js";
 import { sendCoin } from "./commands/send-coin.js";
-import { TestRpcEndpointsCommand } from "./commands/test-rpc-endpoints.js";
+import { testRpcs } from "./commands/test-rpcs.js";
 
 dotenv.config();
 
@@ -30,9 +30,9 @@ program.configureHelp({
 
 program
     .command("balance")
-    .description("Get the total Coin<T> balance owned by one or more addresses.")
+    .description("Get the total Coin<T> balance owned by one or more addresses")
     .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
-    .requiredOption("-a, --addresses <addresses...>", "The Sui address(es) to query the balance for")
+    .requiredOption("-a, --addresses <addresses...>", "The address(es) to query the balance for")
     .action(async (opts) => {
         await balance(opts.coinType, opts.addresses);
     });
@@ -58,7 +58,7 @@ program
 program
     .command("faucet")
     .description("Get SUI from the faucet on localnet/devnet/testnet")
-    .option("-a, --address <addresses...>", "Sui address(es) where SUI should be sent. Defaults to your active address.")
+    .option("-a, --address <addresses...>", "Address(es) where SUI should be sent. Defaults to your active address.")
     .action(async (opts) => {
         await faucet(opts.address || []);
     });
@@ -120,11 +120,10 @@ program
     });
 
 program
-    .command("test-rpc-endpoints")
-    .description("Test the latency of various Sui RPC endpoints")
-    .action(() => {
-        const command = new TestRpcEndpointsCommand();
-        command.execute();
+    .command("test-rpcs")
+    .description("Measure the latency of various Sui RPC endpoints")
+    .action(async () => {
+        await testRpcs();
     });
 
 program.parse(process.argv);
