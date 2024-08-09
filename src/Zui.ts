@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 import { BulksenderCommand } from "./commands/bulksender/bulksender.js";
 import { EmptyWalletCommand } from "./commands/empty-wallet.js";
 import { faucet } from "./commands/faucet.js";
-import { FindCoinBalancesCommand } from "./commands/find-coin-balances.js";
 import { FindCoinHoldersCommand } from "./commands/find-coin-holders.js";
 import { FindLastTransactionCommand } from "./commands/find-last-txn.js";
 import { FindNftHoldersCommand } from "./commands/find-nft-holders.js";
@@ -56,17 +55,6 @@ program
     .action((options) => {
         const command = new BulksenderCommand();
         command.execute([options.coinId, options.inputFile, options.outputFile]);
-    });
-
-program
-    .command("find-coin-balances")
-    .description("Find how much Coin<T> is owned by each address")
-    .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
-    .option("-i, --input-file <inputFile>", "JSON file with addresses and (ignored) balances")
-    .option("-o, --output-file <outputFile>", "JSON file with addresses and (correct) balances")
-    .action((options) => {
-        const command = new FindCoinBalancesCommand();
-        command.execute([options.coinType, options.inputFile, options.outputFile]);
     });
 
 program
