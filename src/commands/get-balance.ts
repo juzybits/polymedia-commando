@@ -1,8 +1,8 @@
 import { shortenAddress } from "@polymedia/suitcase-core";
 import { setupSuiTransaction } from "@polymedia/suitcase-node";
-import { Command } from "../Zui.js";
+import { ZuiCommand } from "../types.js";
 
-export class GetBalanceCommand implements Command {
+export class GetBalanceCommand implements ZuiCommand {
     private coinType = "";
     private addresses: string[] = [];
 

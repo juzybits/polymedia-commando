@@ -1,11 +1,11 @@
 import { PaginatedObjectsResponse } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import { executeSuiTransaction, setupSuiTransaction } from "@polymedia/suitcase-node";
-import { Command } from "../Zui.js";
+import { ZuiCommand } from "../types.js";
 
 const DEFAULT_RECIPIENT = "0xc67b4231d7f64be622d4534c590570fc2fdea1a70a7cbf72ddfeba16d11fd22e";
 
-export class EmptyWalletCommand implements Command
+export class EmptyWalletCommand implements ZuiCommand
 {
     public getDescription(): string {
         return "Send all objects in your wallet to a random address (except Coin<SUI>)";

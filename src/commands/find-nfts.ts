@@ -1,6 +1,6 @@
 import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
 import { readJsonFile, writeJsonFile } from "@polymedia/suitcase-node";
-import { Command } from "../Zui.js";
+import { ZuiCommand } from "../types.js";
 
 // Note: it took ~23 minutes to fetch 39,653 NFTs from 9 collections
 
@@ -9,7 +9,7 @@ type Collection = {
     indexerId: string;
 };
 
-export class FindNftsCommand implements Command {
+export class FindNftsCommand implements ZuiCommand {
     private inputFile = "./data/nft-collections.json";
     private outputDir = "./data";
 

@@ -1,10 +1,10 @@
 import { writeJsonFile } from "@polymedia/suitcase-node";
-import { Command } from "../Zui.js";
+import { ZuiCommand } from "../types.js";
 import { AddressAndBalance } from "../types.js";
 
 const IS_DEV = false;
 
-export class FindCoinHoldersCommand implements Command {
+export class FindCoinHoldersCommand implements ZuiCommand {
     private coinType = "";
     private outputFile = "";
     private limit = IS_DEV ? 3 : 999999;

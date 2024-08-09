@@ -1,8 +1,8 @@
 import { readJsonFile, writeCsvFile } from "@polymedia/suitcase-node";
-import { Command } from "../Zui.js";
+import { ZuiCommand } from "../types.js";
 import { AddressAndBalance } from "../types.js";
 
-export class TransformBalancesJsonToCsvCommand implements Command {
+export class TransformBalancesJsonToCsvCommand implements ZuiCommand {
     private decimals = 0;
     private inputFile = "";
     private outputFile = "";

@@ -1,7 +1,7 @@
 import { generateRandomAddress } from "@polymedia/suitcase-core";
-import { Command } from "../Zui.js";
+import { ZuiCommand } from "../types.js";
 
-export class GenerateAddressesAndBalancesCommand implements Command {
+export class GenerateAddressesAndBalancesCommand implements ZuiCommand {
     private amount = 0;
 
     public getDescription(): string {

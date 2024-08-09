@@ -1,8 +1,8 @@
 import { getActiveAddress, getActiveEnv } from "@polymedia/suitcase-node";
-import { Command } from "../Zui.js";
+import { ZuiCommand } from "../types.js";
 import { requestSuiFromFaucet, shortenAddress, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
 
-export class FaucetCommand implements Command {
+export class FaucetCommand implements ZuiCommand {
     private recipients: string[] = [];
 
     public getDescription(): string {

@@ -1,7 +1,7 @@
 import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
 import { readJsonFile } from "@polymedia/suitcase-node";
 import fs from "fs";
-import { Command } from "../Zui.js";
+import { ZuiCommand } from "../types.js";
 
 // Note: it took ~6.5 minutes to fetch 10,703 holders from 11 collections
 
@@ -10,7 +10,7 @@ type Collection = {
     indexerId: string;
 };
 
-export class FindNftHoldersCommand implements Command {
+export class FindNftHoldersCommand implements ZuiCommand {
     private inputFile = "";
     private outputDir = "";
 

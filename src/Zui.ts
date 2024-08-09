@@ -1,3 +1,7 @@
+#!/usr/bin/env node
+
+import dotenv from "dotenv";
+import { Command } from "commander";
 import { BulksenderCommand } from "./commands/bulksender/bulksender.js";
 import { EmptyWalletCommand } from "./commands/empty-wallet.js";
 import { FindCoinBalancesCommand } from "./commands/find-coin-balances.js";
@@ -12,95 +16,147 @@ import { SendCoinAmountCommand } from "./commands/send-coin-amount.js";
 import { TestRpcEndpointsCommand } from "./commands/test-rpc-endpoints.js";
 import { TransformBalancesJsonToCsvCommand } from "./commands/transform-balances-json-to-csv.js";
 
-/**
- * Interface defining the structure of a command in the Zui framework.
- */
-export type Command = {
-    /** Returns a short description of the command. */
-    getDescription(): string;
-    /** Returns detailed usage information for the command. */
-    getUsage(): string;
-    /** Executes the command logic. */
-    execute(args: string[]): Promise<void>;
-};
+dotenv.config();
 
-/**
- * The main class responsible for managing and executing commands.
- */
-export class Zui {
-    private commands: Record<string, Command>;
+const program = new Command();
 
-    constructor() {
-        this.commands = {};
-        this.registerCommand("bulksender", new BulksenderCommand());
-        this.registerCommand("empty-wallet", new EmptyWalletCommand());
-        this.registerCommand("faucet", new FaucetCommand());
-        this.registerCommand("find-coin-balances", new FindCoinBalancesCommand());
-        this.registerCommand("find-coin-holders", new FindCoinHoldersCommand());
-        this.registerCommand("find-last-txn", new FindLastTransactionCommand());
-        this.registerCommand("find-nft-holders", new FindNftHoldersCommand());
-        this.registerCommand("find-nfts", new FindNftsCommand());
-        this.registerCommand("generate-addresses-and-balances", new GenerateAddressesAndBalancesCommand());
-        this.registerCommand("get-balance", new GetBalanceCommand());
-        this.registerCommand("send-coin-amount", new SendCoinAmountCommand());
-        this.registerCommand("test-rpc-endpoints", new TestRpcEndpointsCommand());
-        this.registerCommand("transform-balances-json-to-csv", new TransformBalancesJsonToCsvCommand());
-    }
+program
+    .name("zui")
+    .description("POLYMEDIA ZUI: Sui command line tools")
+    .version("0.0.1");
 
-    /**
-     * Registers a new command with the Zui framework.
-     * @param name - The name of the command.
-     * @param command - The command object.
-     */
-    public registerCommand(name: string, command: Command) {
-        this.commands[name] = command;
-    }
+program.configureHelp({
+    sortSubcommands: true,
+    subcommandTerm: (cmd) => cmd.name(), // only show the name, instead of short usage.
+});
 
-    async run(): Promise<void> {
-        const args = process.argv.slice(3); // skip "node" and "zui"/"main.js"
-        const commandName = process.argv[2];
+program
+    .command("faucet")
+    .description("Get SUI from the faucet on localnet/devnet/testnet")
+    .option("-a, --address <addresses...>", "One or more Sui addresses where SUI should be sent")
+    .action((options) => {
+        const command = new FaucetCommand();
+        command.execute(options.address || []);
+    });
 
-        // Show general help
-        if (!commandName || commandName === "-h" || commandName === "--help") {
-            this.printGeneralHelp();
-            return;
-        }
+program
+    .command("empty-wallet")
+    .description("Send all objects in your wallet to a random address (except Coin<SUI>)")
+    .option("-r, --recipient <recipient>", "The address where the objects will be sent")
+    .action((options) => {
+        const command = new EmptyWalletCommand();
+        command.execute([options.recipient]);
+    });
 
-        // Grab the requested command object
-        const command = this.commands[commandName];
-        if (!command) {
-            console.error(`Unknown command: ${commandName}`);
-            this.printGeneralHelp();
-            process.exit(1);
-        }
+program
+    .command("bulksender")
+    .description("Send Coin<T> to a list of addresses")
+    .option("-c, --coin-id <coinId>", "The Coin<T> to pay for the airdrop")
+    .option("-i, --input-file <inputFile>", "Path to a CSV with recipient addresses and amounts")
+    .option("-o, --output-file <outputFile>", "Path to a text file to log transaction details")
+    .action((options) => {
+        const command = new BulksenderCommand();
+        command.execute([options.coinId, options.inputFile, options.outputFile]);
+    });
 
-        // Show command usage
-        if (args.includes("-h") || args.includes("--help")) {
-            console.log(command.getUsage());
-            return;
-        }
+program
+    .command("find-coin-balances")
+    .description("Find how much Coin<T> is owned by each address")
+    .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
+    .option("-i, --input-file <inputFile>", "JSON file with addresses and (ignored) balances")
+    .option("-o, --output-file <outputFile>", "JSON file with addresses and (correct) balances")
+    .action((options) => {
+        const command = new FindCoinBalancesCommand();
+        command.execute([options.coinType, options.inputFile, options.outputFile]);
+    });
 
-        try {
-            await command.execute(args);
-        } catch (error) {
-            console.error(`Error executing ${commandName}:`, error);
-            process.exit(1);
-        }
-    }
+program
+    .command("find-coin-holders")
+    .description("Find Coin<T> holders using the Suiscan API")
+    .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
+    .option("-o, --output-file <outputFile>", "JSON file with addresses and (inaccurate) balances")
+    .action((options) => {
+        const command = new FindCoinHoldersCommand();
+        command.execute([options.coinType, options.outputFile]);
+    });
 
-    private printGeneralHelp(): void {
-        console.log("\nPOLYMEDIA ZUI: Sui command line tools");
-        console.log("\nUsage:");
-        console.log("  zui COMMAND [OPTIONS]\n");
+program
+    .command("find-last-txn")
+    .description("Find the last transaction for each Sui address")
+    .option("-i, --input-file <inputFile>", "JSON file with addresses and balances")
+    .option("-o, --output-file <outputFile>", "JSON file with addresses and their last transaction ID and time")
+    .action((options) => {
+        const command = new FindLastTransactionCommand();
+        command.execute([options.inputFile, options.outputFile]);
+    });
 
-        console.log("Available Commands:");
-        for (const commandName in this.commands) {
-            const command = this.commands[commandName];
-            console.log(`  - ${commandName}: ${command.getDescription()}`);
-        }
+program
+    .command("find-nft-holders")
+    .description("Find NFT holders for a set of collections via Indexer.xyz")
+    .option("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
+    .option("-d, --output-dir <outputDir>", "Output directory to write the TXT files")
+    .action((options) => {
+        const command = new FindNftHoldersCommand();
+        command.execute([options.inputFile, options.outputDir]);
+    });
 
-        console.log("\nFor more information about a command:");
-        console.log("  zui COMMAND -h");
-    }
+program
+    .command("find-nfts")
+    .description("Find all NFTs and their owners for a set of collections via Indexer.xyz")
+    .option("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
+    .option("-d, --output-dir <outputDir>", "Output directory to write the JSON files")
+    .action((options) => {
+        const command = new FindNftsCommand();
+        command.execute([options.inputFile, options.outputDir]);
+    });
 
-}
+program
+    .command("generate-addresses-and-balances")
+    .description("Generate random Sui addresses and balances (for testing)")
+    .option("-a, --amount <amount>", "The amount of address-balance pairs to generate")
+    .action((options) => {
+        const command = new GenerateAddressesAndBalancesCommand();
+        command.execute([options.amount]);
+    });
+
+program
+    .command("get-balance")
+    .description("Get the total Coin<T> balance owned by one or more addresses.")
+    .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
+    .option("-a, --addresses <addresses...>", "The Sui address or addresses to query the balance for")
+    .action((options) => {
+        const command = new GetBalanceCommand();
+        command.execute([options.coinType, ...options.addresses]);
+    });
+
+program
+    .command("send-coin")
+    .description("Send an amount of Coin<T> to a recipient (handles coin merging and splitting)")
+    .option("-a, --amount <amount>", "The amount to send, without decimals")
+    .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
+    .option("-r, --recipient <recipient>", "The address of the recipient")
+    .action((options) => {
+        const command = new SendCoinAmountCommand();
+        command.execute([options.amount, options.coinType, options.recipient]);
+    });
+
+program
+    .command("test-rpc-endpoints")
+    .description("Test the latency of various Sui RPC endpoints")
+    .action(() => {
+        const command = new TestRpcEndpointsCommand();
+        command.execute();
+    });
+
+program
+    .command("transform-balances-json-to-csv")
+    .description("Transform a .json file containing addresses and balances into a .csv file")
+    .option("-d, --decimals <decimals>", "Number of decimals for Coin<T>")
+    .option("-i, --input-file <inputFile>", "JSON file with addresses and balances (with decimals)")
+    .option("-o, --output-file <outputFile>", "CSV file with addresses and balances (without decimals)")
+    .action((options) => {
+        const command = new TransformBalancesJsonToCsvCommand();
+        command.execute([options.decimals, options.inputFile, options.outputFile]);
+    });
+
+program.parse(process.argv);
