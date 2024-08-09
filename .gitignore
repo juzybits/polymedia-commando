@@ -1,14 +1,15 @@
 .DS_Store
 
-# TypeScript
-dist/
-node_modules/
+# JavaScript
+.auth.ts
+.env*
+.turbo
+.wrangler
+dist
+node_modules
 
 # Sui
 .coverage_map.mvcov
 .trace
-build/
-
-# App specific
-.env
-data/
+build
+Move.lock
