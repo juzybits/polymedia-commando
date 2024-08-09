@@ -2,7 +2,7 @@
 
 import { Command } from "commander";
 import dotenv from "dotenv";
-import { BulksenderCommand } from "./commands/bulksender/bulksender.js";
+import { bulksend } from "./commands/bulksender/bulksender.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
 import { faucet } from "./commands/faucet.js";
 import { findCoinHolders } from "./commands/find-coin-holders.js";
@@ -30,11 +30,13 @@ program.configureHelp({
 });
 
 program
-    .command("faucet")
-    .description("Get SUI from the faucet on localnet/devnet/testnet")
-    .option("-a, --address <addresses...>", "One or more Sui addresses where SUI should be sent")
+    .command("bulksend")
+    .description("Send Coin<T> to a list of addresses")
+    .requiredOption("-c, --coin-id <coinId>", "The Coin<T> to pay for the airdrop")
+    .requiredOption("-i, --input-file <inputFile>", "Path to a CSV with recipient addresses and amounts")
+    .requiredOption("-o, --output-file <outputFile>", "Path to a text file to log transaction details")
     .action(async (opts) => {
-        await faucet(opts.address || []);
+        await bulksend(opts.coinId, opts.inputFile, opts.outputFile);
     });
 
 program
@@ -46,14 +48,11 @@ program
     });
 
 program
-    .command("bulksender")
-    .description("Send Coin<T> to a list of addresses")
-    .option("-c, --coin-id <coinId>", "The Coin<T> to pay for the airdrop")
-    .option("-i, --input-file <inputFile>", "Path to a CSV with recipient addresses and amounts")
-    .option("-o, --output-file <outputFile>", "Path to a text file to log transaction details")
-    .action((opts) => {
-        const command = new BulksenderCommand();
-        command.execute([opts.coinId, opts.inputFile, opts.outputFile]);
+    .command("faucet")
+    .description("Get SUI from the faucet on localnet/devnet/testnet")
+    .option("-a, --address <addresses...>", "One or more Sui addresses where SUI should be sent")
+    .action(async (opts) => {
+        await faucet(opts.address || []);
     });
 
 program
