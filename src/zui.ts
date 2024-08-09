@@ -3,7 +3,7 @@
 import { Command } from "commander";
 import dotenv from "dotenv";
 import { balance } from "./commands/balance.js";
-import { bulksend } from "./commands/bulksender/bulksender.js";
+import { bulksend } from "./commands/bulksender/bulksend.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
 import { faucet } from "./commands/faucet.js";
 import { findCoinHolders } from "./commands/find-coin-holders.js";

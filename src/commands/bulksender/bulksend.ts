@@ -2,10 +2,12 @@ import { bcs } from "@mysten/sui/bcs";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 import {
+    balanceToString,
     chunkArray,
     formatNumber,
     NetworkName,
     sleep,
+    stringToBalance,
     validateAndNormalizeSuiAddress,
 } from "@polymedia/suitcase-core";
 import {
@@ -111,28 +113,39 @@ export async function bulksend(
         }
         const coinSymbol = coinMetadata.symbol;
         const coinDecimals = coinMetadata.decimals;
-        const decimalMultiplier = BigInt(10**coinDecimals);
         console.log(`COIN_ID symbol: ${coinSymbol}`);
         console.log(`COIN_ID decimals: ${coinDecimals}`);
 
         // Get COIN_ID balance
-        const coinBalanceDecimals = BigInt((coinObject.data.content.fields as any).balance);
-        const coinBalanceNoDecimals = coinBalanceDecimals / decimalMultiplier;
-        console.log(`COIN_ID balance: ${formatNumber(Number(coinBalanceNoDecimals))} ${coinSymbol}`);
+        const coinBalance = BigInt((coinObject.data.content.fields as any).balance);
+        console.log(`COIN_ID balance: ${balanceToString(coinBalance, coinDecimals)} ${coinSymbol}`);
 
         // Read addresses and amounts from input file
-        const addressAmountPairs = readCsvFile<AddressAmountPair>(inputFile, parseCsvLine);
-        console.log(`\nFound ${addressAmountPairs.length} addresses in ${inputFile}`);
-        const batches = chunkArray(addressAmountPairs, BATCH_SIZE);
+        function parseCsvLine(values: string[]): AddressBalancePair | null {
+            const [addressStr, amountStr] = values;
+
+            const address = validateAndNormalizeSuiAddress(addressStr);
+
+            if (address === null) {
+                console.debug(`[parseCsvLine] Skipping line with invalid owner: ${addressStr}`);
+                return null;
+            }
+
+            const balance = stringToBalance(amountStr, coinDecimals);
+
+            return { address, balance };
+        }
+        const addressBalancePairs = readCsvFile<AddressBalancePair>(inputFile, parseCsvLine);
+        console.log(`\nFound ${addressBalancePairs.length} addresses in ${inputFile}`);
+        const batches = chunkArray(addressBalancePairs, BATCH_SIZE);
         console.log(`Airdrop will be done in ${batches.length} transaction blocks`);
-        console.log(`Gas estimate: ${formatNumber(GAS_PER_ADDRESS*addressAmountPairs.length)} SUI`);
+        console.log(`Gas estimate: ${formatNumber(GAS_PER_ADDRESS*addressBalancePairs.length)} SUI`);
         // TODO: abort if current gas is lower than gas estimate
-        const totalAmountNoDecimals = addressAmountPairs.reduce((sum, pair) => sum + pair.amount, BigInt(0));
-        const totalAmountDecimals = totalAmountNoDecimals * decimalMultiplier;
-        console.log(`Total amount to be sent: ${formatNumber(Number(totalAmountNoDecimals))} ${coinSymbol}`);
+        const totalBalance = addressBalancePairs.reduce((sum, pair) => sum + pair.balance, BigInt(0));
+        console.log(`Total amount to be sent: ${balanceToString(totalBalance, coinDecimals)} ${coinSymbol}`);
 
         // Abort if COIN_ID doesn't have enough balance
-        if (totalAmountDecimals > coinBalanceDecimals) {
+        if (totalBalance > coinBalance) {
             throw new Error("Total amount to be sent is bigger than COIN_ID balance");
         }
 
@@ -151,18 +164,18 @@ export async function bulksend(
             const packageId = PACKAGE_IDS.get(networkName);
             for (const batch of batches) {
                 batchNumber++;
-                const batchAmount = batch.reduce((total, pair) => total + pair.amount, BigInt(0));
-                logTransactionStart(outputFile, batchAmount, batchNumber, batch);
+                const batchBalance = batch.reduce((total, pair) => total + pair.balance, BigInt(0));
+                logTransactionStart(outputFile, batchBalance, batchNumber, batch);
 
                 const tx = new Transaction();
-                const payCoin = tx.splitCoins(coinId, [batchAmount * decimalMultiplier]);
+                const payCoin = tx.splitCoins(coinId, [batchBalance]);
                 tx.moveCall({
                     target: `${packageId}::bulksender::send`,
                     typeArguments: [ coinType ],
                     arguments: [
                         payCoin,
                         tx.pure(bcs.vector(bcs.U64).serialize(
-                            batch.map(pair => pair.amount * decimalMultiplier)
+                            batch.map(pair => pair.balance)
                         )),
                         tx.pure(bcs.vector(bcs.Address).serialize(
                             batch.map(pair => pair.address)
@@ -212,31 +225,12 @@ export async function bulksend(
 
 // === types ===
 
-type AddressAmountPair = {
+type AddressBalancePair = {
     address: string;
-    amount: bigint;
+    balance: bigint;
 };
 
 // === helpers ===
-
-/**
- * It expects the 1st column to be the owner address and the 2nd column to be the amount to be sent.
- */
-function parseCsvLine(values: string[]): AddressAmountPair | null {
-    const [addressStr, amountStr] = values;
-
-    const address = validateAndNormalizeSuiAddress(addressStr);
-
-    if (address === null) {
-        console.debug(`[parseCsvLine] Skipping line with invalid owner: ${addressStr}`);
-        return null;
-    }
-
-    const amount = BigInt(amountStr);
-
-    return { address, amount };
-
-}
 
 /**
  * Output looks like this:
@@ -248,7 +242,7 @@ function logTransactionStart(
     outputFile: string,
     batchAmount: bigint,
     batchNumber: number,
-    batch: AddressAmountPair[],
+    batch: AddressBalancePair[],
 ): void {
     const shortText = `Sending ${batchAmount} to batch ${batchNumber} (${batch.length} addresses)`;
     console.log(shortText);
