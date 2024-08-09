@@ -9,8 +9,8 @@ import { findCoinHolders } from "./commands/find-coin-holders.js";
 import { findLastTx } from "./commands/find-last-tx.js";
 import { findNftHolders } from "./commands/find-nft-holders.js";
 import { findNfts } from "./commands/find-nfts.js";
-import { GenerateAddressesAndBalancesCommand } from "./commands/generate-addresses-and-balances.js";
 import { GetBalanceCommand } from "./commands/get-balance.js";
+import { randomAddresses } from "./commands/random-addresses.js";
 import { SendCoinAmountCommand } from "./commands/send-coin-amount.js";
 import { TestRpcEndpointsCommand } from "./commands/test-rpc-endpoints.js";
 import { TransformBalancesJsonToCsvCommand } from "./commands/transform-balances-json-to-csv.js";
@@ -93,15 +93,6 @@ program
     });
 
 program
-    .command("generate-addresses-and-balances")
-    .description("Generate random Sui addresses and balances (for testing)")
-    .option("-a, --amount <amount>", "The amount of address-balance pairs to generate")
-    .action((opts) => {
-        const command = new GenerateAddressesAndBalancesCommand();
-        command.execute([opts.amount]);
-    });
-
-program
     .command("get-balance")
     .description("Get the total Coin<T> balance owned by one or more addresses.")
     .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
@@ -109,6 +100,15 @@ program
     .action((opts) => {
         const command = new GetBalanceCommand();
         command.execute([opts.coinType, ...opts.addresses]);
+    });
+
+program
+    .command("random-addresses")
+    .description("Generate random Sui addresses (for testing)")
+    .requiredOption("-a, --amount <amount>", "The amount of addresses to generate")
+    .option("-b, --balance", "Include random balance with each address")
+    .action(async (opts) => {
+        await randomAddresses(opts.amount, opts.balance);
     });
 
 program
