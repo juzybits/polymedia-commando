@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-import dotenv from "dotenv";
 import { Command } from "commander";
+import dotenv from "dotenv";
 import { BulksenderCommand } from "./commands/bulksender/bulksender.js";
 import { EmptyWalletCommand } from "./commands/empty-wallet.js";
+import { faucet } from "./commands/faucet.js";
 import { FindCoinBalancesCommand } from "./commands/find-coin-balances.js";
 import { FindCoinHoldersCommand } from "./commands/find-coin-holders.js";
 import { FindLastTransactionCommand } from "./commands/find-last-txn.js";
@@ -11,7 +12,6 @@ import { FindNftHoldersCommand } from "./commands/find-nft-holders.js";
 import { FindNftsCommand } from "./commands/find-nfts.js";
 import { GenerateAddressesAndBalancesCommand } from "./commands/generate-addresses-and-balances.js";
 import { GetBalanceCommand } from "./commands/get-balance.js";
-import { FaucetCommand } from "./commands/faucet.js";
 import { SendCoinAmountCommand } from "./commands/send-coin-amount.js";
 import { TestRpcEndpointsCommand } from "./commands/test-rpc-endpoints.js";
 import { TransformBalancesJsonToCsvCommand } from "./commands/transform-balances-json-to-csv.js";
@@ -34,9 +34,8 @@ program
     .command("faucet")
     .description("Get SUI from the faucet on localnet/devnet/testnet")
     .option("-a, --address <addresses...>", "One or more Sui addresses where SUI should be sent")
-    .action((options) => {
-        const command = new FaucetCommand();
-        command.execute(options.address || []);
+    .action(async (options) => {
+        await faucet(options.address || []);
     });
 
 program
