@@ -1,4 +1,4 @@
-import { shortenAddress } from "@polymedia/suitcase-core";
+import { balanceToString, shortenAddress } from "@polymedia/suitcase-core";
 import { setupSuiTransaction } from "@polymedia/suitcase-node";
 
 export async function balance(
@@ -18,9 +18,9 @@ export async function balance(
     /* Fetch balances for each address */
 
     for (const owner of addresses) {
-        const resp = await suiClient.getBalance({ owner, coinType: coinType });
+        const bal = await suiClient.getBalance({ owner, coinType: coinType });
         const addressPretty = shortenAddress(owner);
-        const balancePretty = (Number(resp.totalBalance) / 10**coinMeta.decimals).toLocaleString("en-US");
+        const balancePretty = balanceToString(BigInt(bal.totalBalance), coinMeta.decimals);
         console.log(`${addressPretty}: ${balancePretty} ${coinMeta.symbol}`);
     }
 }

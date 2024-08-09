@@ -11,7 +11,7 @@ import { findLastTx } from "./commands/find-last-tx.js";
 import { findNftHolders } from "./commands/find-nft-holders.js";
 import { findNfts } from "./commands/find-nfts.js";
 import { randomAddresses } from "./commands/random-addresses.js";
-import { SendCoinAmountCommand } from "./commands/send-coin-amount.js";
+import { sendCoin } from "./commands/send-coin.js";
 import { TestRpcEndpointsCommand } from "./commands/test-rpc-endpoints.js";
 import { TransformBalancesJsonToCsvCommand } from "./commands/transform-balances-json-to-csv.js";
 
@@ -113,12 +113,11 @@ program
 program
     .command("send-coin")
     .description("Send an amount of Coin<T> to a recipient (handles coin merging and splitting)")
-    .option("-a, --amount <amount>", "The amount to send, without decimals")
-    .option("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
-    .option("-r, --recipient <recipient>", "The address of the recipient")
-    .action((opts) => {
-        const command = new SendCoinAmountCommand();
-        command.execute([opts.amount, opts.coinType, opts.recipient]);
+    .requiredOption("-a, --amount <amount>", "The amount to send, without decimals")
+    .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
+    .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
+    .action(async (opts) => {
+        await sendCoin(opts.amount, opts.coinType, opts.recipient);
     });
 
 program
