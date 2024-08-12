@@ -27,16 +27,16 @@
     },
     "dependencies": {
         "@mysten/sui": "^1.5.0",
-        "@polymedia/suitcase-core": "^0.0.13",
-        "@polymedia/suitcase-node": "^0.0.13",
+        "@polymedia/suitcase-core": "^0.0.15",
+        "@polymedia/suitcase-node": "^0.0.15",
         "commander": "^12.1.0",
         "dotenv": "^16.4.5"
     },
     "devDependencies": {
-        "@eslint/js": "^9.8.0",
+        "@eslint/js": "^9.9.0",
         "@stylistic/eslint-plugin": "^2.6.2",
-        "@types/node": "^22.1.0",
-        "eslint": "^9.8.0",
+        "@types/node": "^22.2.0",
+        "eslint": "^9.9.0",
         "typescript": "^5.5.4",
         "typescript-eslint": "^8.0.1"
     },
