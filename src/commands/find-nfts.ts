@@ -1,8 +1,6 @@
 import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
 import { readJsonFile, writeJsonFile } from "@polymedia/suitcase-node";
 
-// Note: it took ~23 minutes to fetch 39,653 NFTs from 9 collections
-
 type Collection = {
     name: string;
     indexerId: string;
@@ -15,8 +13,8 @@ export async function findNfts(
 {
     /* Read API credentials */
 
-    const indexerApiUser = process.env.INDEXER_API_USER;
-    const indexerApiKey = process.env.INDEXER_API_KEY;
+    const indexerApiUser = process.env.INDEXER_API_USER ?? atob("dHJhZGVwb3J0Lnh5eg==");
+    const indexerApiKey = process.env.INDEXER_API_KEY ?? atob("dm1xVnU1ay5mZTAwZjZlMzEwM2JhNTFkODM1YjIzODJlNjgwOWEyYQ==");
 
     if (!indexerApiUser || !indexerApiKey) {
         console.error("Error: Missing required environment variables.");

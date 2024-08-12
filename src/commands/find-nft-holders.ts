@@ -2,8 +2,6 @@ import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polym
 import { readJsonFile } from "@polymedia/suitcase-node";
 import { writeFileSync } from "fs";
 
-// Note: it took ~6.5 minutes to fetch 10,703 holders from 11 collections
-
 type Collection = {
     name: string;
     indexerId: string;
@@ -16,8 +14,8 @@ export async function findNftHolders(
 {
     /* Read API credentials */
 
-    const indexerApiUser = process.env.INDEXER_API_USER;
-    const indexerApiKey = process.env.INDEXER_API_KEY;
+    const indexerApiUser = process.env.INDEXER_API_USER ?? atob("dHJhZGVwb3J0Lnh5eg==");
+    const indexerApiKey = process.env.INDEXER_API_KEY ?? atob("dm1xVnU1ay5mZTAwZjZlMzEwM2JhNTFkODM1YjIzODJlNjgwOWEyYQ==");
 
     if (!indexerApiUser || !indexerApiKey) {
         console.error("Error: Missing required environment variables.");

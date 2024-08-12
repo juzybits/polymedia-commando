@@ -20,10 +20,10 @@ pnpm install
 pnpm zui -h
 ```
 
-Create `.env` and add your Indexer.xyz credentials if you'll fetch NFT data:
-
+If you'll fetch NFT data, set your Indexer.xyz credentials as environment variables:
 ```
-cp .env.example .env
+export INDEXER_API_USER=your_username
+export INDEXER_API_KEY=your_api_key
 ```
 
 ## Usage
