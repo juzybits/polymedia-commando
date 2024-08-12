@@ -2,6 +2,7 @@
 
 import { Command } from "commander";
 import dotenv from "dotenv";
+import packageJson from '../package.json' with { type: 'json' };
 import { balance } from "./commands/balance.js";
 import { bulksend } from "./commands/bulksender/bulksend.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
@@ -21,7 +22,7 @@ const program = new Command();
 program
     .name("zui")
     .description("POLYMEDIA ZUI: Sui command line tools")
-    .version("0.0.2");
+    .version(packageJson.version);
 
 program.configureHelp({
     sortSubcommands: true,

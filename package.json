@@ -1,6 +1,6 @@
 {
     "private": false,
-    "version": "0.0.3",
+    "version": "0.0.4",
     "name": "@polymedia/zui",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://github.com/juzybits/polymedia-commando",
@@ -17,7 +17,7 @@
         "zui"
     ],
     "scripts": {
-        "zui": "tsc -b && node dist/zui.js",
+        "zui": "tsc -b && node --disable-warning=ExperimentalWarning dist/zui.js",
         "build": "tsc -b",
         "clean": "rm -rf dist/ node_modules/ .turbo/ .wrangler/ src/commands/bulksender/sui/build/",
         "dev": "tsc --watch",
@@ -49,6 +49,6 @@
         "dist/"
     ],
     "bin": {
-        "zui": "./dist/zui.js"
+        "zui": "node --disable-warning=ExperimentalWarning dist/zui.js"
     }
 }
