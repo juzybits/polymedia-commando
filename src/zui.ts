@@ -2,7 +2,9 @@
 
 import { Command } from "commander";
 import dotenv from "dotenv";
-import packageJson from '../package.json' with { type: 'json' };
+import { readFileSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { balance } from "./commands/balance.js";
 import { bulksend } from "./commands/bulksender/bulksend.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
@@ -22,7 +24,7 @@ const program = new Command();
 program
     .name("zui")
     .description("POLYMEDIA ZUI: Sui command line tools")
-    .version(packageJson.version);
+    .version(`zui ${getVersion()}`);
 
 program.configureHelp({
     sortSubcommands: true,
@@ -144,3 +146,13 @@ program
     });
 
 program.parse(process.argv);
+
+function getVersion(): string
+{
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+
+    const packageText = readFileSync(join(__dirname, "..", "package.json"), "utf8");
+    const packageJson = JSON.parse(packageText);
+    return packageJson.version;
+}
