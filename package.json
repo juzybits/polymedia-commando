@@ -1,6 +1,6 @@
 {
     "private": false,
-    "version": "0.0.4",
+    "version": "0.0.5",
     "name": "@polymedia/zui",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://github.com/juzybits/polymedia-commando",
@@ -49,6 +49,6 @@
         "dist/"
     ],
     "bin": {
-        "zui": "node --disable-warning=ExperimentalWarning dist/zui.js"
+        "zui": "dist/zui.js"
     }
 }
