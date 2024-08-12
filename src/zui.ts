@@ -87,6 +87,7 @@ program
 
 program
     .command("find-nft-holders")
+    .summary("Find NFT holders for a set of collections via Indexer.xyz")
     .description(
 `Find NFT holders for a set of collections via Indexer.xyz
 
@@ -104,6 +105,7 @@ Example input file:
 
 program
     .command("find-nfts")
+    .summary("Find all NFTs and their owners for a set of collections via Indexer.xyz")
     .description(
 `Find all NFTs and their owners for a set of collections via Indexer.xyz
 
