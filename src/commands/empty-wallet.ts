@@ -1,5 +1,6 @@
 import { PaginatedObjectsResponse } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
+import { isParsedDataObject, objResToContent, objResToType } from "@polymedia/suitcase-core";
 import { executeSuiTransaction, setupSuiTransaction } from "@polymedia/suitcase-node";
 
 const DEFAULT_RECIPIENT = "0xc67b4231d7f64be622d4534c590570fc2fdea1a70a7cbf72ddfeba16d11fd22e";
@@ -30,14 +31,19 @@ export async function emptyWallet(
         pagObjRes = await suiClient.getOwnedObjects({
             owner: signer.toSuiAddress(),
             cursor,
-            options: { showType: true },
+            options: { showType: true, showContent: true },
         });
         cursor = pagObjRes.nextCursor ?? null;
         page++;
         if (pagObjRes.data.length > 0)
         {
             const objIds = pagObjRes.data
-                .filter(obj => obj.data?.type !== "0x2::coin::Coin<0x2::sui::SUI>")
+                .filter(obj => {
+                    const content = objResToContent(obj);
+                    return isParsedDataObject(content)
+                        && content.hasPublicTransfer
+                        && objResToType(obj) !== "0x2::coin::Coin<0x2::sui::SUI>";
+                })
                 .map(obj => obj.data!.objectId);
             if (objIds.length === 0) {
                 continue;
