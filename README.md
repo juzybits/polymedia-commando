@@ -51,6 +51,7 @@ Commands:
   find-coin-holders  Find Coin<T> holders using the Suiscan API
   find-last-tx       Find the last transaction for each Sui address
   find-nft-holders   Find NFT holders for a set of collections via Indexer.xyz
+  find-nft-verified  Find all verified NFT collections via Indexer.xyz
   find-nfts          Find all NFTs and their owners for a set of collections via Indexer.xyz
   help               display help for command
   random-addr        Generate pseudorandom Sui addresses

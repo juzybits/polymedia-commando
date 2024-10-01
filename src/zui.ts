@@ -12,6 +12,7 @@ import { faucet } from "./commands/faucet.js";
 import { findCoinHolders } from "./commands/find-coin-holders.js";
 import { findLastTx } from "./commands/find-last-tx.js";
 import { findNftHolders } from "./commands/find-nft-holders.js";
+import { findNftVerified } from "./commands/find-nft-verified.js";
 import { findNfts } from "./commands/find-nfts.js";
 import { randomAddr } from "./commands/random-addr.js";
 import { sendCoin } from "./commands/send-coin.js";
@@ -119,6 +120,14 @@ Example input file:
     .requiredOption("-o, --output-dir <outputDir>", "Output directory to write the JSON files")
     .action(async (opts) => {
         await findNfts(opts.inputFile, opts.outputDir);
+    });
+
+program
+    .command("find-nft-verified")
+    .description("Find all verified NFT collections via Indexer.xyz")
+    .requiredOption("-o, --output-file <outputFile>", "Output file to write the JSON")
+    .action(async (opts) => {
+        await findNftVerified(opts.outputFile);
     });
 
 program
