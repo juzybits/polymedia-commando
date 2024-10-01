@@ -1,4 +1,4 @@
-import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
+import { apiRequestIndexer, sleep, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { readJsonFile } from "@polymedia/suitcase-node";
 import { writeFileSync } from "fs";
 
@@ -39,7 +39,7 @@ export async function findNftHolders(
             }
             for (const item of results) {
                 offset++;
-                const address = item.owner && validateAndNormalizeSuiAddress(item.owner);
+                const address = item.owner && validateAndNormalizeAddress(item.owner);
                 if (address) {
                     holders.add(address);
                 } else {

@@ -1,5 +1,5 @@
 import { getActiveAddress, getActiveEnv } from "@polymedia/suitcase-node";
-import { requestSuiFromFaucet, shortenAddress, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
+import { requestSuiFromFaucet, shortenAddress, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 
 export async function faucet(
     addresses: string[],
@@ -10,7 +10,7 @@ export async function faucet(
     const recipients: string[] = [];
 
     for (const recipient of addresses) {
-        const cleanRecipient = validateAndNormalizeSuiAddress(recipient);
+        const cleanRecipient = validateAndNormalizeAddress(recipient);
         if (!cleanRecipient) {
             console.warn(`Error: invalid address: ${recipient}`);
             return;

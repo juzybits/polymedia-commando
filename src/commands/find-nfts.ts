@@ -1,4 +1,4 @@
-import { apiRequestIndexer, sleep, validateAndNormalizeSuiAddress } from "@polymedia/suitcase-core";
+import { apiRequestIndexer, sleep, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { readJsonFile, writeJsonFile } from "@polymedia/suitcase-node";
 
 type Collection = {
@@ -40,7 +40,7 @@ export async function findNfts(
                 break;
             }
             for (const item of results) {
-                const address = item.owner && validateAndNormalizeSuiAddress(item.owner);
+                const address = item.owner && validateAndNormalizeAddress(item.owner);
                 if (address) {
                     item.owner = address;
                     nfts.push(item);

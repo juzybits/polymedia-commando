@@ -8,7 +8,7 @@ import {
     NetworkName,
     sleep,
     stringToBalance,
-    validateAndNormalizeSuiAddress,
+    validateAndNormalizeAddress,
 } from "@polymedia/suitcase-core";
 import {
     fileExists,
@@ -124,7 +124,7 @@ export async function bulksend(
         function parseCsvLine(values: string[]): AddressBalancePair | null {
             const [addressStr, amountStr] = values;
 
-            const address = validateAndNormalizeSuiAddress(addressStr);
+            const address = validateAndNormalizeAddress(addressStr);
 
             if (address === null) {
                 console.debug(`[parseCsvLine] Skipping line with invalid owner: ${addressStr}`);

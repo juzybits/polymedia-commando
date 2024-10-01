@@ -26,19 +26,19 @@
         "typecheck": "tsc -b"
     },
     "dependencies": {
-        "@mysten/sui": "^1.7.0",
-        "@polymedia/suitcase-core": "^0.0.23",
-        "@polymedia/suitcase-node": "^0.0.23",
+        "@mysten/sui": "^1.11.0",
+        "@polymedia/suitcase-core": "^0.0.32",
+        "@polymedia/suitcase-node": "^0.0.32",
         "commander": "^12.1.0",
         "dotenv": "^16.4.5"
     },
     "devDependencies": {
-        "@eslint/js": "^9.9.1",
-        "@stylistic/eslint-plugin": "^2.6.4",
-        "@types/node": "^22.5.0",
-        "eslint": "^9.9.1",
-        "typescript": "^5.5.4",
-        "typescript-eslint": "^8.2.0"
+        "@eslint/js": "^9.11.1",
+        "@stylistic/eslint-plugin": "^2.8.0",
+        "@types/node": "^22.7.4",
+        "eslint": "^9.11.1",
+        "typescript": "^5.6.2",
+        "typescript-eslint": "^8.8.0"
     },
     "type": "module",
     "sideEffects": false,
