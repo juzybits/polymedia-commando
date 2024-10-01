@@ -14,7 +14,7 @@ type VerifiedCollection = {
     discord: string | null;
     twitter: string | null;
     website: string | null;
-}
+};
 
 type GraphQLResponse = {
     data: {
@@ -22,7 +22,7 @@ type GraphQLResponse = {
             collections: VerifiedCollection[];
         };
     };
-}
+};
 
 export async function findNftVerified(
     outputFile: string,

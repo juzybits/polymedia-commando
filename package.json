@@ -17,13 +17,13 @@
         "zui"
     ],
     "scripts": {
-        "zui": "tsc -b && node dist/zui.js",
         "build": "tsc -b",
-        "clean": "rm -rf dist/ node_modules/ .turbo/ .wrangler/ src/commands/bulksender/sui/build/",
+        "clean": "rm -rf dist/ node_modules/ .turbo/ src/commands/bulksender/sui/build/ src/commands/bulksender/sui/Move.lock",
         "dev": "tsc --watch",
         "lint": "eslint src/ --report-unused-disable-directives --max-warnings 0",
         "prepublishOnly": "rm -rf dist/ && pnpm build",
-        "typecheck": "tsc -b"
+        "typecheck": "tsc -b",
+        "zui": "tsc -b && node dist/zui.js"
     },
     "dependencies": {
         "@mysten/sui": "^1.11.0",
@@ -37,6 +37,7 @@
         "@stylistic/eslint-plugin": "^2.8.0",
         "@types/node": "^22.7.4",
         "eslint": "^9.11.1",
+        "eslint-plugin-import": "^2.30.0",
         "typescript": "^5.6.2",
         "typescript-eslint": "^8.8.0"
     },
