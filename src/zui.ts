@@ -7,6 +7,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { balance } from "./commands/balance.js";
 import { bulksend } from "./commands/bulksender/bulksend.js";
+import { destroyZero } from "./commands/destroy-zero.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
 import { faucet } from "./commands/faucet.js";
 import { findCoinHolders } from "./commands/find-coin-holders.js";
@@ -49,6 +50,14 @@ program
     .requiredOption("-o, --output-file <outputFile>", "Path to a text file to log transaction details")
     .action(async (opts) => {
         await bulksend(opts.coinId, opts.inputFile, opts.outputFile);
+    });
+
+program
+    .command("destroy-zero")
+    .description("Destroy all Coin<T> objects with 0 balance in your wallet")
+    .option("-d, --dev-inspect", "Don't execute the transaction, just use devInspectTransactionBlock()", false)
+    .action(async (opts) => {
+        await destroyZero(opts.devInspect);
     });
 
 program
