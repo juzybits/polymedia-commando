@@ -33,7 +33,7 @@ export async function destroyZero(
             const objFields = objResToFields(objResp);
             const objData = objResp.data!;
             const fullType = objData.type!;
-            const innerType = fullType.match(/<(.+)>/)?.[1];
+            const innerType = (/<(.+)>/.exec(fullType))?.[1];
             if (!innerType) {
                 throw new Error(`Can't parse coin type: ${fullType}`);
             }
@@ -82,7 +82,7 @@ async function executeTransaction(
             signer,
             transaction: tx,
             options: { showEffects: true, showObjectChanges: true }
-        })
+        });
     }
 
     const info = {
