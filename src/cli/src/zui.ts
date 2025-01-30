@@ -15,7 +15,7 @@ import { findLastTx } from "./commands/find-last-tx.js";
 import { findNftHolders } from "./commands/find-nft-holders.js";
 import { findNftVerified } from "./commands/find-nft-verified.js";
 import { findNfts } from "./commands/find-nfts.js";
-import { randomAddr } from "./commands/random-addr.js";
+import { randAddr } from "./commands/rand-addr.js";
 import { sendCoin } from "./commands/send-coin.js";
 
 dotenv.config();
@@ -130,7 +130,7 @@ program
     .requiredOption("-n, --number <number>", "The amount of addresses to generate")
     .option("-b, --balance", "Include a random balance with each address")
     .action(async (opts) => {
-        await randomAddr(opts.number, opts.balance);
+        await randAddr(opts.number, opts.balance);
     });
 
 program
