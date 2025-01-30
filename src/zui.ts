@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { balance } from "./commands/balance.js";
 import { bulksend } from "./commands/bulksender/bulksend.js";
 import { destroyZero } from "./commands/destroy-zero.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
@@ -33,15 +32,6 @@ program.configureHelp({
     sortSubcommands: true,
     subcommandTerm: (cmd) => cmd.name(), // only show the name, instead of short usage.
 });
-
-program
-    .command("balance")
-    .description("Get the total Coin<T> balance owned by one or more addresses")
-    .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
-    .requiredOption("-a, --addresses <addresses...>", "The address(es) to query the balance for")
-    .action(async (opts) => {
-        await balance(opts.coinType, opts.addresses);
-    });
 
 program
     .command("bulksend")
