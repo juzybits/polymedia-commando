@@ -144,11 +144,11 @@ program
 program
     .command("send-coin")
     .description("Send a Coin<T> amount to a recipient")
-    .requiredOption("-n, --number <number>", "The number of coins to send (e.g. 0.5 for 0.5 SUI)")
+    .requiredOption("-a, --amount <amount>", "The number of coins to send (e.g. 0.5 for 0.5 SUI)")
     .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
     .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
     .action(async (opts) => {
-        await sendCoin(opts.number, opts.coinType, opts.recipient);
+        await sendCoin(opts.amount, opts.coinType, opts.recipient);
     });
 
 program.parse(process.argv);

@@ -1,8 +1,9 @@
-import { formatNumber, getCoinOfValue } from "@polymedia/suitcase-core";
+import { coinWithBalance } from "@mysten/sui/transactions";
+import { formatBalance, formatNumber, stringToBalance } from "@polymedia/suitcase-core";
 import { executeSuiTransaction, promptUser, setupSuiTransaction } from "@polymedia/suitcase-node";
 
 export async function sendCoin(
-    numberOfCoinsToSend: number,
+    amount: string,
     coinType: string,
     recipientAddr: string,
 ): Promise<void>
@@ -15,7 +16,7 @@ export async function sendCoin(
         console.error(`Error: CoinMetadata not found for ${coinType}`);
         return;
     }
-    const balanceToSend = BigInt(numberOfCoinsToSend * 10**coinMeta.decimals);
+    const balanceToSend = stringToBalance(amount, coinMeta.decimals);
 
     /* Check if the user has enough balance */
 
@@ -33,7 +34,7 @@ export async function sendCoin(
 
     /* Get user confirmation */
 
-    console.log(`amount: ${formatNumber(numberOfCoinsToSend)} ${coinMeta.symbol}`);
+    console.log(`amount: ${formatBalance(balanceToSend, coinMeta.decimals)} ${coinMeta.symbol}`);
     console.log(`recipient: ${recipientAddr}`);
     const userConfirmed = await promptUser("\nDoes this look okay? (y/n) ");
     if (!userConfirmed) {
@@ -43,13 +44,10 @@ export async function sendCoin(
 
     /* Send the coin */
 
-    const [coin] = await getCoinOfValue(
-        suiClient,
-        tx,
-        ownerAddress,
-        coinType,
-        balanceToSend,
-    );
+    const coin = coinWithBalance({
+        balance: balanceToSend,
+        type: coinType,
+    })(tx);
     tx.transferObjects([coin], recipientAddr);
 
     const resp = await executeSuiTransaction(suiClient, tx, signer);
