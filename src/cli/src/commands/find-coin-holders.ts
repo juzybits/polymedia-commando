@@ -2,11 +2,13 @@ import { writeJsonFile } from "@polymedia/suitcase-node";
 
 import { AddressAndBalance } from "../types.js";
 
-export async function findCoinHolders(
-    coinType: string,
-    outputFile: string,
-    limit = 999_999_999,
-): Promise<void>
+export async function findCoinHolders({
+    coinType, outputFile, limit = 999_999_999,
+}: {
+    coinType: string;
+    outputFile?: string;
+    limit?: number;
+}): Promise<void>
 {
     /* Fetch holders */
 
@@ -26,7 +28,11 @@ export async function findCoinHolders(
         });
     }
 
-    writeJsonFile(outputFile, output);
+    if (outputFile) {
+        writeJsonFile(outputFile, output);
+    } else {
+        console.log(output);
+    }
 }
 
 type ApiResponse = {
