@@ -6,9 +6,11 @@ import {
     chunkArray,
     formatNumber,
     NetworkName,
+    newSignTx,
     sleep,
     stringToBalance,
-    validateAndNormalizeAddress,
+    SuiClientBase,
+    validateAndNormalizeAddress
 } from "@polymedia/suitcase-core";
 import {
     fileExists,
@@ -72,6 +74,10 @@ export async function bulksend(
             getActiveKeypair(),
         ]);
         const suiClient = new SuiClient({ url: getFullnodeUrl(networkName)});
+        const client = new SuiClientBaseWrapper({
+            suiClient,
+            signTx: newSignTx(suiClient, signer),
+        });
         const activeAddress = signer.toSuiAddress();
         console.log(`Active network: ${networkName}`);
         console.log(`Active address: ${activeAddress}`);
@@ -160,14 +166,7 @@ export async function bulksend(
                     ],
                 });
 
-                const result = await suiClient.signAndExecuteTransaction({
-                    signer,
-                    transaction: tx,
-                    options: {
-                        showEffects: true,
-                        showObjectChanges: true,
-                    }
-                });
+                const result = await client.signAndExecuteTx(tx);
 
                 if (result.effects?.status.status !== "success") {
                     throw new Error(`Transaction status was '${result.effects?.status.status}': ${result.digest}`);
@@ -236,3 +235,5 @@ function logText(
     const logEntry = `${date} - ${text}\n`;
     appendFileSync(outputFile, logEntry);
 }
+
+class SuiClientBaseWrapper extends SuiClientBase {}
