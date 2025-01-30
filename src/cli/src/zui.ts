@@ -7,7 +7,7 @@ import { fileURLToPath } from "url";
 import { Command } from "commander";
 import dotenv from "dotenv";
 
-import { bulksend } from "./commands/bulksender/bulksend.js";
+import { bulksend } from "./commands/bulksend.js";
 import { destroyZero } from "./commands/destroy-zero.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
 import { findCoinHolders } from "./commands/find-coin-holders.js";
