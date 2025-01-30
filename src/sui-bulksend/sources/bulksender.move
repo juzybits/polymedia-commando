@@ -1,27 +1,25 @@
-module polymedia_bulksender::bulksender
-{
-    use std::vector;
-    use sui::coin::{Self, Coin};
-    use sui::pay;
-    use sui::tx_context::{TxContext};
+module polymedia_bulksender::bulksender;
 
-    const E_LENGTH_MISMATCH: u64 = 1000;
+use sui::{
+    coin::{Self, Coin},
+    pay::{Self},
+};
 
-    public fun send<T> (
-        pay_coin: Coin<T>,
-        amounts: vector<u64>,
-        recipients: vector<address>,
-        ctx: &mut TxContext,
-    )
-    {
-        assert!(vector::length(&amounts) == vector::length(&recipients), E_LENGTH_MISMATCH);
+const E_LENGTH_MISMATCH: u64 = 1000;
 
-        while (vector::length(&amounts) > 0) {
-            let amount: u64 = vector::pop_back(&mut amounts);
-            let recipient: address = vector::pop_back(&mut recipients);
-            pay::split_and_transfer(&mut pay_coin, amount, recipient, ctx);
-        };
+public fun send<T>(
+    mut pay_coin: Coin<T>,
+    mut amounts: vector<u64>,
+    mut recipients: vector<address>,
+    ctx: &mut TxContext,
+) {
+    assert!(amounts.length() == recipients.length(), E_LENGTH_MISMATCH);
 
-        coin::destroy_zero(pay_coin);
-    }
+    while (amounts.length() > 0) {
+        let amount = amounts.pop_back();
+        let recipient = recipients.pop_back();
+        pay::split_and_transfer(&mut pay_coin, amount, recipient, ctx);
+    };
+
+    coin::destroy_zero(pay_coin);
 }
