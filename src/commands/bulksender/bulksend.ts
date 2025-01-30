@@ -1,6 +1,6 @@
 import { bcs } from "@mysten/sui/bcs";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
-import { Transaction } from "@mysten/sui/transactions";
+import { coinWithBalance, Transaction } from "@mysten/sui/transactions";
 import {
     balanceToString,
     chunkArray,
@@ -50,75 +50,48 @@ const GAS_PER_ADDRESS = 0.0013092459;
 /// === command ===
 
 export async function bulksend(
-    coinId: string,
+    coinType: string,
     inputFile: string,
     outputFile: string,
 ): Promise<void>
 {
     try {
+        // Check input and output files
         console.log(`Input file: ${inputFile}`);
         console.log(`Output file: ${outputFile}`);
-
-        // Abort if the output file already exists, to prevent double-runs
+        if (!fileExists(inputFile)) {
+            throw new Error(`${inputFile} doesn't exist. Create a .csv file with two columns: address and amount.`);
+        }
         if (fileExists(outputFile)) {
             throw new Error(`${outputFile} already exists. Check and handle it before rerunning the script.`);
         }
 
-        // Abort if the input file doesn't exist
-        if (!fileExists(inputFile)) {
-            throw new Error(`${inputFile} doesn't exist. Create a .csv file with two columns: address and amount.`);
-        }
-
-        // Create a SuiClient instance for the current `sui client active-env`
-        const networkName = await getActiveEnv();
-        console.log(`\nActive network: ${networkName}`);
+        // Initialize SuiClient
+        const [networkName, signer] = await Promise.all([
+            getActiveEnv(),
+            getActiveKeypair(),
+        ]);
         const suiClient = new SuiClient({ url: getFullnodeUrl(networkName)});
-
-        // Get the keypair for the current `sui client active-address`
-        const signer = await getActiveKeypair();
         const activeAddress = signer.toSuiAddress();
+        console.log(`Active network: ${networkName}`);
         console.log(`Active address: ${activeAddress}`);
 
-        // Abort if COIN_ID doesn't exist
-        console.log(`\nCOIN_ID: ${coinId}`);
-        const coinObject = await suiClient.getObject({
-            id: coinId,
-            options: {
-                showContent: true,
-                showOwner: true,
-            },
-        });
-        if (coinObject.error || coinObject.data?.content?.dataType !== "moveObject") {
-            throw new Error("COIN_ID object doesn't exist on this network");
+        // Check coin metadata
+        console.log(`Coin type: ${coinType}`);
+        const coinMeta = await suiClient.getCoinMetadata({ coinType });
+        if (!coinMeta) {
+            throw new Error(`Failed to get CoinMetadata for coin type "${coinType}"`);
         }
+        const coinSymbol = coinMeta.symbol;
+        const coinDecimals = coinMeta.decimals;
+        console.log(`Coin symbol: ${coinSymbol}`);
+        console.log(`Coin decimals: ${coinDecimals}`);
 
-        // Abort if the user doesn't own COIN_ID
-        if (activeAddress !== (coinObject.data as any).owner.AddressOwner) {
-            throw new Error("Your active address doesn't own COIN_ID");
-        }
-
-        // Get the Coin type (the `T` in `Coin<T>`)
-        const coinTypeFull = coinObject.data.content.type; // e.g. "0x2::coin::Coin<0x2::sui::SUI>"
-        const match = /<([^>]+)>/.exec(coinTypeFull); // extract "0x2::sui::SUI" from the full type
-        if (!match) {
-            throw new Error(`Failed to parse the Coin type from the object type: ${coinTypeFull}`);
-        }
-        const coinType = match[1];
-        console.log(`COIN_ID type: ${coinType}`);
-
-        // Get COIN_ID symbol and decimals
-        const coinMetadata = await suiClient.getCoinMetadata({ coinType });
-        if (!coinMetadata) {
-            throw new Error("Failed to get CoinMetadata for COIN_ID type");
-        }
-        const coinSymbol = coinMetadata.symbol;
-        const coinDecimals = coinMetadata.decimals;
-        console.log(`COIN_ID symbol: ${coinSymbol}`);
-        console.log(`COIN_ID decimals: ${coinDecimals}`);
-
-        // Get COIN_ID balance
-        const coinBalance = BigInt((coinObject.data.content.fields as any).balance);
-        console.log(`COIN_ID balance: ${balanceToString(coinBalance, coinDecimals)} ${coinSymbol}`);
+        // Get user coinType balance
+        const userBalance = BigInt(
+            (await suiClient.getBalance({ owner: activeAddress, coinType })).totalBalance
+        );
+        console.log(`User balance: ${balanceToString(userBalance, coinDecimals)} ${coinSymbol}`);
 
         // Read addresses and amounts from input file
         function parseCsvLine(values: string[]): AddressBalancePair | null {
@@ -135,18 +108,18 @@ export async function bulksend(
 
             return { address, balance };
         }
-        const addressBalancePairs = readCsvFile<AddressBalancePair>(inputFile, parseCsvLine);
-        console.log(`\nFound ${addressBalancePairs.length} addresses in ${inputFile}`);
-        const batches = chunkArray(addressBalancePairs, BATCH_SIZE);
+        const addrsAndBals = readCsvFile<AddressBalancePair>(inputFile, parseCsvLine);
+        console.log(`\nFound ${addrsAndBals.length} addresses in ${inputFile}`);
+        const batches = chunkArray(addrsAndBals, BATCH_SIZE);
         console.log(`Airdrop will be done in ${batches.length} transaction blocks`);
-        console.log(`Gas estimate: ${formatNumber(GAS_PER_ADDRESS*addressBalancePairs.length)} SUI`);
+        console.log(`Gas estimate: ${formatNumber(GAS_PER_ADDRESS*addrsAndBals.length)} SUI`);
         // TODO: abort if current gas is lower than gas estimate
-        const totalBalance = addressBalancePairs.reduce((sum, pair) => sum + pair.balance, BigInt(0));
+        const totalBalance = addrsAndBals.reduce((sum, pair) => sum + pair.balance, BigInt(0));
         console.log(`Total amount to be sent: ${balanceToString(totalBalance, coinDecimals)} ${coinSymbol}`);
 
-        // Abort if COIN_ID doesn't have enough balance
-        if (totalBalance > coinBalance) {
-            throw new Error("Total amount to be sent is bigger than COIN_ID balance");
+        // Abort if user doesn't have enough balance
+        if (totalBalance > userBalance) {
+            throw new Error("Total amount to be sent is bigger than user balance");
         }
 
         // Get user confirmation before proceeding
@@ -162,13 +135,17 @@ export async function bulksend(
         let batchNumber = 0;
         try {
             const packageId = PACKAGE_IDS.get(networkName);
-            for (const batch of batches) {
+            for (const batch of batches)
+            {
                 batchNumber++;
                 const batchBalance = batch.reduce((total, pair) => total + pair.balance, BigInt(0));
                 logTransactionStart(outputFile, batchBalance, batchNumber, batch);
 
                 const tx = new Transaction();
-                const payCoin = tx.splitCoins(coinId, [batchBalance]);
+                const payCoin = coinWithBalance({
+                    type: coinType,
+                    balance: batchBalance,
+                });
                 tx.moveCall({
                     target: `${packageId}::bulksender::send`,
                     typeArguments: [ coinType ],

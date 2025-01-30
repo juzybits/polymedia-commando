@@ -36,11 +36,11 @@ program.configureHelp({
 program
     .command("bulksend")
     .description("Send Coin<T> to a list of addresses")
-    .requiredOption("-c, --coin-id <coinId>", "The Coin<T> to pay for the airdrop")
+    .requiredOption("-c, --coin-type <coinType>", "The type of coin to send (the T in Coin<T>)")
     .requiredOption("-i, --input-file <inputFile>", "Path to a CSV with recipient addresses and coin amounts")
     .requiredOption("-o, --output-file <outputFile>", "Path to a text file to log transaction details")
     .action(async (opts) => {
-        await bulksend(opts.coinId, opts.inputFile, opts.outputFile);
+        await bulksend(opts.coinType, opts.inputFile, opts.outputFile);
     });
 
 program
