@@ -9,7 +9,7 @@ export async function findCoinHolders(
 {
     /* Fetch holders */
 
-    const urlHolders = `https://suiscan.xyz/api/sui-backend/mainnet/api/coins/${coinType}/holders?sortBy=AMOUNT&orderBy=DESC&searchStr=&page=0&size=${limit}`;
+    const urlHolders = `https://n.suiscan.xyz/data/api/coins/${coinType}/holders?page=0&sortBy=AMOUNT&orderBy=DESC&size=${limit}`;
     const resp: ApiResponse = await fetch(urlHolders)
     .then((response: Response) => {
         if (!response.ok)
