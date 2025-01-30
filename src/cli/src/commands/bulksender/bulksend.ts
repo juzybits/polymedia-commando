@@ -42,7 +42,7 @@ const BATCH_SIZE = 500;
  * The public RPC rate limit is 100 requests per 30 seconds according to
  * https://docs.sui.io/references/sui-api/rpc-best-practices
  */
-const RATE_LIMIT_DELAY = 334;
+const RATE_LIMIT_DELAY = 300;
 
 // TODO: abort if current gas is lower than gas estimate
 export async function bulksend(
@@ -113,7 +113,6 @@ export async function bulksend(
     }
 
     // === send Coin<T> to each address ===
-
     let totalGas = 0;
     let batchNumber = 0;
     try {
@@ -143,20 +142,20 @@ export async function bulksend(
                 ],
             });
 
-            const result = await client.signAndExecuteTx(tx);
+            const resp = await client.signAndExecuteTx(tx);
 
-            if (result.effects?.status.status !== "success") {
-                throw new Error(`Transaction status was '${result.effects?.status.status}': ${result.digest}`);
+            if (resp.effects?.status.status !== "success") {
+                throw new Error(`Transaction status was '${resp.effects?.status.status}': ${resp.digest}. Response: ${JSON.stringify(resp, null, 2)}`);
             }
 
-            if (result.effects?.created?.length !== batch.length) {
-                throw new Error(`Transaction created ${result.effects?.created?.length} objects `
-                + `for ${batch.length} addresses: ${result.digest}`);
+            if (resp.effects?.created?.length !== batch.length) {
+                throw new Error(`Transaction created ${resp.effects?.created?.length} objects `
+                + `for ${batch.length} addresses: ${resp.digest}. Response: ${JSON.stringify(resp, null, 2)}`);
             }
 
-            logText(outputFile, `Transaction successful: ${result.digest}`);
+            logText(outputFile, `Transaction successful: ${resp.digest}`);
 
-            const gas = result.effects.gasUsed;
+            const gas = resp.effects.gasUsed;
             totalGas += Number(gas.computationCost) + Number(gas.storageCost) - Number(gas.storageRebate);
 
             if (networkName !== "localnet") {
