@@ -1,4 +1,3 @@
-
 import { verifyPersonalMessageSignature } from "@mysten/sui/verify";
 
 export async function msgVerify({

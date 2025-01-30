@@ -53,6 +53,7 @@ Commands:
   find-nft-verified  Find all verified NFT collections via Indexer.xyz
   find-nfts          Find all NFTs and their owners for a set of collections via Indexer.xyz
   help               display help for command
+  msg-sign           Sign a Sui personal message
   msg-verify         Verify a Sui personal message signature
   random-addr        Generate pseudorandom Sui addresses
   send-coin          Send a Coin<T> amount to a recipient

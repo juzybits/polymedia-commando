@@ -15,6 +15,7 @@ import { findLastTx } from "./commands/find-last-tx.js";
 import { findNftHolders } from "./commands/find-nft-holders.js";
 import { findNftVerified } from "./commands/find-nft-verified.js";
 import { findNfts } from "./commands/find-nfts.js";
+import { msgSign } from "./commands/msg-sign.js";
 import { msgVerify } from "./commands/msg-verify.js";
 import { randAddr } from "./commands/rand-addr.js";
 import { sendCoin } from "./commands/send-coin.js";
@@ -22,9 +23,6 @@ import { sendCoin } from "./commands/send-coin.js";
 dotenv.config();
 
 const program = new Command();
-
-// TODO: add msg-verify
-// TODO: add msg-sign
 
 program
     .name("zui")
@@ -126,14 +124,33 @@ program
     });
 
 program
+    .command("msg-sign")
+    .description("Sign a Sui personal message")
+    .addHelpText("after", `
+Output:
+  On success (exit code 0):
+      {"signature": "..."}
+
+  On failure (exit code 1)
+      {"signature": null, "error": "The error message"}
+
+Example:
+  zui msg-sign "Hello Sui"
+`)
+    .requiredOption("-m, --message <string>", "message to sign")
+    .action(async (opts) => {
+        await msgSign(opts.message);
+    });
+
+program
     .command("msg-verify")
     .description("Verify a Sui personal message signature")
     .addHelpText("after", `
 Output:
-  • On success (exit code 0):
+  On success (exit code 0):
       {"success": true}
 
-  • On failure (exit code 1):
+  On failure (exit code 1):
       {"success": false, "error": "The error message"}
 
 Example:
