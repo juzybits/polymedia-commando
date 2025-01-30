@@ -17,12 +17,12 @@
         "zui"
     ],
     "scripts": {
-        "build": "tsc -b",
+        "build": "tsc --build",
         "clean": "rm -rf dist/ node_modules/ .turbo/ src/commands/bulksender/sui/build/ src/commands/bulksender/sui/Move.lock",
-        "dev": "tsc --watch",
+        "dev": "tsc --watch --preserveWatchOutput",
         "lint": "eslint src/ --report-unused-disable-directives --max-warnings 0",
-        "prepublishOnly": "rm -rf dist/ && pnpm build",
-        "typecheck": "tsc -b",
+        "prepublishOnly": "pnpm clean && pnpm i && pnpm build",
+        "typecheck": "tsc --noEmit",
         "zui": "tsc -b && node dist/zui.js"
     },
     "dependencies": {
@@ -44,6 +44,10 @@
     },
     "type": "module",
     "sideEffects": false,
+    "engines": {
+        "node": ">=18"
+    },
+    "packageManager": "pnpm@9.15.4",
     "publishConfig": {
         "access": "public"
     },
