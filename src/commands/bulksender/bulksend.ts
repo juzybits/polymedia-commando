@@ -1,6 +1,9 @@
+import { appendFileSync } from "fs";
+
 import { bcs } from "@mysten/sui/bcs";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
 import { coinWithBalance, Transaction } from "@mysten/sui/transactions";
+
 import {
     balanceToString,
     chunkArray,
@@ -19,7 +22,6 @@ import {
     promptUser,
     readCsvFile,
 } from "@polymedia/suitcase-node";
-import { appendFileSync } from "fs";
 
 // === config ===
 

@@ -1,4 +1,5 @@
 import { writeJsonFile } from "@polymedia/suitcase-node";
+
 import { AddressAndBalance } from "../types.js";
 
 export async function findCoinHolders(

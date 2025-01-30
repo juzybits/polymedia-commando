@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
-import { Command } from "commander";
-import dotenv from "dotenv";
 import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+
+import { Command } from "commander";
+import dotenv from "dotenv";
+
 import { bulksend } from "./commands/bulksender/bulksend.js";
 import { destroyZero } from "./commands/destroy-zero.js";
 import { emptyWallet } from "./commands/empty-wallet.js";

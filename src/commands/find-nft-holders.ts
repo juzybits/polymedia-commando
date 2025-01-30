@@ -1,6 +1,7 @@
+import { writeFileSync } from "fs";
+
 import { apiRequestIndexer, sleep, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { readJsonFile } from "@polymedia/suitcase-node";
-import { writeFileSync } from "fs";
 
 type Collection = {
     name: string;
