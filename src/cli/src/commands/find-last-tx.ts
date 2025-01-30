@@ -1,18 +1,27 @@
 import { SuiClientWithEndpoint, SuiMultiClient } from "@polymedia/suitcase-core";
 import { getActiveEnv, readJsonFile, writeJsonFile } from "@polymedia/suitcase-node";
 
-export async function findLastTx(
-    inputFile: string,
-    outputFile: string,
-): Promise<void>
+export async function findLastTx({
+    address, inputFile, outputFile,
+}: {
+    address?: string;
+    inputFile?: string;
+    outputFile?: string;
+}): Promise<void>
 {
-    console.log(`inputFile: ${inputFile}`);
-    console.log(`outputFile: ${outputFile}`);
+    if (!address && !inputFile) {
+        console.log("error: either --address or --input-file must be provided");
+        process.exit(1);
+    }
 
-    const addresses = readJsonFile<string[]>(inputFile);
+    const addresses = address ? [address] : readJsonFile<string[]>(inputFile!);
     const multiClient = SuiMultiClient.newWithDefaultEndpoints(await getActiveEnv());
     const lastTxns = await multiClient.executeInBatches(addresses, fetchLastTxn);
-    writeJsonFile(outputFile, lastTxns);
+    if (outputFile) {
+        writeJsonFile(outputFile, lastTxns);
+    } else {
+        console.log(lastTxns);
+    }
 }
 
 type LastTxn = {

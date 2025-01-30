@@ -4,7 +4,7 @@ import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import dotenv from "dotenv";
 
 import { bulksend } from "./commands/bulksend.js";
@@ -76,11 +76,18 @@ program
 
 program
     .command("find-last-tx")
-    .description("Find the last transaction for each Sui address")
-    .requiredOption("-i, --input-file <inputFile>", "JSON file with an array of addresses")
-    .requiredOption("-o, --output-file <outputFile>", "JSON file with addresses and their last transaction ID and time")
+    .description("Find the latest transaction for one or more Sui addresses")
+    .addOption(new Option('-a, --address <address>', 'Single address to find the last transaction for')
+        .conflicts('input-file'))
+    .addOption(new Option('-i, --input-file <path>', 'JSON file with an array of addresses')
+        .conflicts('address'))
+    .option("-o, --output-file [path]", "JSON file with addresses and their last transaction ID and time")
     .action(async (opts) => {
-        await findLastTx(opts.inputFile, opts.outputFile);
+        await findLastTx({
+            address: opts.address,
+            inputFile: opts.inputFile,
+            outputFile: opts.outputFile,
+        });
     });
 
 program
@@ -174,7 +181,7 @@ Example:
     });
 
 program
-    .command("random-addr")
+    .command("rand-addr")
     .description("Generate pseudorandom Sui addresses")
     .requiredOption("-n, --number <number>", "The amount of addresses to generate")
     .option("-b, --balance", "Include a random balance with each address")
