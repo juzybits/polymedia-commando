@@ -18,10 +18,11 @@
     ],
     "scripts": {
         "build": "tsc --build",
-        "clean": "rm -rf dist/ node_modules/ .turbo/ src/commands/bulksender/sui/build/ src/commands/bulksender/sui/Move.lock",
+        "clean": "rm -rf dist/ node_modules/ .turbo/",
         "dev": "tsc --watch --preserveWatchOutput",
         "lint": "eslint src/ --report-unused-disable-directives --max-warnings 0",
-        "prepublishOnly": "pnpm clean && pnpm i && pnpm build",
+        "prepublishOnly": "pnpm clean && pnpm i && pnpm build && cp ../../LICENSE ../../README.md .",
+        "postpublish": "rm -f LICENSE README.md",
         "typecheck": "tsc --noEmit",
         "zui": "tsc -b && node dist/zui.js"
     },
@@ -52,7 +53,9 @@
         "access": "public"
     },
     "files": [
-        "dist/"
+        "dist/",
+        "LICENSE",
+        "README.md"
     ],
     "bin": {
         "zui": "dist/zui.js"
