@@ -37,14 +37,13 @@ zui COMMAND [OPTIONS]
 See all available tools with `zui -h`:
 
 ```
-POLYMEDIA ZUI: Sui command line tools
+ZUI: Sui command line tools
 
 Options:
   -V, --version      output the version number
   -h, --help         display help for command
 
 Commands:
-  balance            Get the total Coin<T> balance owned by one or more addresses
   bulksend           Send Coin<T> to a list of addresses
   destroy-zero       Destroy all Coin<T> objects with 0 balance in your wallet
   empty-wallet       Send all objects in your wallet to a random address (except Coin<SUI>)
@@ -54,6 +53,7 @@ Commands:
   find-nft-verified  Find all verified NFT collections via Indexer.xyz
   find-nfts          Find all NFTs and their owners for a set of collections via Indexer.xyz
   help               display help for command
+  msg-verify         Verify a Sui personal message signature
   random-addr        Generate pseudorandom Sui addresses
   send-coin          Send a Coin<T> amount to a recipient
 ```

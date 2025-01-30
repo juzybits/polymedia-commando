@@ -15,6 +15,7 @@ import { findLastTx } from "./commands/find-last-tx.js";
 import { findNftHolders } from "./commands/find-nft-holders.js";
 import { findNftVerified } from "./commands/find-nft-verified.js";
 import { findNfts } from "./commands/find-nfts.js";
+import { msgVerify } from "./commands/msg-verify.js";
 import { randAddr } from "./commands/rand-addr.js";
 import { sendCoin } from "./commands/send-coin.js";
 
@@ -27,7 +28,7 @@ const program = new Command();
 
 program
     .name("zui")
-    .description("POLYMEDIA ZUI: Sui command line tools")
+    .description("ZUI: Sui command line tools")
     .version(`zui ${getVersion()}`);
 
 program.configureHelp({
@@ -122,6 +123,33 @@ program
     .requiredOption("-o, --output-file <outputFile>", "Output file to write the JSON")
     .action(async (opts) => {
         await findNftVerified(opts.outputFile);
+    });
+
+program
+    .command("msg-verify")
+    .description("Verify a Sui personal message signature")
+    .addHelpText("after", `
+Output:
+  • On success (exit code 0):
+      {"success": true}
+
+  • On failure (exit code 1):
+      {"success": false, "error": "The error message"}
+
+Example:
+  zui msg-verify \\
+      -m "Hello Sui" \\
+      -a "0x9859bde15e867d37256aa080b5d092a2ed09347601ebc751c4478cf26f882bea" \\
+      -s "ACUqih6ukoYyYmAqJ3mE9Yy0XxvnvOQuTKUumE1mOwfAcMIJWpsIcoU/1Jaij2ywjbMvik+NWUeRBPvg2HHYGQs7AdEIr//TRcmBsxmWwuzr9KVoj/MN1Vw+eHF1eqmckg=="`)
+    .requiredOption("-m, --message <string>", "message that was signed")
+    .requiredOption("-a, --address <string>", "signer address")
+    .requiredOption("-s, --signature <string>", "signature to verify")
+    .action(async (opts) => {
+        await msgVerify({
+            message: opts.message,
+            address: opts.address,
+            signature: opts.signature,
+        });
     });
 
 program
