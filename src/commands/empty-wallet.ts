@@ -9,7 +9,7 @@ export async function emptyWallet(
     recipient?: string,
 ): Promise<void>
 {
-    const { network, signer, suiClient } = setupSuiTransaction();
+    const { network, signer, suiClient } = await setupSuiTransaction();
 
     /* Make sure we're not on mainnet */
 

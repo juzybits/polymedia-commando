@@ -16,7 +16,6 @@ import { findNftVerified } from "./commands/find-nft-verified.js";
 import { findNfts } from "./commands/find-nfts.js";
 import { randomAddr } from "./commands/random-addr.js";
 import { sendCoin } from "./commands/send-coin.js";
-import { testRpcs } from "./commands/test-rpcs.js";
 
 dotenv.config();
 
@@ -150,13 +149,6 @@ program
     .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
     .action(async (opts) => {
         await sendCoin(opts.number, opts.coinType, opts.recipient);
-    });
-
-program
-    .command("test-rpcs")
-    .description("Measure the latency of various Sui RPC endpoints")
-    .action(async () => {
-        await testRpcs();
     });
 
 program.parse(process.argv);

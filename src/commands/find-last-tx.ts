@@ -10,7 +10,7 @@ export async function findLastTx(
     console.log(`outputFile: ${outputFile}`);
 
     const addresses = readJsonFile<string[]>(inputFile);
-    const multiClient = SuiMultiClient.newWithDefaultEndpoints(getActiveEnv());
+    const multiClient = SuiMultiClient.newWithDefaultEndpoints(await getActiveEnv());
     const lastTxns = await multiClient.executeInBatches(addresses, fetchLastTxn);
     writeJsonFile(outputFile, lastTxns);
 }

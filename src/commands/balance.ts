@@ -8,7 +8,7 @@ export async function balance(
 {
     /* Fetch CoinMetadata<T> */
 
-    const { suiClient } = setupSuiTransaction();
+    const { suiClient } = await setupSuiTransaction();
     const coinMeta = await suiClient.getCoinMetadata({ coinType: coinType });
     if (!coinMeta) {
         console.error(`Error: CoinMetadata not found for ${coinType}`);

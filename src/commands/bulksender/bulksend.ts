@@ -70,12 +70,12 @@ export async function bulksend(
         }
 
         // Create a SuiClient instance for the current `sui client active-env`
-        const networkName = getActiveEnv();
+        const networkName = await getActiveEnv();
         console.log(`\nActive network: ${networkName}`);
         const suiClient = new SuiClient({ url: getFullnodeUrl(networkName)});
 
         // Get the keypair for the current `sui client active-address`
-        const signer = getActiveKeypair();
+        const signer = await getActiveKeypair();
         const activeAddress = signer.toSuiAddress();
         console.log(`Active address: ${activeAddress}`);
 

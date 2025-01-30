@@ -56,5 +56,4 @@ Commands:
   help               display help for command
   random-addr        Generate pseudorandom Sui addresses
   send-coin          Send a Coin<T> amount to a recipient
-  test-rpcs          Measure the latency of various Sui RPC endpoints
 ```

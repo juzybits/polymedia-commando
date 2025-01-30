@@ -10,7 +10,7 @@ export async function destroyZero(
     devInspect: boolean,
 ): Promise<void>
 {
-    const { signer, suiClient } = setupSuiTransaction();
+    const { signer, suiClient } = await setupSuiTransaction();
 
     let pagObjRes: PaginatedObjectsResponse;
     let cursor: null | string = null;

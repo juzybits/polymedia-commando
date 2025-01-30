@@ -9,7 +9,7 @@ export async function sendCoin(
 {
     /* Calculate amount with decimals */
 
-    const { suiClient, tx, signer } = setupSuiTransaction();
+    const { suiClient, tx, signer } = await setupSuiTransaction();
     const coinMeta = await suiClient.getCoinMetadata({coinType: coinType});
     if (!coinMeta) {
         console.error(`Error: CoinMetadata not found for ${coinType}`);
