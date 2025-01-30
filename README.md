@@ -48,7 +48,6 @@ Commands:
   bulksend           Send Coin<T> to a list of addresses
   destroy-zero       Destroy all Coin<T> objects with 0 balance in your wallet
   empty-wallet       Send all objects in your wallet to a random address (except Coin<SUI>)
-  faucet             Get SUI from the faucet on localnet/devnet/testnet
   find-coin-holders  Find Coin<T> holders using the Suiscan API
   find-last-tx       Find the last transaction for each Sui address
   find-nft-holders   Find NFT holders for a set of collections via Indexer.xyz

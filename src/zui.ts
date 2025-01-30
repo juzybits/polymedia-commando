@@ -9,7 +9,6 @@ import { balance } from "./commands/balance.js";
 import { bulksend } from "./commands/bulksender/bulksend.js";
 import { destroyZero } from "./commands/destroy-zero.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
-import { faucet } from "./commands/faucet.js";
 import { findCoinHolders } from "./commands/find-coin-holders.js";
 import { findLastTx } from "./commands/find-last-tx.js";
 import { findNftHolders } from "./commands/find-nft-holders.js";
@@ -22,6 +21,9 @@ import { testRpcs } from "./commands/test-rpcs.js";
 dotenv.config();
 
 const program = new Command();
+
+// TODO: add msg-verify
+// TODO: add msg-sign
 
 program
     .name("zui")
@@ -66,14 +68,6 @@ program
     .option("-r, --recipient <recipient>", "The address where the objects will be sent")
     .action(async (opts) => {
         await emptyWallet(opts.recipient);
-    });
-
-program
-    .command("faucet")
-    .description("Get SUI from the faucet on localnet/devnet/testnet")
-    .option("-a, --address <addresses...>", "Address(es) where SUI should be sent. Defaults to your active address.")
-    .action(async (opts) => {
-        await faucet(opts.address || []);
     });
 
 program
