@@ -24,7 +24,7 @@
         "prepublishOnly": "pnpm clean && pnpm i && pnpm build && cp ../../LICENSE ../../README.md .",
         "postpublish": "rm -f LICENSE README.md",
         "typecheck": "tsc --noEmit",
-        "zui": "tsc -b && node dist/zui.js"
+        "zui": "tsx src/zui.ts"
     },
     "dependencies": {
         "@mysten/sui": "^1.21.1",
@@ -40,6 +40,7 @@
         "eslint": "^9.19.0",
         "eslint-plugin-import": "^2.31.0",
         "eslint-plugin-unused-imports": "^4.1.4",
+        "tsx": "^4.19.2",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.22.0"
     },
