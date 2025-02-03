@@ -1,16 +1,15 @@
 {
+    "outputDir": "../sui-bytecode/transform-output",
     "identifiers": {
         "Nft": "MyNft"
     },
     "files": [
         {
             "bytecodeInputFile": "../sui-bytecode/build/Demo/bytecode_modules/nft.mv",
-            "bytecodeOutputFile": "../sui-bytecode/transform-output/nft.mv",
             "constants": []
         },
         {
             "bytecodeInputFile": "../sui-bytecode/build/Demo/bytecode_modules/collection.mv",
-            "bytecodeOutputFile": "../sui-bytecode/transform-output/collection.mv",
             "constants": [
                 {
                     "moveType": "Bool",

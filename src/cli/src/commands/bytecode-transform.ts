@@ -8,10 +8,10 @@ import init, { update_constants, update_identifiers } from "@mysten/move-bytecod
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 
 type TransformConfig = {
+    outputDir: string;
     identifiers: Record<string, string>;
     files: {
         bytecodeInputFile: string;
-        bytecodeOutputFile: string;
         constants: {
             moveType: string;
             oldVal: unknown;
@@ -29,6 +29,10 @@ export async function bytecodeTransform({
     await init(loadWasmModule());
     const rawConfig = JSON.parse(fs.readFileSync(configFile, "utf8"));
     const config = validateTransformConfig(rawConfig);
+
+    // ensure output directory exists
+    fs.mkdirSync(config.outputDir, { recursive: true });
+
     for (const transform of config.files) {
         console.debug(`Transforming ${transform.bytecodeInputFile}`);
         const bytecode = fs.readFileSync(transform.bytecodeInputFile);
@@ -37,8 +41,12 @@ export async function bytecodeTransform({
             identifiers: config.identifiers,
             constants: transform.constants,
         });
-        fs.writeFileSync(transform.bytecodeOutputFile, updatedBytecode);
+
+        // get the filename from the input path and use it for output
+        const outputFile = path.join(config.outputDir, path.basename(transform.bytecodeInputFile));
+        fs.writeFileSync(outputFile, updatedBytecode);
     }
+    console.debug("Done. Modified bytecode was saved to:", config.outputDir);
 }
 
 function loadWasmModule(): Buffer {
@@ -129,7 +137,7 @@ function getConstantBcsType(
         });
     }
 
-    // Base types
+    // base types
     switch (type)
     {
         case "U8": return bcs.u8();
@@ -152,8 +160,6 @@ function isNumberArray(val: unknown): boolean {
     return Array.isArray(val) && val.every(item => typeof item === "number");
 }
 
-
-
 function validateTransformConfig(config: unknown): TransformConfig
 {
     if (!config || typeof config !== "object") {
@@ -161,6 +167,10 @@ function validateTransformConfig(config: unknown): TransformConfig
     }
 
     const c = config as any;
+
+    if (!c.outputDir || typeof c.outputDir !== "string") {
+        throw new Error("Config must have an 'outputDir' string");
+    }
 
     if (!c.identifiers || typeof c.identifiers !== "object") {
         throw new Error("Config must have an 'identifiers' object");
@@ -173,9 +183,6 @@ function validateTransformConfig(config: unknown): TransformConfig
     for (const file of c.files) {
         if (!file.bytecodeInputFile || typeof file.bytecodeInputFile !== "string") {
             throw new Error("Each file must have a 'bytecodeInputFile' string");
-        }
-        if (!file.bytecodeOutputFile || typeof file.bytecodeOutputFile !== "string") {
-            throw new Error("Each file must have a 'bytecodeOutputFile' string");
         }
         if (!Array.isArray(file.constants)) {
             throw new Error("Each file must have a 'constants' array");
