@@ -67,11 +67,11 @@ export async function bytecodePublish({
     const resp = await signAndExecuteTx({ client, tx, signer, txRespOptions: { showEffects: true } });
 
     if (resp.effects?.status.status !== "success") {
-        error("Publish failed", resp.effects);
+        error("Publish failed. Response:", resp);
         throw new Error("Publish failed");
     }
 
-    debug("response:", resp);
+    debug("Publish successful. Response:", resp);
     log("status:", resp.effects?.status.status);
     log("digest:", resp.digest);
 }

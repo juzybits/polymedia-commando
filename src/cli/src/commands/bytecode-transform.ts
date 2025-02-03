@@ -1,13 +1,13 @@
-import { execSync } from "child_process";
 import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
+import { spawnSync } from "child_process";
 
 import { bcs, BcsType, fromHex, toHex } from "@mysten/bcs";
-import init, { get_constants,update_constants, update_identifiers } from "@mysten/move-bytecode-template/move_bytecode_template.js";
+import init, { get_constants, update_constants, update_identifiers } from "@mysten/move-bytecode-template/move_bytecode_template.js";
 
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
-import { log, debug, error } from "../logger.js";
+import { log, debug } from "../logger.js";
 
 type TransformConfig = {
     outputDir: string;
@@ -109,7 +109,6 @@ function transformBytecode({
             moveType,
         );
         if (constantsBefore === JSON.stringify(get_constants(updated))) {
-            error(`Failed to update constant`, { moveType, oldVal, newVal });
             throw new Error(`Didn't update constant '${moveType}' with value ${oldVal} to ${newVal}. Make sure 'moveType' and 'oldVal' are correct in your config. You may need to \`sui move build\` again.`);
         }
     }
@@ -230,10 +229,10 @@ function validateTransformConfig(config: unknown): TransformConfig
     return config as TransformConfig;
 }
 
-
 function executeBuildCommand(buildDir: string): void
 {
-    const buildCmd = ["sui", "move", "build", "--path", buildDir];
+    const buildCmd = ["sui", "move", "build"];
+    buildCmd.push("--path", buildDir);
 
     if (global.outputJson) {
         buildCmd.push("--json-errors");
@@ -243,23 +242,26 @@ function executeBuildCommand(buildDir: string): void
         buildCmd.push("--silence-warnings");
     }
 
-    try {
-        debug("Running build command:", buildCmd.join(" "));
-        const result = execSync(buildCmd.join(" "), {
-            // only show stdout if we're in verbose mode
-            stdio: global.outputVerbose ? "inherit" : "pipe"
-        });
+    debug("Running build command:", buildCmd.join(" "));
 
-        // if not in verbose mode (where output is already shown) and we have output
-        if (!global.outputVerbose && result) {
-            const output = result.toString();
-            if (output.trim()) {
-                debug("Build output:", output);
+    const result = spawnSync(buildCmd[0], buildCmd.slice(1), {
+        stdio: ["ignore", "pipe", "pipe"],
+        encoding: "utf8"
+    });
+
+    // Process build output (from stderr)
+    if (result.stderr && !global.outputQuiet) {
+        const lines = result.stderr.trim().split("\n");
+        for (const line of lines) {
+            if (line.trim()) {
+                log(line);
             }
         }
-    } catch (e: any) {
-        error("Build failed", e.message);
-        throw e;
+    }
+
+    // Check for actual errors via exit code
+    if (result.status !== 0) {
+        throw new Error(`Build command failed with status ${result.status}`);
     }
 }
 
