@@ -88,14 +88,19 @@ Example config file:
             "bytecodeInputFile": "your-package/build/Example/bytecode_modules/collection.mv",
             "constants": [
                 { // nft supply
-                    "moveType": "U64",
+                    "moveType": "u64",
                     "oldVal": 1000,
                     "newVal": 9000
                 },
                 { // collection name
-                    "moveType": "Vector(U8)",
+                    "moveType": "vector<u8>",
                     "oldVal": "old string",
                     "newVal": "new string"
+                },
+                { // array of addresses
+                    "moveType": "vector<address>",
+                    "oldVal": [ "0x111", "0x222" ],
+                    "newVal": [ "0x999", "0x888" ]
                 }
             ]
         }

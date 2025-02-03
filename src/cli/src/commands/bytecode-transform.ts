@@ -100,20 +100,30 @@ function transformBytecode({
         if (oldVal === newVal) {
             continue;
         }
-        const bcsType = getConstantBcsType(moveType, oldVal);
+        const normalizedType = normalizeConstantType(moveType);
+        const bcsType = getConstantBcsType(normalizedType, oldVal);
         const constantsBefore = JSON.stringify(get_constants(updated));
         updated = update_constants(
             updated,
             bcsType.serialize(newVal).toBytes(),
             bcsType.serialize(oldVal).toBytes(),
-            moveType,
+            normalizedType,
         );
         if (constantsBefore === JSON.stringify(get_constants(updated))) {
-            throw new Error(`Didn't update constant '${moveType}' with value ${oldVal} to ${newVal}. Make sure 'moveType' and 'oldVal' are correct in your config. You may need to \`sui move build\` again.`);
+            throw new Error(`Didn't update constant '${normalizedType}' with value ${oldVal} to ${newVal}. Make sure 'moveType' and 'oldVal' are correct in your config. You may need to \`sui move build\` again.`);
         }
     }
 
     return updated;
+}
+
+/** Convert types like `vector<u8>` to `Vector(U8)` */
+function normalizeConstantType(moveType: string): string {
+    return moveType
+        .replace(/\s+/g, "") // remove whitespace
+        .replace(/\b[a-z]+\d*\b/g, m => m[0].toUpperCase() + m.slice(1))
+        .replace(/</g, "(")
+        .replace(/>/g, ")");
 }
 
 /**
