@@ -1,7 +1,10 @@
 import fs from "fs";
+import path from "path";
 
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { setupSuiTransaction, signAndExecuteTx } from "@polymedia/suitcase-node";
+
+import { log, debug, error } from "../logger.js";
 
 export async function bytecodePublish({
     bytecodeFiles,
@@ -20,10 +23,18 @@ export async function bytecodePublish({
             throw new Error(`file not found: ${file}`);
         }
     }
+
+    // load network and signer from environment
+    const { network, client, tx, signer } = await setupSuiTransaction();
+    const sender = signer.toSuiAddress();
+    log("Active network:", network);
+    log("Active address:", sender);
+
     // read bytecode files
-    console.log("Reading bytecode files...");
+    log("Reading bytecode files...");
     const bytecodes: number[][] = [];
     for (const file of bytecodeFiles) {
+        debug(`- ${path.basename(file)}`);
         const bytecode = fs.readFileSync(file);
         bytecodes.push(Array.from(bytecode));
     }
@@ -42,31 +53,25 @@ export async function bytecodePublish({
         "0x0000000000000000000000000000000000000000000000000000000000000002"
     ];
     const allDeps = [...new Set([...defaultDeps, ...normalizedDeps])];
-
-    // load network and signer from environment
-    const { network, client, tx, signer } = await setupSuiTransaction();
-    const sender = signer.toSuiAddress();
-    console.log("Active network:", network);
-    console.log("Active address:", sender);
+    debug("Dependencies:", allDeps);
 
     // publish package
-    console.log("Building transaction...");
+    debug("Building transaction...");
     const [upgradeCap] = tx.publish({
         modules: bytecodes,
         dependencies: allDeps,
     });
     tx.transferObjects([upgradeCap], sender);
 
-    console.log("Publishing package...");
-    const result = await signAndExecuteTx({ client, tx, signer, txRespOptions: { showEffects: true } });
+    log("Publishing package...");
+    const resp = await signAndExecuteTx({ client, tx, signer, txRespOptions: { showEffects: true } });
 
-    if (result.effects?.status.status !== "success") {
-        console.error(JSON.stringify(result.effects, null, 2));
+    if (resp.effects?.status.status !== "success") {
+        error("Publish failed", resp.effects);
         throw new Error("Publish failed");
     }
 
-    console.log("Success! Result:");
-    console.log(JSON.stringify(result, null, 2));
-    console.log("Status:", result.effects?.status.status);
-    console.log("Digest:", result.digest);
+    debug("response:", resp);
+    log("status:", resp.effects?.status.status);
+    log("digest:", resp.digest);
 }

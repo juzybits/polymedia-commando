@@ -1,6 +1,9 @@
 import { writeJsonFile } from "@polymedia/suitcase-node";
 
-import { AddressAndBalance } from "../types.js";
+export type AddressAndBalance = {
+    address: string;
+    balance: number; // TODO use bigint
+};
 
 export async function findCoinHolders({
     coinType, outputFile, limit = 999_999_999,

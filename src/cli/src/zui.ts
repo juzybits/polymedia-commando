@@ -21,6 +21,7 @@ import { msgSign } from "./commands/msg-sign.js";
 import { msgVerify } from "./commands/msg-verify.js";
 import { randAddr } from "./commands/rand-addr.js";
 import { sendCoin } from "./commands/send-coin.js";
+import "./types.js";
 
 dotenv.config();
 
@@ -29,7 +30,15 @@ const program = new Command();
 program
     .name("zui")
     .description("ZUI: Sui command line tools")
-    .version(`zui ${getVersion()}`);
+    .version(`zui ${getVersion()}`)
+    .option("--json", "output in JSON format (useful for scripting)")
+    .option("-q, --quiet", "suppress non-error output")
+    .option("-v, --verbose", "show debug output")
+    .hook("preAction", (thisCommand) => {
+        global.outputJson = thisCommand.opts().json ?? false;
+        global.outputQuiet = thisCommand.opts().quiet ?? false;
+        global.outputVerbose = thisCommand.opts().verbose ?? false;
+    });
 
 program.configureHelp({
     sortSubcommands: true,
