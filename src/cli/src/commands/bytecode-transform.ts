@@ -7,6 +7,7 @@ import { bcs, BcsType, fromHex, toHex } from "@mysten/bcs";
 import init, { get_constants,update_constants, update_identifiers } from "@mysten/move-bytecode-template/move_bytecode_template.js";
 
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
+import { log, debug, error } from "../logger.js";
 
 type TransformConfig = {
     outputDir: string;
@@ -35,10 +36,8 @@ export async function bytecodeTransform({
 
     // build the Move package if requested
     if (buildDir) {
-        console.debug("Building Move package...");
-        const buildCmd = `sui move build --path ${buildDir}`;
-        const result = execSync(buildCmd);
-        console.debug(result.toString());
+        log("Building Move package...");
+        executeBuildCommand(buildDir);
     }
 
     // ensure output directory exists
@@ -59,8 +58,9 @@ export async function bytecodeTransform({
     }
 
     // apply transformations to each bytecode file
+    log("Transforming bytecode...");
     for (const transform of config.files) {
-        console.debug(`Transforming ${transform.bytecodeInputFile}`);
+        debug(`- ${transform.bytecodeInputFile}`);
         const bytecode = fs.readFileSync(transform.bytecodeInputFile);
         const updatedBytecode = transformBytecode({
             bytecode: new Uint8Array(bytecode),
@@ -72,7 +72,7 @@ export async function bytecodeTransform({
         const outputFile = path.join(config.outputDir, path.basename(transform.bytecodeInputFile));
         fs.writeFileSync(outputFile, updatedBytecode);
     }
-    console.debug("Done. Modified bytecode was saved to:", config.outputDir);
+    log("Modified bytecode was saved to:", config.outputDir);
 }
 
 function loadWasmModule(): Buffer {
@@ -109,6 +109,7 @@ function transformBytecode({
             moveType,
         );
         if (constantsBefore === JSON.stringify(get_constants(updated))) {
+            error(`Failed to update constant`, { moveType, oldVal, newVal });
             throw new Error(`Didn't update constant '${moveType}' with value ${oldVal} to ${newVal}. Make sure 'moveType' and 'oldVal' are correct in your config. You may need to \`sui move build\` again.`);
         }
     }
@@ -185,14 +186,6 @@ function getConstantBcsType(
     }
 }
 
-function isStringValue(val: unknown): boolean {
-    return typeof val === "string";
-}
-
-function isNumberArray(val: unknown): boolean {
-    return Array.isArray(val) && val.every(item => typeof item === "number");
-}
-
 function validateTransformConfig(config: unknown): TransformConfig
 {
     if (!config || typeof config !== "object") {
@@ -235,4 +228,45 @@ function validateTransformConfig(config: unknown): TransformConfig
     }
 
     return config as TransformConfig;
+}
+
+
+function executeBuildCommand(buildDir: string): void
+{
+    const buildCmd = ["sui", "move", "build", "--path", buildDir];
+
+    if (global.outputJson) {
+        buildCmd.push("--json-errors");
+    }
+
+    if (global.outputQuiet) {
+        buildCmd.push("--silence-warnings");
+    }
+
+    try {
+        debug("Running build command:", buildCmd.join(" "));
+        const result = execSync(buildCmd.join(" "), {
+            // only show stdout if we're in verbose mode
+            stdio: global.outputVerbose ? "inherit" : "pipe"
+        });
+
+        // if not in verbose mode (where output is already shown) and we have output
+        if (!global.outputVerbose && result) {
+            const output = result.toString();
+            if (output.trim()) {
+                debug("Build output:", output);
+            }
+        }
+    } catch (e: any) {
+        error("Build failed", e.message);
+        throw e;
+    }
+}
+
+function isStringValue(val: unknown): boolean {
+    return typeof val === "string";
+}
+
+function isNumberArray(val: unknown): boolean {
+    return Array.isArray(val) && val.every(item => typeof item === "number");
 }
