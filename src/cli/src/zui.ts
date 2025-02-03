@@ -117,16 +117,13 @@ program
 
 program
     .command("find-nft-holders")
-    .summary("Find NFT holders for a set of collections via Indexer.xyz")
-    .description(
-`Find NFT holders for a set of collections via Indexer.xyz
-
+    .description("Find NFT holders for a set of collections via Indexer.xyz")
+    .addHelpText("after", `
 Example input file:
 [
     { "name": "Prime Machin", "indexerId": "07231735-96de-4710-8e11-52c61a482578" },
     { "name": "Fuddies", "indexerId": "4827d37b-5574-404f-b030-d26912ad7461" }
-]`
-    )
+]`)
     .requiredOption("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
     .requiredOption("-o, --output-dir <outputDir>", "Output directory to write the TXT files")
     .action(async (opts) => {
@@ -135,16 +132,13 @@ Example input file:
 
 program
     .command("find-nfts")
-    .summary("Find all NFTs and their owners for a set of collections via Indexer.xyz")
-    .description(
-`Find all NFTs and their owners for a set of collections via Indexer.xyz
-
+    .description("Find all NFTs and their owners for a set of collections via Indexer.xyz")
+    .addHelpText("after", `
 Example input file:
 [
     { "name": "Prime Machin", "indexerId": "07231735-96de-4710-8e11-52c61a482578" },
     { "name": "Fuddies", "indexerId": "4827d37b-5574-404f-b030-d26912ad7461" }
-]`
-    )
+]`)
     .requiredOption("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
     .requiredOption("-o, --output-dir <outputDir>", "Output directory to write the JSON files")
     .action(async (opts) => {
