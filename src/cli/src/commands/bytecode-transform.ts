@@ -4,7 +4,7 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
 import { bcs, BcsType, fromHex, toHex } from "@mysten/bcs";
-import init, { update_constants, update_identifiers } from "@mysten/move-bytecode-template/move_bytecode_template.js";
+import init, { get_constants,update_constants, update_identifiers } from "@mysten/move-bytecode-template/move_bytecode_template.js";
 
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 
@@ -97,13 +97,20 @@ function transformBytecode({
     let updated = update_identifiers(bytecode, identifiers);
     for (const constant of constants) {
         const { moveType, oldVal, newVal } = constant;
+        if (oldVal === newVal) {
+            continue;
+        }
         const bcsType = getConstantBcsType(moveType, oldVal);
+        const constantsBefore = JSON.stringify(get_constants(updated));
         updated = update_constants(
             updated,
             bcsType.serialize(newVal).toBytes(),
             bcsType.serialize(oldVal).toBytes(),
             moveType,
         );
+        if (constantsBefore === JSON.stringify(get_constants(updated))) {
+            throw new Error(`Didn't update constant '${moveType}' with value ${oldVal} to ${newVal}. Make sure 'moveType' and 'oldVal' are correct in your config. You may need to \`sui move build\` again.`);
+        }
     }
 
     return updated;
