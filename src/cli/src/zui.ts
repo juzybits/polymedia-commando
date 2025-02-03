@@ -49,11 +49,12 @@ program
 program
     .command("bytecode-publish")
     .description("Publish Move bytecode files as a Sui package")
-    .requiredOption("-f, --files <files...>", "One or more Move bytecode files to publish"
-    )
+    .requiredOption("-f, --files <files...>", "One or more Move bytecode files to publish")
+    .option("-d, --dependencies <dependencies...>", "The package IDs of dependencies, if any (0x1 and 0x2 are always included)")
     .action(async (opts) => {
         await bytecodePublish({
             bytecodeFiles: opts.files,
+            dependencies: opts.dependencies,
         });
     });
 
