@@ -11,7 +11,7 @@ export async function destroyZero(
     devInspect: boolean,
 ): Promise<void>
 {
-    const { signer, suiClient } = await setupSuiTransaction();
+    const { signer, client } = await setupSuiTransaction();
 
     let pagObjRes: PaginatedObjectsResponse;
     let cursor: null | string = null;
@@ -21,7 +21,7 @@ export async function destroyZero(
     let moveCallCount = 0; // do up to MAX_CALLS_PER_TX coin::destroy_zero() calls per tx
 
     do {
-        pagObjRes = await suiClient.getOwnedObjects({
+        pagObjRes = await client.getOwnedObjects({
             owner: signer.toSuiAddress(),
             filter: { StructType: "0x2::coin::Coin" },
             options: { showType: true, showContent: true },
@@ -50,7 +50,7 @@ export async function destroyZero(
             moveCallCount++;
             if (moveCallCount >= MAX_CALLS_PER_TX) {
                 console.log(`=== tx ${txNumber++}: Destroying ${moveCallCount} coins ===`);
-                await executeTransaction(tx, suiClient, signer, devInspect);
+                await executeTransaction(tx, client, signer, devInspect);
                 tx = new Transaction();
                 txNumber++;
                 moveCallCount = 0;
@@ -60,13 +60,13 @@ export async function destroyZero(
 
     if (moveCallCount > 0) {
         console.log(`=== tx ${txNumber++}: Destroying ${moveCallCount} coins ===`);
-        await executeTransaction(tx, suiClient, signer, devInspect);
+        await executeTransaction(tx, client, signer, devInspect);
     }
 }
 
 async function executeTransaction(
     tx: Transaction,
-    suiClient: SuiClient,
+    client: SuiClient,
     signer: Signer,
     devInspect: boolean,
 ): Promise<void>
@@ -74,12 +74,12 @@ async function executeTransaction(
     let resp: DevInspectResults | SuiTransactionBlockResponse;
 
     if (devInspect) {
-        resp = await suiClient.devInspectTransactionBlock({
+        resp = await client.devInspectTransactionBlock({
             transactionBlock: tx,
             sender: signer.toSuiAddress(),
         });
     } else {
-        resp = await suiClient.signAndExecuteTransaction({
+        resp = await client.signAndExecuteTransaction({
             signer,
             transaction: tx,
             options: { showEffects: true, showObjectChanges: true }

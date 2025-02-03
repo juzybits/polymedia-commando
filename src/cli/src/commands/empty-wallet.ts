@@ -10,7 +10,7 @@ export async function emptyWallet(
     recipient?: string,
 ): Promise<void>
 {
-    const { network, signer, suiClient } = await setupSuiTransaction();
+    const { network, signer, client } = await setupSuiTransaction();
 
     /* Make sure we're not on mainnet */
 
@@ -29,7 +29,7 @@ export async function emptyWallet(
     let cursor: null | string = null;
     let page = 0;
     do {
-        pagObjRes = await suiClient.getOwnedObjects({
+        pagObjRes = await client.getOwnedObjects({
             owner: signer.toSuiAddress(),
             cursor,
             options: { showType: true, showContent: true },
@@ -51,7 +51,7 @@ export async function emptyWallet(
             }
             const tx = new Transaction();
             tx.transferObjects(objIds, recipientAddr);
-            const txRes = await executeSuiTransaction(suiClient, tx, signer);
+            const txRes = await executeSuiTransaction(client, tx, signer);
             console.log(`page: ${page}, objects: ${objIds.length}, tx status: ${txRes.effects!.status.status}`);
         }
     } while (pagObjRes.hasNextPage);

@@ -11,8 +11,8 @@ export async function sendCoin(
 {
     /* Calculate amount with decimals */
 
-    const { suiClient, tx, signer } = await setupSuiTransaction();
-    const coinMeta = await suiClient.getCoinMetadata({coinType: coinType});
+    const { client, tx, signer } = await setupSuiTransaction();
+    const coinMeta = await client.getCoinMetadata({coinType: coinType});
     if (!coinMeta) {
         console.error(`Error: CoinMetadata not found for ${coinType}`);
         return;
@@ -22,7 +22,7 @@ export async function sendCoin(
     /* Check if the user has enough balance */
 
     const ownerAddress = signer.getPublicKey().toSuiAddress();
-    const balanceObj = await suiClient.getBalance({
+    const balanceObj = await client.getBalance({
         owner: ownerAddress,
         coinType: coinType,
     });
@@ -51,6 +51,6 @@ export async function sendCoin(
     })(tx);
     tx.transferObjects([coin], recipientAddr);
 
-    const resp = await executeSuiTransaction(suiClient, tx, signer);
+    const resp = await executeSuiTransaction(client, tx, signer);
     console.log(resp);
 }

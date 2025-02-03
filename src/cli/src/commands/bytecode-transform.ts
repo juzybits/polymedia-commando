@@ -123,7 +123,7 @@ function transformBytecode({
 function getConstantBcsType(
     moveType: string,
     value: unknown,
-): BcsType<unknown, any> // eslint-disable-line @typescript-eslint/no-explicit-any
+): BcsType<unknown, any>
 {
     const type = moveType.trim();
 
