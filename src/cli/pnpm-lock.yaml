@@ -19,10 +19,10 @@ importers:
         version: 1.21.1(typescript@5.7.3)
       '@polymedia/suitcase-core':
         specifier: ^0.0.43
-        version: 0.0.43(@mysten/sui@1.21.1(typescript@5.7.3))
+        version: link:../../../polymedia-suitcase/src/core
       '@polymedia/suitcase-node':
         specifier: ^0.0.43
-        version: 0.0.43(@mysten/sui@1.21.1(typescript@5.7.3))
+        version: link:../../../polymedia-suitcase/src/node
       commander:
         specifier: ^13.1.0
         version: 13.1.0
@@ -326,16 +326,6 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
-
-  '@polymedia/suitcase-core@0.0.43':
-    resolution: {integrity: sha512-M0SOKwushJAvQx+hHL+VXT7QuaHy3feI9eeZAtIfAB6QcUwlzY3MqnrfVI73NcEdW51sB29FRmu4XeQnbyXXuQ==}
-    peerDependencies:
-      '@mysten/sui': ^1.21.1
-
-  '@polymedia/suitcase-node@0.0.43':
-    resolution: {integrity: sha512-g2qNuYJoNiRBjZ5zDKJ4or88WK2KcYP0X+KKCVP/ikWmeynOZ/G6YoolLRJKkx5MHhRUQfjtmQlz6sSZNyNOmw==}
-    peerDependencies:
-      '@mysten/sui': ^1.21.1
 
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
@@ -1495,15 +1485,6 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.0
-
-  '@polymedia/suitcase-core@0.0.43(@mysten/sui@1.21.1(typescript@5.7.3))':
-    dependencies:
-      '@mysten/sui': 1.21.1(typescript@5.7.3)
-
-  '@polymedia/suitcase-node@0.0.43(@mysten/sui@1.21.1(typescript@5.7.3))':
-    dependencies:
-      '@mysten/sui': 1.21.1(typescript@5.7.3)
-      '@polymedia/suitcase-core': 0.0.43(@mysten/sui@1.21.1(typescript@5.7.3))
 
   '@rtsao/scc@1.1.0': {}
 

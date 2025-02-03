@@ -3,10 +3,11 @@ import { Signer } from "@mysten/sui/cryptography";
 import { Transaction } from "@mysten/sui/transactions";
 
 import { objResToFields } from "@polymedia/suitcase-core";
-import { setupSuiTransaction } from "@polymedia/suitcase-node";
+import { setupSuiTransaction, signAndExecuteTx } from "@polymedia/suitcase-node";
 
 const MAX_CALLS_PER_TX = 1000; // see `max_programmable_tx_commands` in sui/crates/sui-protocol-config/src/lib.rs
 
+// TODO: SerialTransactionExecutor
 export async function destroyZero(
     devInspect: boolean,
 ): Promise<void>
@@ -79,11 +80,7 @@ async function executeTransaction(
             sender: signer.toSuiAddress(),
         });
     } else {
-        resp = await client.signAndExecuteTransaction({
-            signer,
-            transaction: tx,
-            options: { showEffects: true, showObjectChanges: true }
-        });
+        resp = await signAndExecuteTx({ client, tx, signer });
     }
 
     const info = {

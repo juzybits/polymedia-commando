@@ -1,7 +1,7 @@
 import { coinWithBalance } from "@mysten/sui/transactions";
 
 import { formatBalance, formatNumber, stringToBalance } from "@polymedia/suitcase-core";
-import { executeSuiTransaction, promptUser, setupSuiTransaction } from "@polymedia/suitcase-node";
+import { signAndExecuteTx, promptUser, setupSuiTransaction } from "@polymedia/suitcase-node";
 
 export async function sendCoin(
     amount: string,
@@ -51,6 +51,6 @@ export async function sendCoin(
     })(tx);
     tx.transferObjects([coin], recipientAddr);
 
-    const resp = await executeSuiTransaction(client, tx, signer);
+    const resp = await signAndExecuteTx({ client, tx, signer, waitForTxOptions: false });
     console.log(resp);
 }

@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import { setupSuiTransaction } from "@polymedia/suitcase-node";
+import { setupSuiTransaction, signAndExecuteTx } from "@polymedia/suitcase-node";
 
 export async function bytecodePublish({
     bytecodeFiles,
@@ -40,19 +40,15 @@ export async function bytecodePublish({
     tx.transferObjects([upgradeCap], sender);
 
     console.log("Publishing package...");
-    const result = await client.signAndExecuteTransaction({
-        transaction: tx,
-        signer: signer,
-        options: {
-            showEffects: true,
-            showObjectChanges: true,
-        }
-    });
+    const result = await signAndExecuteTx({ client, tx, signer, txRespOptions: { showEffects: true } });
 
     if (result.effects?.status.status !== "success") {
         console.error(JSON.stringify(result.effects, null, 2));
         throw new Error("Publish failed");
     }
 
-    console.log("Success! Result:", result);
+    console.log("Success! Result:");
+    console.log(JSON.stringify(result, null, 2));
+    console.log("Status:", result.effects?.status.status);
+    console.log("Digest:", result.digest);
 }
