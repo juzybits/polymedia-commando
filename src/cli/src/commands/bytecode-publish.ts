@@ -1,9 +1,6 @@
 import fs from "fs";
 
-import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
-import { Transaction } from "@mysten/sui/transactions";
-
-import { pairFromSecretKey } from "@polymedia/suitcase-core";
+import { setupSuiTransaction } from "@polymedia/suitcase-node";
 
 export async function bytecodePublish({
     bytecodeFiles,
@@ -22,33 +19,30 @@ export async function bytecodePublish({
         }
     }
 
-    const privateKey = "suiprivkey1qz58vz6dtqtx8v5yu7kg95v5k3zdlsh28txk38lztaxh89rnkp492vrw7f7";
-    const keypair = pairFromSecretKey(privateKey);
-    const sender = keypair.toSuiAddress();
-    console.debug("Sender address:", sender); // // 0x07cc17b06662371b306cd6a84bd20134f8d7c230cb8b7c6fc3eb6da08d26d6d2
+    const { network, client, tx, signer } = await setupSuiTransaction();
+    const sender = signer.toSuiAddress();
 
-    console.debug("Reading bytecodes...");
+    console.log("Active network:", network);
+    console.log("Active address:", sender);
+
+    console.log("Reading bytecode files...");
     const bytecodes: number[][] = [];
     for (const file of bytecodeFiles) {
         const bytecode = fs.readFileSync(file);
         bytecodes.push(Array.from(bytecode));
     }
 
-    console.debug("Building transaction...");
-    const tx = new Transaction();
+    console.log("Building transaction...");
     const [upgradeCap] = tx.publish({
         modules: bytecodes,
         dependencies: [ "0x1", "0x2" ],
     });
     tx.transferObjects([upgradeCap], sender);
 
-    console.debug("Publishing package...");
-    const client = new SuiClient({
-        url: getFullnodeUrl("localnet")
-    });
+    console.log("Publishing package...");
     const result = await client.signAndExecuteTransaction({
         transaction: tx,
-        signer: keypair,
+        signer: signer,
         options: {
             showEffects: true,
             showObjectChanges: true,
@@ -57,8 +51,8 @@ export async function bytecodePublish({
 
     if (result.effects?.status.status !== "success") {
         console.error(JSON.stringify(result.effects, null, 2));
-        throw new Error("publish failed");
+        throw new Error("Publish failed");
     }
 
-    console.debug("Published! Result:", result);
+    console.log("Success! Result:", result);
 }
