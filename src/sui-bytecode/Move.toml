@@ -1,0 +1,11 @@
+[package]
+name = "Demo"
+version = "1.0.0"
+edition = "2024.beta"
+license = "Apache-2.0"
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet" }
+
+[addresses]
+demo = "0x0"

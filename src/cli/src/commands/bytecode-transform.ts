@@ -26,7 +26,7 @@ const identifiers = {
 
 const bytecodeTransforms: BytecodeTransform[] = [ // TODO read from arguments
     {
-        bytecodeInputFile: "../sui-demo/build/Demo/bytecode_modules/collection.mv",
+        bytecodeInputFile: "../sui-bytecode/build/Demo/bytecode_modules/collection.mv",
         bytecodeOutputFile: "./out/collection.mv",
         identifiers,
         constants: [
@@ -132,7 +132,7 @@ const bytecodeTransforms: BytecodeTransform[] = [ // TODO read from arguments
         ],
     },
     {
-        bytecodeInputFile: "../sui-demo/build/Demo/bytecode_modules/nft.mv",
+        bytecodeInputFile: "../sui-bytecode/build/Demo/bytecode_modules/nft.mv",
         bytecodeOutputFile: "./out/nft.mv",
         identifiers,
         constants: [],
@@ -159,7 +159,7 @@ function loadWasmModule(): Buffer {
     try {
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = dirname(__filename);
-        const wasmPath = path.resolve(__dirname, "../node_modules/@mysten/move-bytecode-template/move_bytecode_template_bg.wasm");
+        const wasmPath = path.resolve(__dirname, "../../node_modules/@mysten/move-bytecode-template/move_bytecode_template_bg.wasm");
         return fs.readFileSync(wasmPath);
     } catch (e) {
         throw new Error(`Failed to load WASM module: ${e}`);

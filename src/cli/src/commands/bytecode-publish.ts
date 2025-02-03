@@ -42,7 +42,8 @@ export async function bytecodePublish({
         transaction: tx,
         signer: keypair,
         options: {
-            showEffects: true
+            showEffects: true,
+            showObjectChanges: true,
         }
     });
 
