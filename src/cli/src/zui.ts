@@ -48,9 +48,13 @@ program
 
 program
     .command("bytecode-publish")
-    .description("Publish a Move package")
-    .action(async (_opts) => {
-        await bytecodePublish({});
+    .description("Publish Move bytecode files as a Sui package")
+    .requiredOption("-f, --files <files...>", "One or more Move bytecode files to publish"
+    )
+    .action(async (opts) => {
+        await bytecodePublish({
+            bytecodeFiles: opts.files,
+        });
     });
 
 program
