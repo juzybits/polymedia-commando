@@ -44,6 +44,7 @@ const BATCH_SIZE = 500;
  */
 const RATE_LIMIT_DELAY = 300;
 
+// TODO: SerialTransactionExecutor
 // TODO: abort if current gas is lower than gas estimate
 export async function bulksend(
     coinType: string,
