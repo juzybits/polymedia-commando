@@ -6,8 +6,8 @@ import { Transaction } from "@mysten/sui/transactions";
 import { pairFromSecretKey } from "@polymedia/suitcase-core";
 
 const moduleBytecodes = [ // TODO read from arguments
-    "./out/collection.mv",
-    "./out/nft.mv",
+    "../sui-bytecode/transform-output/collection.mv",
+    "../sui-bytecode/transform-output/nft.mv",
 ];
 
 export async function bytecodePublish({

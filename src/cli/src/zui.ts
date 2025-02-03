@@ -56,8 +56,11 @@ program
 program
     .command("bytecode-transform")
     .description("Change identifiers and constants in a Move bytecode file")
-    .action(async (_opts) => {
-        await bytecodeTransform({});
+    .requiredOption("-c, --config <config>", "Path to a JSON file with the transform config")
+    .action(async (opts) => {
+        await bytecodeTransform({
+            configFile: opts.config,
+        });
     });
 
 program
