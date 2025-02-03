@@ -55,11 +55,13 @@ program
 
 program
     .command("bytecode-transform")
-    .description("Change identifiers and constants in a Move bytecode file")
-    .requiredOption("-c, --config <config>", "Path to a JSON file with the transform config")
+    .description("Update identifiers (module and struct names) and constant values in Move bytecode files")
+    .requiredOption("-c, --config <file>", "Path to a JSON file specifying transformations")
+    .option("-b, --build [directory]", "Build the Move package in this directory before transforming")
     .action(async (opts) => {
         await bytecodeTransform({
             configFile: opts.config,
+            buildDir: opts.build,
         });
     });
 

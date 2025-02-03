@@ -2,8 +2,12 @@ module demo::collection;
 
 // === imports ===
 
-use std::string::{String};
-use sui::table::{Self, Table};
+use std::{
+    string::{String},
+};
+use sui::{
+    table::{Self, Table},
+};
 
 // === constants ===
 

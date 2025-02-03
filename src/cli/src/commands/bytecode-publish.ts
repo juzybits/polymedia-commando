@@ -8,6 +8,7 @@ import { pairFromSecretKey } from "@polymedia/suitcase-core";
 const moduleBytecodes = [ // TODO read from arguments
     "../sui-bytecode/transform-output/collection.mv",
     "../sui-bytecode/transform-output/nft.mv",
+    "../sui-bytecode/transform-output/wrapper.mv",
 ];
 
 export async function bytecodePublish({

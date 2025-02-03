@@ -2,10 +2,16 @@ module demo::nft;
 
 // === imports ===
 
-use demo::collection::{Collection, CollectionAdminCap};
-use std::string::String;
-use sui::display;
-use sui::package;
+use std::{
+    string::{String},
+};
+use sui::{
+    display::{Self},
+    package::{Self},
+};
+use demo::{
+    collection::{Collection, CollectionAdminCap},
+};
 
 // === structs ===
 

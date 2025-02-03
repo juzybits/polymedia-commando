@@ -1,3 +1,4 @@
+import { execSync } from "child_process";
 import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -22,17 +23,42 @@ type TransformConfig = {
 
 export async function bytecodeTransform({
     configFile,
+    buildDir,
 }:{
     configFile: string;
+    buildDir?: string;
 }): Promise<void>
 {
     await init(loadWasmModule());
     const rawConfig = JSON.parse(fs.readFileSync(configFile, "utf8"));
     const config = validateTransformConfig(rawConfig);
 
+    // build the Move package if requested
+    if (buildDir) {
+        console.debug("Building Move package...");
+        const buildCmd = `sui move build --path ${buildDir}`;
+        const result = execSync(buildCmd);
+        console.debug(result.toString());
+    }
+
     // ensure output directory exists
     fs.mkdirSync(config.outputDir, { recursive: true });
 
+    // empty .mv files in the output directory
+    for (const file of fs.readdirSync(config.outputDir)) {
+        if (file.endsWith(".mv")) {
+            fs.unlinkSync(path.join(config.outputDir, file));
+        }
+    }
+
+    // check that all input files exist
+    for (const transform of config.files) {
+        if (!fs.existsSync(transform.bytecodeInputFile)) {
+            throw new Error(`Input file ${transform.bytecodeInputFile} does not exist. Did you forget to \`sui move build\`?`);
+        }
+    }
+
+    // apply transformations to each bytecode file
     for (const transform of config.files) {
         console.debug(`Transforming ${transform.bytecodeInputFile}`);
         const bytecode = fs.readFileSync(transform.bytecodeInputFile);

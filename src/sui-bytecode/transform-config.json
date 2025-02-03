@@ -1,11 +1,20 @@
 {
     "outputDir": "../sui-bytecode/transform-output",
     "identifiers": {
-        "Nft": "MyNft"
+        "nft": "my_nft",
+        "NFT": "MY_NFT",
+        "Nft": "MyNft",
+        "wrapper": "my_wrapper",
+        "WRAPPER": "MY_WRAPPER",
+        "Wrapper": "MyWrapper"
     },
     "files": [
         {
             "bytecodeInputFile": "../sui-bytecode/build/Demo/bytecode_modules/nft.mv",
+            "constants": []
+        },
+        {
+            "bytecodeInputFile": "../sui-bytecode/build/Demo/bytecode_modules/wrapper.mv",
             "constants": []
         },
         {
