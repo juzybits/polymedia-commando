@@ -8,6 +8,8 @@ import { Command, Option } from "commander";
 import dotenv from "dotenv";
 
 import { bulksend } from "./commands/bulksend.js";
+import { bytecodePublish } from "./commands/bytecode-publish.js";
+import { bytecodeTransform } from "./commands/bytecode-transform.js";
 import { destroyZero } from "./commands/destroy-zero.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
 import { findCoinHolders } from "./commands/find-coin-holders.js";
@@ -45,6 +47,20 @@ program
     });
 
 program
+    .command("bytecode-publish")
+    .description("Publish a Move package")
+    .action(async (_opts) => {
+        await bytecodePublish({});
+    });
+
+program
+    .command("bytecode-transform")
+    .description("Change identifiers and constants in a Move bytecode file")
+    .action(async (_opts) => {
+        await bytecodeTransform({});
+    });
+
+program
     .command("destroy-zero")
     .description("Destroy all Coin<T> objects with 0 balance in your wallet")
     .option("-d, --dev-inspect", "Don't execute the transaction, just use devInspectTransactionBlock()", false)
@@ -77,10 +93,10 @@ program
 program
     .command("find-last-tx")
     .description("Find the latest transaction for one or more Sui addresses")
-    .addOption(new Option('-a, --address <address>', 'Single address to find the last transaction for')
-        .conflicts('input-file'))
-    .addOption(new Option('-i, --input-file <path>', 'JSON file with an array of addresses')
-        .conflicts('address'))
+    .addOption(new Option("-a, --address <address>", "Single address to find the last transaction for")
+        .conflicts("input-file"))
+    .addOption(new Option("-i, --input-file <path>", "JSON file with an array of addresses")
+        .conflicts("address"))
     .option("-o, --output-file [path]", "JSON file with addresses and their last transaction ID and time")
     .action(async (opts) => {
         await findLastTx({
