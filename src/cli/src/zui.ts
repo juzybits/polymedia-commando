@@ -59,7 +59,40 @@ program
 
 program
     .command("bytecode-transform")
-    .description("Update identifiers (module and struct names) and constant values in Move bytecode files")
+    .description("Update identifiers and constants in Move bytecode files")
+    .addHelpText("after", `
+Example config file:
+{
+    "outputDir": "path/to/output/directory",
+    "identifiers": {
+        "nft": "my_nft", // module name
+        "NFT": "MY_NFT", // one-time witness
+        "Nft": "MyNft"   // struct name
+    },
+    "files": [
+        {
+            "bytecodeInputFile": "your-package/build/Example/bytecode_modules/nft.mv",
+            "constants": []
+        },
+        {
+            "bytecodeInputFile": "your-package/build/Example/bytecode_modules/collection.mv",
+            "constants": [
+                { // nft supply
+                    "moveType": "U64",
+                    "oldVal": 1000,
+                    "newVal": 9000
+                },
+                { // collection name
+                    "moveType": "Vector(U8)",
+                    "oldVal": "old string",
+                    "newVal": "new string"
+                }
+            ]
+        }
+    ]
+}
+
+For a complete working example, visit https://github.com/juzybits/polymedia-commando/blob/main/src/sui-bytecode`)
     .requiredOption("-c, --config <file>", "Path to a JSON file specifying transformations")
     .option("-b, --build [directory]", "Build the Move package in this directory before transforming")
     .action(async (opts) => {
