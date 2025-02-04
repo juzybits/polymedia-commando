@@ -3,6 +3,8 @@ import { coinWithBalance } from "@mysten/sui/transactions";
 import { formatBalance, formatNumber, stringToBalance } from "@polymedia/suitcase-core";
 import { signAndExecuteTx, promptUser, setupSuiTransaction } from "@polymedia/suitcase-node";
 
+import { error, log, debug } from "../logger.js";
+
 export async function sendCoin(
     amount: string,
     coinType: string,
@@ -11,10 +13,10 @@ export async function sendCoin(
 {
     /* Calculate amount with decimals */
 
-    const { client, tx, signer } = await setupSuiTransaction();
+    const { client, tx, signer, network } = await setupSuiTransaction();
     const coinMeta = await client.getCoinMetadata({coinType: coinType});
     if (!coinMeta) {
-        console.error(`Error: CoinMetadata not found for ${coinType}`);
+        error(`CoinMetadata not found for ${coinType}`);
         return;
     }
     const balanceToSend = stringToBalance(amount, coinMeta.decimals);
@@ -29,17 +31,17 @@ export async function sendCoin(
     const userBalance = BigInt(balanceObj.totalBalance);
     if (userBalance < balanceToSend) {
         const balance = Number(userBalance) / 10**coinMeta.decimals;
-        console.error(`Error: your balance is only ${formatNumber(balance)} ${coinMeta.symbol}`);
+        error(`your balance is only ${formatNumber(balance)} ${coinMeta.symbol}`);
         return;
     }
 
     /* Get user confirmation */
 
-    console.log(`amount: ${formatBalance(balanceToSend, coinMeta.decimals)} ${coinMeta.symbol}`);
-    console.log(`recipient: ${recipientAddr}`);
-    const userConfirmed = await promptUser("\nDoes this look okay? (y/n) ");
+    log("amount", `${formatBalance(balanceToSend, coinMeta.decimals)} ${coinMeta.symbol}`);
+    log("recipient", recipientAddr);
+    const userConfirmed = network !== "mainnet" || await promptUser("\nDoes this look okay? (y/n) ");
     if (!userConfirmed) {
-        console.log("Execution aborted by the user.");
+        log("Execution aborted by the user");
         return;
     }
 
@@ -52,5 +54,7 @@ export async function sendCoin(
     tx.transferObjects([coin], recipientAddr);
 
     const resp = await signAndExecuteTx({ client, tx, signer, waitForTxOptions: false });
-    console.log(resp);
+    debug("Response", resp);
+    log("tx status", resp.effects?.status.status);
+    log("tx digest", resp.digest);
 }
