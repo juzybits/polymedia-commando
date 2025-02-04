@@ -17,15 +17,17 @@ export async function destroyZero(
 {
     const { signer, client } = await setupSuiTransaction();
     let totalGas = 0;
+    let batchNumber = 0;
+    let totalBatches = 0;
 
     async function processBatch(
         coins: {
             objectId: string,
             innerType: string,
         }[],
-        batchLabel: string,
     )
     {
+        batchNumber++;
         const tx = new Transaction();
         for (const coin of coins) {
             tx.moveCall({
@@ -34,7 +36,7 @@ export async function destroyZero(
                 arguments: [tx.object(coin.objectId)],
             });
         }
-        log(`${batchLabel}: destroying ${coins.length} coins`);
+        log(`Sending tx ${batchNumber}/${totalBatches} with ${coins.length} coins...`);
         const resp = await executeTransaction(tx, client, signer, devInspect);
 
         if (!devInspect && resp.effects?.gasUsed) {
@@ -46,7 +48,9 @@ export async function destroyZero(
     let pagObjRes: PaginatedObjectsResponse;
     let cursor: null | string = null;
     let currentBatch: { objectId: string, innerType: string }[] = [];
+    let zeroCoins: { objectId: string, innerType: string }[] = [];
 
+    // First collect all zero coins
     do {
         pagObjRes = await client.getOwnedObjects({
             owner: signer.toSuiAddress(),
@@ -67,23 +71,24 @@ export async function destroyZero(
             if (objFields.balance !== "0") {
                 continue;
             }
-
-            currentBatch.push({
+            zeroCoins.push({
                 objectId: objData.objectId,
                 innerType,
             });
-
-            // process batch when it reaches max size
-            if (currentBatch.length >= MAX_CALLS_PER_TX) {
-                await processBatch(currentBatch, `batch of ${currentBatch.length}`);
-                currentBatch = [];
-            }
         }
     } while (pagObjRes.hasNextPage);
 
-    // process any remaining coins in the final batch
-    if (currentBatch.length > 0) {
-        await processBatch(currentBatch, "final batch");
+    // Calculate total batches
+    totalBatches = Math.ceil(zeroCoins.length / MAX_CALLS_PER_TX);
+
+    // Process coins in batches
+    for (let i = 0; i < zeroCoins.length; i++) {
+        currentBatch.push(zeroCoins[i]);
+
+        if (currentBatch.length >= MAX_CALLS_PER_TX || i === zeroCoins.length - 1) {
+            await processBatch(currentBatch);
+            currentBatch = [];
+        }
     }
 
     if (!devInspect) {

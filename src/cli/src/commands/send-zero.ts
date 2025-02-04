@@ -20,10 +20,13 @@ export async function sendZero({
 {
     const { client, signer } = await setupSuiTransaction();
     let totalGas = 0;
+    let batchNumber = 0;
+    const totalBatches = Math.ceil(number / MAX_FN_CALLS_PER_TX);
 
-    async function sendBatch(txNumber: number, numberOfCoins: number)
+    async function sendBatch(numberOfCoins: number)
     {
-        log(`Sending tx ${txNumber} with ${numberOfCoins} coins...`);
+        batchNumber++;
+        log(`Sending tx ${batchNumber}/${totalBatches} with ${numberOfCoins} coins...`);
         const tx = new Transaction();
         for (let i = 0; i < numberOfCoins; i++) {
             const [coin] = tx.moveCall({
@@ -45,10 +48,10 @@ export async function sendZero({
     const remainingCalls = number % MAX_FN_CALLS_PER_TX;
 
     for (let batch = 0; batch < numFullBatches; batch++) {
-        await sendBatch(batch, MAX_FN_CALLS_PER_TX);
+        await sendBatch(MAX_FN_CALLS_PER_TX);
     }
     if (remainingCalls > 0) {
-        await sendBatch(numFullBatches, remainingCalls);
+        await sendBatch(remainingCalls);
     }
 
     log(`Gas used: ${totalGas / 1_000_000_000} SUI`);
