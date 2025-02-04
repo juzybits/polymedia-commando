@@ -15,7 +15,7 @@ type CoinInfo = {
     innerType: string;
 };
 
-export async function destroyZero(): Promise<void>
+export async function coinZeroDestroy(): Promise<void>
 {
     const { signer, client } = await setupSuiTransaction();
     let totalGas = 0;
@@ -44,7 +44,7 @@ export async function destroyZero(): Promise<void>
     let pagObjRes: PaginatedObjectsResponse;
     let cursor: null | string = null;
     let currentBatch: CoinInfo[] = [];
-    let zeroCoins: CoinInfo[] = [];
+    const zeroCoins: CoinInfo[] = [];
 
     // First collect all zero coins
     do {

@@ -2,15 +2,15 @@ import { Transaction } from "@mysten/sui/transactions";
 
 import { signAndExecuteTx, setupSuiTransaction } from "@polymedia/suitcase-node";
 
-import { log, debug } from "../logger.js";
 import { MAX_PROGRAMMABLE_TX_COMMANDS } from "../config.js";
+import { log, debug } from "../logger.js";
 
 // note: could be more efficient with a contract:
 // fun send<T>(recipient, number_of_coins) // create and transfer under the hood
 
 const MAX_FN_CALLS_PER_TX = MAX_PROGRAMMABLE_TX_COMMANDS / 2 - 1;
 
-export async function sendZero({
+export async function coinSendZero({
     number, coinType, recipient,
 }: {
     number: number;

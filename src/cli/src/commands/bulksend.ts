@@ -5,8 +5,8 @@ import { coinWithBalance, Transaction } from "@mysten/sui/transactions";
 import { balanceToString, chunkArray, NetworkName, sleep, stringToBalance, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { fileExists, getActiveEnv, getActiveKeypair, promptUser, readCsvFile, signAndExecuteTx } from "@polymedia/suitcase-node";
 
-import { debug, log, error } from "../logger.js";
 import { MAX_PROGRAMMABLE_TX_COMMANDS } from "../config.js";
+import { debug, log, error } from "../logger.js";
 
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function

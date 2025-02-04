@@ -5,7 +5,7 @@ import { signAndExecuteTx, promptUser, setupSuiTransaction } from "@polymedia/su
 
 import { error, log, debug } from "../logger.js";
 
-export async function sendAmount({
+export async function coinSend({
     amount, coinType, recipient,
 }: {
     amount: string;

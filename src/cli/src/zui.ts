@@ -10,7 +10,9 @@ import dotenv from "dotenv";
 import { bulksend } from "./commands/bulksend.js";
 import { bytecodePublish } from "./commands/bytecode-publish.js";
 import { bytecodeTransform } from "./commands/bytecode-transform.js";
-import { destroyZero } from "./commands/destroy-zero.js";
+import { coinSend } from "./commands/coin-send.js";
+import { coinZeroDestroy } from "./commands/coin-zero-destroy.js";
+import { coinSendZero } from "./commands/coin-zero-send.js";
 import { emptyWallet } from "./commands/empty-wallet.js";
 import { findCoinHolders } from "./commands/find-coin-holders.js";
 import { findLastTx } from "./commands/find-last-tx.js";
@@ -20,8 +22,6 @@ import { findNfts } from "./commands/find-nfts.js";
 import { msgSign } from "./commands/msg-sign.js";
 import { msgVerify } from "./commands/msg-verify.js";
 import { randAddr } from "./commands/rand-addr.js";
-import { sendAmount } from "./commands/send-amount.js";
-import { sendZero } from "./commands/send-zero.js";
 import "./types.js";
 
 // @ts-expect-error Property 'toJSON' does not exist on type 'BigInt'
@@ -121,10 +121,38 @@ For a complete working example, visit https://github.com/juzybits/polymedia-comm
     });
 
 program
-    .command("destroy-zero")
+    .command("coin-send")
+    .description("Send a Coin<T> amount to a recipient")
+    .requiredOption("-a, --amount <amount>", "The number of coins to send (e.g. 0.5 for 0.5 SUI)")
+    .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
+    .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
+    .action(async (opts) => {
+        await coinSend({
+            amount: opts.amount,
+            coinType: opts.coinType,
+            recipient: opts.recipient,
+        });
+    });
+
+program
+    .command("coin-zero-destroy")
     .description("Destroy all Coin<T> objects with 0 balance in your wallet")
     .action(async (_opts) => {
-        await destroyZero();
+        await coinZeroDestroy();
+    });
+
+program
+    .command("coin-zero-send")
+    .description("Create and send coins with 0 balance")
+    .requiredOption("-n, --number <number>", "The number of coins to send")
+    .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
+    .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
+    .action(async (opts) => {
+        await coinSendZero({
+            number: opts.number,
+            coinType: opts.coinType,
+            recipient: opts.recipient,
+        });
     });
 
 program
@@ -256,34 +284,6 @@ program
     .option("-b, --balance", "Include a random balance with each address")
     .action(async (opts) => {
         await randAddr(opts.number, opts.balance);
-    });
-
-program
-    .command("send-amount")
-    .description("Send a Coin<T> amount to a recipient")
-    .requiredOption("-a, --amount <amount>", "The number of coins to send (e.g. 0.5 for 0.5 SUI)")
-    .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
-    .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
-    .action(async (opts) => {
-        await sendAmount({
-            amount: opts.amount,
-            coinType: opts.coinType,
-            recipient: opts.recipient,
-        });
-    });
-
-program
-    .command("send-zero")
-    .description("Create and send coins with 0 balance")
-    .requiredOption("-n, --number <number>", "The number of coins to send")
-    .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
-    .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
-    .action(async (opts) => {
-        await sendZero({
-            number: opts.number,
-            coinType: opts.coinType,
-            recipient: opts.recipient,
-        });
     });
 
 program.parse(process.argv);
