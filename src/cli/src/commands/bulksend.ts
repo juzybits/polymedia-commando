@@ -6,6 +6,7 @@ import { balanceToString, chunkArray, NetworkName, sleep, stringToBalance, valid
 import { fileExists, getActiveEnv, getActiveKeypair, promptUser, readCsvFile, signAndExecuteTx } from "@polymedia/suitcase-node";
 
 import { debug, log, error } from "../logger.js";
+import { MAX_PROGRAMMABLE_TX_COMMANDS } from "../config.js";
 
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function
@@ -21,7 +22,7 @@ const PACKAGE_IDS = new Map<NetworkName, string> ([
  * It breaks above 511 addresses per PTB. You'll get this error if BATCH_SIZE is too high:
  * "JsonRpcError: Error checking transaction input objects: SizeLimitExceeded"
  */
-const BATCH_SIZE = 500;
+const MAX_FN_CALLS_PER_TX = MAX_PROGRAMMABLE_TX_COMMANDS / 2 - 1;
 /**
  * How long to sleep between RPC requests, in milliseconds.
  * The public RPC rate limit is 100 requests per 30 seconds according to
@@ -82,7 +83,7 @@ export async function bulksend(
     }
 
     // split into transactions
-    const batches = chunkArray(addrsAndBals, BATCH_SIZE);
+    const batches = chunkArray(addrsAndBals, MAX_FN_CALLS_PER_TX);
     log("Transactions required", batches.length);
 
     // get user confirmation
