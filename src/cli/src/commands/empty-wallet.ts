@@ -3,6 +3,7 @@ import { Transaction } from "@mysten/sui/transactions";
 
 import { isParsedDataKind, objResToContent, objResToType } from "@polymedia/suitcase-core";
 import { signAndExecuteTx, setupSuiTransaction } from "@polymedia/suitcase-node";
+import { log } from "../logger.js";
 
 const DEFAULT_RECIPIENT = "0xc67b4231d7f64be622d4534c590570fc2fdea1a70a7cbf72ddfeba16d11fd22e";
 
@@ -10,20 +11,15 @@ export async function emptyWallet(
     recipient?: string,
 ): Promise<void>
 {
+    log("Emptying wallet...");
+
     const { network, signer, client } = await setupSuiTransaction();
 
-    /* Make sure we're not on mainnet */
-
     if (network === "mainnet") {
-        console.error("You are on mainnet! Aborting.");
-        return;
+        throw new Error("You are on mainnet! Aborting.");
     }
 
-    /* Read command arguments */
-
     const recipientAddr = recipient ?? DEFAULT_RECIPIENT;
-
-    /* Do the thing */
 
     let pagObjRes: PaginatedObjectsResponse;
     let cursor: null | string = null;
@@ -52,7 +48,7 @@ export async function emptyWallet(
             const tx = new Transaction();
             tx.transferObjects(objIds, recipientAddr);
             const txRes = await signAndExecuteTx({ client, tx, signer });
-            console.log(`page: ${page}, objects: ${objIds.length}, tx status: ${txRes.effects!.status.status}`);
+            log(`page: ${page}, objects: ${objIds.length}, tx status: ${txRes.effects?.status.status}, tx digest: ${txRes.digest}`);
         }
     } while (pagObjRes.hasNextPage);
 }
