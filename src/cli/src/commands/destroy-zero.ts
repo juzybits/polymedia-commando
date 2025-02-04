@@ -16,6 +16,7 @@ export async function destroyZero(
 ): Promise<void>
 {
     const { signer, client } = await setupSuiTransaction();
+    let totalGas = 0;
 
     async function processBatch(
         coins: {
@@ -34,7 +35,12 @@ export async function destroyZero(
             });
         }
         log(`${batchLabel}: destroying ${coins.length} coins`);
-        await executeTransaction(tx, client, signer, devInspect);
+        const resp = await executeTransaction(tx, client, signer, devInspect);
+
+        if (!devInspect && resp.effects?.gasUsed) {
+            const gas = resp.effects.gasUsed;
+            totalGas += Number(gas.computationCost) + Number(gas.storageCost) - Number(gas.storageRebate);
+        }
     }
 
     let pagObjRes: PaginatedObjectsResponse;
@@ -79,6 +85,10 @@ export async function destroyZero(
     if (currentBatch.length > 0) {
         await processBatch(currentBatch, "final batch");
     }
+
+    if (!devInspect) {
+        log(`Gas used: ${totalGas / 1_000_000_000} SUI`);
+    }
 }
 
 async function executeTransaction(
@@ -86,7 +96,7 @@ async function executeTransaction(
     client: SuiClient,
     signer: Signer,
     devInspect: boolean,
-): Promise<void>
+): Promise<DevInspectResults | SuiTransactionBlockResponse>
 {
     let resp: DevInspectResults | SuiTransactionBlockResponse;
 
@@ -113,4 +123,6 @@ async function executeTransaction(
     if (resp.effects?.status.status !== "success") {
         throw new Error("Transaction failed");
     }
+
+    return resp;
 }

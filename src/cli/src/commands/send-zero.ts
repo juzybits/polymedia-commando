@@ -19,6 +19,7 @@ export async function sendZero({
 }): Promise<void>
 {
     const { client, signer } = await setupSuiTransaction();
+    let totalGas = 0;
 
     async function sendBatch(txNumber: number, numberOfCoins: number)
     {
@@ -35,6 +36,9 @@ export async function sendZero({
         debug("tx response", resp);
         log("tx status", resp.effects?.status.status);
         log("tx digest", resp.digest);
+
+        const gas = resp.effects!.gasUsed;
+        totalGas += Number(gas.computationCost) + Number(gas.storageCost) - Number(gas.storageRebate);
     }
 
     const numFullBatches = Math.floor(number / MAX_FN_CALLS_PER_TX);
@@ -46,4 +50,6 @@ export async function sendZero({
     if (remainingCalls > 0) {
         await sendBatch(numFullBatches, remainingCalls);
     }
+
+    log(`Gas used: ${totalGas / 1_000_000_000} SUI`);
 }
