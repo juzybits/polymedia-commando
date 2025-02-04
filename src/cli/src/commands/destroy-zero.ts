@@ -5,9 +5,11 @@ import { Transaction } from "@mysten/sui/transactions";
 import { objResToFields } from "@polymedia/suitcase-core";
 import { setupSuiTransaction, signAndExecuteTx } from "@polymedia/suitcase-node";
 
-import { log } from "../logger.js";
+import { debug, log } from "../logger.js";
 
-const MAX_CALLS_PER_TX = 1000; // see `max_programmable_tx_commands` in sui/crates/sui-protocol-config/src/lib.rs
+// "Size limit exceeded: serialized transaction size exceeded maximum of 131072 is ..."
+// see `max_tx_size_bytes` in sui/crates/sui-protocol-config/src/lib.rs
+const MAX_CALLS_PER_TX = 750;
 
 export async function destroyZero(
     devInspect: boolean,
@@ -15,12 +17,29 @@ export async function destroyZero(
 {
     const { signer, client } = await setupSuiTransaction();
 
+    async function processBatch(
+        coins: {
+            objectId: string,
+            innerType: string,
+        }[],
+        batchLabel: string,
+    )
+    {
+        const tx = new Transaction();
+        for (const coin of coins) {
+            tx.moveCall({
+                target: "0x2::coin::destroy_zero",
+                typeArguments: [coin.innerType],
+                arguments: [tx.object(coin.objectId)],
+            });
+        }
+        log(`${batchLabel}: destroying ${coins.length} coins`);
+        await executeTransaction(tx, client, signer, devInspect);
+    }
+
     let pagObjRes: PaginatedObjectsResponse;
     let cursor: null | string = null;
-
-    let tx = new Transaction();
-    let txNumber = 1;
-    let moveCallCount = 0; // do up to MAX_CALLS_PER_TX coin::destroy_zero() calls per tx
+    let currentBatch: { objectId: string, innerType: string }[] = [];
 
     do {
         pagObjRes = await client.getOwnedObjects({
@@ -31,8 +50,7 @@ export async function destroyZero(
         });
         cursor = pagObjRes.nextCursor ?? null;
 
-        for (const objResp of pagObjRes.data)
-        {
+        for (const objResp of pagObjRes.data) {
             const objFields = objResToFields(objResp);
             const objData = objResp.data!;
             const fullType = objData.type!;
@@ -43,26 +61,23 @@ export async function destroyZero(
             if (objFields.balance !== "0") {
                 continue;
             }
-            tx.moveCall({
-                target: "0x2::coin::destroy_zero",
-                typeArguments: [innerType],
-                arguments: [tx.object(objData.objectId)],
+
+            currentBatch.push({
+                objectId: objData.objectId,
+                innerType,
             });
 
-            moveCallCount++;
-            if (moveCallCount >= MAX_CALLS_PER_TX) {
-                log(`tx ${txNumber}: destroying ${moveCallCount} coins`);
-                await executeTransaction(tx, client, signer, devInspect);
-                tx = new Transaction();
-                txNumber++;
-                moveCallCount = 0;
+            // process batch when it reaches max size
+            if (currentBatch.length >= MAX_CALLS_PER_TX) {
+                await processBatch(currentBatch, `batch of ${currentBatch.length}`);
+                currentBatch = [];
             }
         }
     } while (pagObjRes.hasNextPage);
 
-    if (moveCallCount > 0) {
-        log(`tx ${txNumber}: destroying ${moveCallCount} coins`);
-        await executeTransaction(tx, client, signer, devInspect);
+    // process any remaining coins in the final batch
+    if (currentBatch.length > 0) {
+        await processBatch(currentBatch, "final batch");
     }
 }
 
@@ -93,7 +108,7 @@ async function executeTransaction(
     if ("digest" in resp) {
         info.digest = resp.digest;
     }
-    console.log(JSON.stringify(info, null, 2));
+    debug("tx response", info);
 
     if (resp.effects?.status.status !== "success") {
         throw new Error("Transaction failed");
