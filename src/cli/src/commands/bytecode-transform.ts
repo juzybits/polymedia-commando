@@ -4,23 +4,27 @@ import { fileURLToPath } from "url";
 import { spawnSync } from "child_process";
 
 import { bcs, BcsType, fromHex, toHex } from "@mysten/bcs";
-import init, { get_constants, update_constants, update_identifiers } from "@mysten/move-bytecode-template/move_bytecode_template.js";
+import initWasmModule, { get_constants, update_constants, update_identifiers } from "@mysten/move-bytecode-template/move_bytecode_template.js";
 
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 import { log, debug } from "../logger.js";
 
+// === types ===
+
 type TransformConfig = {
-    outputDir: string;
-    identifiers: Record<string, string>;
+    outputDir: string; // path where the transformed bytecode files will be saved
+    identifiers: Record<string, string>; // map of old identifiers (modules/functions/fields) to new ones
     files: {
-        bytecodeInputFile: string;
+        bytecodeInputFile: string; // path to the bytecode file to transform
         constants: {
-            moveType: string;
-            oldVal: unknown;
-            newVal: unknown;
+            moveType: string; // Move type of the constant, e.g. `vector<u8>`
+            oldVal: unknown; // current value of the constant in the original bytecode
+            newVal: unknown; // desired value of the constant in the transformed bytecode
         }[];
     }[];
 };
+
+// === main ===
 
 export async function bytecodeTransform({
     configFile,
@@ -30,31 +34,15 @@ export async function bytecodeTransform({
     buildDir?: string;
 }): Promise<void>
 {
-    await init(loadWasmModule());
-    const rawConfig = JSON.parse(fs.readFileSync(configFile, "utf8"));
-    const config = validateTransformConfig(rawConfig);
+    await loadWasmModule();
 
-    if (buildDir) {
-        log("Building Move package...");
-        executeBuildCommand(buildDir);
-    }
+    const config = loadTransformConfig(configFile);
 
-    // ensure output directory exists
-    fs.mkdirSync(config.outputDir, { recursive: true });
+    buildDir && executeBuildCommand(buildDir);
 
-    // empty .mv files in the output directory
-    for (const file of fs.readdirSync(config.outputDir)) {
-        if (file.endsWith(".mv")) {
-            fs.unlinkSync(path.join(config.outputDir, file));
-        }
-    }
+    createOrEmptyOutputDir(config.outputDir);
 
-    // check that all input files exist
-    for (const transform of config.files) {
-        if (!fs.existsSync(transform.bytecodeInputFile)) {
-            throw new Error(`Input file ${transform.bytecodeInputFile} does not exist. Did you forget to \`sui move build\`?`);
-        }
-    }
+    checkInputFilesExist(config.files.map(f => f.bytecodeInputFile));
 
     // apply transformations to each bytecode file
     log("Transforming bytecode...");
@@ -74,17 +62,127 @@ export async function bytecodeTransform({
     log("Modified bytecode was saved to:", config.outputDir);
 }
 
-function loadWasmModule(): Buffer {
+// === setup ===
+
+async function loadWasmModule() {
     try {
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = dirname(__filename);
         const wasmPath = path.resolve(__dirname, "../../node_modules/@mysten/move-bytecode-template/move_bytecode_template_bg.wasm");
-        return fs.readFileSync(wasmPath);
+        const wasm = fs.readFileSync(wasmPath);
+        await initWasmModule(wasm);
     } catch (e) {
         throw new Error(`Failed to load WASM module: ${e}`);
     }
 }
 
+function loadTransformConfig(configFile: string): TransformConfig {
+    const config = JSON.parse(fs.readFileSync(configFile, "utf8"));
+
+    if (!config || typeof config !== "object") {
+        throw new Error("Config must be an object");
+    }
+
+    const c = config as any;
+
+    if (!c.outputDir || typeof c.outputDir !== "string") {
+        throw new Error("Config must have an 'outputDir' string");
+    }
+
+    if (!c.identifiers || typeof c.identifiers !== "object") {
+        throw new Error("Config must have an 'identifiers' object");
+    }
+
+    if (!Array.isArray(c.files)) {
+        throw new Error("Config must have a 'files' array");
+    }
+
+    for (const file of c.files) {
+        if (!file.bytecodeInputFile || typeof file.bytecodeInputFile !== "string") {
+            throw new Error("Each file must have a 'bytecodeInputFile' string");
+        }
+        if (!Array.isArray(file.constants)) {
+            throw new Error("Each file must have a 'constants' array");
+        }
+
+        for (const constant of file.constants) {
+            if (!constant.moveType || typeof constant.moveType !== "string") {
+                throw new Error("Each constant must have a 'moveType' string");
+            }
+            if (!("oldVal" in constant)) {
+                throw new Error("Each constant must have an 'oldVal'");
+            }
+            if (!("newVal" in constant)) {
+                throw new Error("Each constant must have a 'newVal'");
+            }
+        }
+    }
+
+    return config as TransformConfig;
+}
+
+function executeBuildCommand(buildDir: string): void {
+    log("Building Move package...");
+
+    const buildCmd = ["sui", "move", "build"];
+    buildCmd.push("--path", buildDir);
+
+    if (global.outputJson) {
+        buildCmd.push("--json-errors");
+    }
+
+    if (global.outputQuiet) {
+        buildCmd.push("--silence-warnings");
+    }
+
+    debug("Running build command:", buildCmd.join(" "));
+
+    const result = spawnSync(buildCmd[0], buildCmd.slice(1), {
+        stdio: ["ignore", "pipe", "pipe"],
+        encoding: "utf8"
+    });
+
+    // Process build output (from stderr)
+    if (result.stderr && !global.outputQuiet) {
+        const lines = result.stderr.trim().split("\n");
+        for (const line of lines) {
+            if (line.trim()) {
+                log(line);
+            }
+        }
+    }
+
+    // Check for actual errors via exit code
+    if (result.status !== 0) {
+        throw new Error(`Build command failed with status ${result.status}`);
+    }
+}
+
+function createOrEmptyOutputDir(outputDir: string): void {
+    // ensure output directory exists
+    fs.mkdirSync(outputDir, { recursive: true });
+
+    // delete .mv files in the output directory
+    for (const file of fs.readdirSync(outputDir)) {
+        if (file.endsWith(".mv")) {
+            fs.unlinkSync(path.join(outputDir, file));
+        }
+    }
+}
+
+function checkInputFilesExist(files: string[]): void {
+    for (const file of files) {
+        if (!fs.existsSync(file)) {
+            throw new Error(`Input file ${file} does not exist. Did you forget to \`sui move build\`?`);
+        }
+    }
+}
+
+// === bytecode transformation ===
+
+/**
+ * Call `update_identifiers` and `update_constants` to transform the bytecode.
+ */
 function transformBytecode({
     bytecode, identifiers, constants,
 }: {
@@ -116,7 +214,9 @@ function transformBytecode({
     return updated;
 }
 
-/** Convert types like `vector<u8>` to `Vector(U8)` */
+/**
+ * Convert types like `vector<u8>` to `Vector(U8)`
+ * */
 function normalizeConstantType(moveType: string): string {
     return moveType
         .replace(/\s+/g, "") // remove whitespace
@@ -194,85 +294,7 @@ function getConstantBcsType(
     }
 }
 
-function validateTransformConfig(config: unknown): TransformConfig
-{
-    if (!config || typeof config !== "object") {
-        throw new Error("Config must be an object");
-    }
-
-    const c = config as any;
-
-    if (!c.outputDir || typeof c.outputDir !== "string") {
-        throw new Error("Config must have an 'outputDir' string");
-    }
-
-    if (!c.identifiers || typeof c.identifiers !== "object") {
-        throw new Error("Config must have an 'identifiers' object");
-    }
-
-    if (!Array.isArray(c.files)) {
-        throw new Error("Config must have a 'files' array");
-    }
-
-    for (const file of c.files) {
-        if (!file.bytecodeInputFile || typeof file.bytecodeInputFile !== "string") {
-            throw new Error("Each file must have a 'bytecodeInputFile' string");
-        }
-        if (!Array.isArray(file.constants)) {
-            throw new Error("Each file must have a 'constants' array");
-        }
-
-        for (const constant of file.constants) {
-            if (!constant.moveType || typeof constant.moveType !== "string") {
-                throw new Error("Each constant must have a 'moveType' string");
-            }
-            if (!("oldVal" in constant)) {
-                throw new Error("Each constant must have an 'oldVal'");
-            }
-            if (!("newVal" in constant)) {
-                throw new Error("Each constant must have a 'newVal'");
-            }
-        }
-    }
-
-    return config as TransformConfig;
-}
-
-function executeBuildCommand(buildDir: string): void
-{
-    const buildCmd = ["sui", "move", "build"];
-    buildCmd.push("--path", buildDir);
-
-    if (global.outputJson) {
-        buildCmd.push("--json-errors");
-    }
-
-    if (global.outputQuiet) {
-        buildCmd.push("--silence-warnings");
-    }
-
-    debug("Running build command:", buildCmd.join(" "));
-
-    const result = spawnSync(buildCmd[0], buildCmd.slice(1), {
-        stdio: ["ignore", "pipe", "pipe"],
-        encoding: "utf8"
-    });
-
-    // Process build output (from stderr)
-    if (result.stderr && !global.outputQuiet) {
-        const lines = result.stderr.trim().split("\n");
-        for (const line of lines) {
-            if (line.trim()) {
-                log(line);
-            }
-        }
-    }
-
-    // Check for actual errors via exit code
-    if (result.status !== 0) {
-        throw new Error(`Build command failed with status ${result.status}`);
-    }
-}
+// === helpers ===
 
 function isStringValue(val: unknown): boolean {
     return typeof val === "string";
