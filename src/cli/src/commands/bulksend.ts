@@ -1,5 +1,3 @@
-import { appendFileSync } from "fs";
-
 import { bcs } from "@mysten/sui/bcs";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
 import { coinWithBalance, Transaction } from "@mysten/sui/transactions";
@@ -22,14 +20,14 @@ import {
     readCsvFile,
 } from "@polymedia/suitcase-node";
 
-import { debug, log } from "../logger.js";
+import { debug, log, error } from "../logger.js";
 
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function
  */
 const PACKAGE_IDS = new Map<NetworkName, string> ([
-    ["localnet", ""],
-    ["devnet", "0x680147436c5ca7501bdda0bc99625d097d2a7a3db48a79949d4192cb1acea3dc"],
+    ["localnet", "0x8bd6031ad73629d54d1426038d790d1936d26b2227c3ae813861d5911814c953"],
+    ["devnet", ""],
     ["testnet", "0x7f541b25c64aa2d0330a64dfaeb7c0e35924b6633069b8047125e038728d15d6"],
     ["mainnet", "0x026b2b422e630c79c961fdb5d63821547ec8fb2ad5b7095189c440e1bdbba9f1"],
 ]);
@@ -51,12 +49,10 @@ const RATE_LIMIT_DELAY = 300;
 export async function bulksend(
     coinType: string,
     inputFile: string,
-    outputFile: string, // TODO: remove
 ): Promise<void>
 {
     // === check input and output files ===
     debug(`Input file: ${inputFile}`);
-    debug(`Output file: ${outputFile}`);
     if (!fileExists(inputFile)) {
         throw new Error(`${inputFile} doesn't exist. Create a .csv file with two columns: address and amount.`);
     }
@@ -117,11 +113,14 @@ export async function bulksend(
     let batchNumber = 0;
     try {
         const packageId = PACKAGE_IDS.get(networkName);
+        if (!packageId) {
+            throw new Error(`Bulksender package ID missing for network "${networkName}"`);
+        }
         for (const batch of batches)
         {
             batchNumber++;
             const batchBalance = batch.reduce((total, pair) => total + pair.balance, BigInt(0));
-            logTransactionStart(outputFile, batchBalance, batchNumber, batch);
+            log(`Sending ${batchBalance} to batch ${batchNumber} (${batch.length} addresses)`);
 
             const tx = new Transaction();
             const payCoin = coinWithBalance({
@@ -153,7 +152,7 @@ export async function bulksend(
                 + `for ${batch.length} addresses: ${resp.digest}. Response: ${JSON.stringify(resp, null, 2)}`);
             }
 
-            logText(outputFile, `Transaction successful: ${resp.digest}`);
+            log("Transaction successful", resp.digest);
 
             const gas = resp.effects.gasUsed;
             totalGas += Number(gas.computationCost) + Number(gas.storageCost) - Number(gas.storageRebate);
@@ -165,9 +164,9 @@ export async function bulksend(
         log("\nDone!");
         log(`Gas used: ${totalGas / 1_000_000_000} SUI\n`);
     }
-    catch (error) {
-        logText(outputFile, String(error));
-        throw error;
+    catch (err) {
+        error("Transaction failed", String(err));
+        throw err;
     }
 }
 
@@ -195,32 +194,4 @@ function parseCsvLine(
     }
     const balance = stringToBalance(amountStr, decimals);
     return { address, balance };
-}
-
-/**
- * Output looks like this:
- * ```
- * 2023-12-06T09:42:05.963Z - Sending to batch 1 (500 addresses): 0x326c, 0x445e, ...
- * ```
- */
-function logTransactionStart(
-    outputFile: string,
-    batchAmount: bigint,
-    batchNumber: number,
-    batch: AddressBalancePair[],
-): void {
-    const shortText = `Sending ${batchAmount} to batch ${batchNumber} (${batch.length} addresses)`;
-    log(shortText);
-    const addresses = batch.map(pair => pair.address.substring(0, 6)).join(", ");
-    const longText = `${shortText}: ${addresses}`;
-    logText(outputFile, longText);
-}
-
-function logText(
-    outputFile: string,
-    text: string,
-): void {
-    const date = new Date().toISOString();
-    const logEntry = `${date} - ${text}\n`;
-    appendFileSync(outputFile, logEntry);
 }
