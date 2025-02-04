@@ -1,5 +1,6 @@
 import { Transaction } from "@mysten/sui/transactions";
 
+import { shortenAddress } from "@polymedia/suitcase-core";
 import { signAndExecuteTx, setupSuiTransaction } from "@polymedia/suitcase-node";
 
 import { MAX_PROGRAMMABLE_TX_COMMANDS } from "../config.js";
@@ -18,6 +19,8 @@ export async function coinSendZero({
     recipient: string;
 }): Promise<void>
 {
+    log(`Sending ${number} coins with 0 balance to ${shortenAddress(recipient)}...`);
+
     const { client, signer } = await setupSuiTransaction();
     let totalGas = 0;
     let batchNumber = 0;

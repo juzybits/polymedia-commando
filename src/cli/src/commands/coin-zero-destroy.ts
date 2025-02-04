@@ -17,6 +17,8 @@ type CoinInfo = {
 
 export async function coinZeroDestroy(): Promise<void>
 {
+    log("Destroying all Coin with 0 balance in your wallet...");
+
     const { signer, client } = await setupSuiTransaction();
     let totalGas = 0;
     let batchNumber = 0;
