@@ -60,7 +60,7 @@ export async function bytecodeTransform({
         const outputFile = path.join(config.outputDir, path.basename(transform.bytecodeInputFile));
         fs.writeFileSync(outputFile, updatedBytecode);
     }
-    log("Modified bytecode was saved to:", config.outputDir);
+    log("Modified bytecode was saved to", config.outputDir);
 }
 
 // === setup ===
@@ -134,7 +134,7 @@ function executeBuildCommand(buildDir: string): void {
         buildCmd.push("--silence-warnings");
     }
 
-    debug("Running build command:", buildCmd.join(" "));
+    debug("Running build command", buildCmd.join(" "));
 
     const result = spawnSync(buildCmd[0], buildCmd.slice(1), {
         stdio: ["ignore", "pipe", "pipe"],

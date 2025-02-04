@@ -68,38 +68,40 @@ export async function bulksend(
         signTx: newSignTx(suiClient, signer),
     });
     const activeAddress = signer.toSuiAddress();
-    log(`Active network: ${networkName}`);
-    log(`Active address: ${activeAddress}`);
+    log("Active network", networkName);
+    log("Active address", activeAddress);
 
     // === check coin metadata ===
-    debug(`Coin type: ${coinType}`);
+    debug("Coin type", coinType);
     const coinMeta = await suiClient.getCoinMetadata({ coinType });
     if (!coinMeta) {
         throw new Error(`Failed to get CoinMetadata for coin type "${coinType}"`);
     }
     const coinSymbol = coinMeta.symbol;
     const coinDecimals = coinMeta.decimals;
-    debug(`Coin symbol: ${coinSymbol}`);
-    debug(`Coin decimals: ${coinDecimals}`);
+    debug("Coin symbol", coinSymbol);
+    debug("Coin decimals", coinDecimals);
 
     // === get user balance ===
     const userBalance = BigInt(
         (await suiClient.getBalance({ owner: activeAddress, coinType })).totalBalance
     );
-    debug(`User balance: ${balanceToString(userBalance, coinDecimals)} ${coinSymbol}`);
+    const userBalanceStr = `${balanceToString(userBalance, coinDecimals)} ${coinSymbol}`;
+    debug("User balance", userBalanceStr);
 
     // === read addresses and amounts from input file ===
     const addrsAndBals = readCsvFile<AddressBalancePair>(inputFile, (vals) => parseCsvLine(vals, coinDecimals));
-    log(`Found ${addrsAndBals.length} addresses in ${inputFile}`);
+    log("Addresses found in input file", addrsAndBals.length);
 
     const totalBalance = addrsAndBals.reduce((sum, pair) => sum + pair.balance, BigInt(0));
-    log(`Total amount to be sent: ${balanceToString(totalBalance, coinDecimals)} ${coinSymbol}`);
+    const totalBalanceStr = `${balanceToString(totalBalance, coinDecimals)} ${coinSymbol}`;
+    log("Total amount to be sent", totalBalanceStr);
     if (totalBalance > userBalance) {
         throw new Error("Total amount to be sent is bigger than user balance");
     }
 
     const batches = chunkArray(addrsAndBals, BATCH_SIZE);
-    log(`Airdrop will be done in ${batches.length} transaction blocks`);
+    log("Transactions required", batches.length);
 
     // === get user confirmation ===
     const userConfirmed = networkName !== "mainnet" || await promptUser("\nDoes this look okay? (y/n) ");
@@ -120,7 +122,8 @@ export async function bulksend(
         {
             batchNumber++;
             const batchBalance = batch.reduce((total, pair) => total + pair.balance, BigInt(0));
-            log(`Sending ${batchBalance} to batch ${batchNumber} (${batch.length} addresses)`);
+            const batchBalanceStr = `${balanceToString(batchBalance, coinDecimals)} ${coinSymbol}`;
+            log(`Sending tx ${batchNumber}/${batches.length} (${batch.length} addresses)`, batchBalanceStr);
 
             const tx = new Transaction();
             const payCoin = coinWithBalance({
@@ -161,7 +164,7 @@ export async function bulksend(
                 await sleep(RATE_LIMIT_DELAY); // give the RPC a break
             }
         }
-        log("\nDone!");
+        log("Done!");
         log(`Gas used: ${totalGas / 1_000_000_000} SUI\n`);
     }
     catch (err) {
@@ -189,7 +192,7 @@ function parseCsvLine(
     const [addrStr, amountStr] = values;
     const address = validateAndNormalizeAddress(addrStr);
     if (address === null) {
-        debug(`[parseCsvLine] Skipping line with invalid owner: ${addrStr}`);
+        debug("[parseCsvLine] Skipping line with invalid owner:", addrStr);
         return null;
     }
     const balance = stringToBalance(amountStr, decimals);

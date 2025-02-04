@@ -27,8 +27,8 @@ export async function bytecodePublish({
     // load network and signer from environment
     const { network, client, tx, signer } = await setupSuiTransaction();
     const sender = signer.toSuiAddress();
-    log("Active network:", network);
-    log("Active address:", sender);
+    log("Active network", network);
+    log("Active address", sender);
 
     // read bytecode files
     log("Reading bytecode files...");
@@ -53,7 +53,7 @@ export async function bytecodePublish({
         "0x0000000000000000000000000000000000000000000000000000000000000002"
     ];
     const allDeps = [...new Set([...defaultDeps, ...normalizedDeps])];
-    debug("Dependencies:", allDeps);
+    debug("Dependencies", allDeps);
 
     // publish package
     debug("Building transaction...");
@@ -67,11 +67,11 @@ export async function bytecodePublish({
     const resp = await signAndExecuteTx({ client, tx, signer, txRespOptions: { showEffects: true } });
 
     if (resp.effects?.status.status !== "success") {
-        error("Publish failed. Response:", resp);
+        error("Publish failed. Response", resp);
         throw new Error("Publish failed");
     }
 
-    debug("Publish successful. Response:", resp);
-    log("status:", resp.effects?.status.status);
-    log("digest:", resp.digest);
+    debug("Publish successful. Response", resp);
+    log("status", resp.effects?.status.status);
+    log("digest", resp.digest);
 }

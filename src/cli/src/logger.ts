@@ -28,7 +28,7 @@ export function error(message: string, data?: any) {
 
 function formatMessage(prefix: string, message: string, data?: any): string {
     const prefixStr = prefix ? `${prefix}: ` : "";
-    const dataStr = data !== undefined ? ` ${formatData(data)}` : "";
+    const dataStr = data !== undefined ? `: ${formatData(data)}` : "";
     return `${prefixStr}${message}${dataStr}`;
 }
 
