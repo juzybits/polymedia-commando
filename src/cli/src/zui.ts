@@ -23,6 +23,9 @@ import { randAddr } from "./commands/rand-addr.js";
 import { sendCoin } from "./commands/send-coin.js";
 import "./types.js";
 
+// @ts-expect-error Property 'toJSON' does not exist on type 'BigInt'
+BigInt.prototype.toJSON = function() { return this.toString(); };
+
 dotenv.config();
 
 const program = new Command();
