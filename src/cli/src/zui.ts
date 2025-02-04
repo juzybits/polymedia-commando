@@ -123,9 +123,8 @@ For a complete working example, visit https://github.com/juzybits/polymedia-comm
 program
     .command("destroy-zero")
     .description("Destroy all Coin<T> objects with 0 balance in your wallet")
-    .option("-d, --dev-inspect", "Don't execute the transaction, just use devInspectTransactionBlock()", false)
-    .action(async (opts) => {
-        await destroyZero(opts.devInspect);
+    .action(async (_opts) => {
+        await destroyZero();
     });
 
 program
@@ -275,7 +274,7 @@ program
 
 program
     .command("send-zero")
-    .description("Send a number of Coin<T> with 0 balance to a recipient")
+    .description("Create and send coins with 0 balance")
     .requiredOption("-n, --number <number>", "The number of coins to send")
     .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
     .requiredOption("-r, --recipient <recipient>", "The address of the recipient")

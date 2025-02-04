@@ -61,5 +61,6 @@ Commands:
   msg-sign            Sign a Sui personal message
   msg-verify          Verify a Sui personal message signature
   rand-addr           Generate pseudorandom Sui addresses
-  send-coin           Send a Coin<T> amount to a recipient
+  send-amount         Send a Coin<T> amount to a recipient
+  send-zero           Create and send coins with 0 balance
 ```

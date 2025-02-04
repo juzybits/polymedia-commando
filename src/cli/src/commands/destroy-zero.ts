@@ -1,5 +1,4 @@
-import { DevInspectResults, PaginatedObjectsResponse, SuiClient, SuiTransactionBlockResponse } from "@mysten/sui/client";
-import { Signer } from "@mysten/sui/cryptography";
+import { PaginatedObjectsResponse } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 
 import { objResToFields } from "@polymedia/suitcase-core";
@@ -11,21 +10,19 @@ import { debug, log } from "../logger.js";
 // see `max_tx_size_bytes` in sui/crates/sui-protocol-config/src/lib.rs
 const MAX_CALLS_PER_TX = 750;
 
-export async function destroyZero(
-    devInspect: boolean,
-): Promise<void>
+type CoinInfo = {
+    objectId: string;
+    innerType: string;
+};
+
+export async function destroyZero(): Promise<void>
 {
     const { signer, client } = await setupSuiTransaction();
     let totalGas = 0;
     let batchNumber = 0;
     let totalBatches = 0;
 
-    async function processBatch(
-        coins: {
-            objectId: string,
-            innerType: string,
-        }[],
-    )
+    async function processBatch(coins: CoinInfo[])
     {
         batchNumber++;
         const tx = new Transaction();
@@ -37,18 +34,17 @@ export async function destroyZero(
             });
         }
         log(`Sending tx ${batchNumber}/${totalBatches} with ${coins.length} coins...`);
-        const resp = await executeTransaction(tx, client, signer, devInspect);
+        const resp = await signAndExecuteTx({ client, tx, signer });
+        debug("tx response", resp);
 
-        if (!devInspect && resp.effects?.gasUsed) {
-            const gas = resp.effects.gasUsed;
-            totalGas += Number(gas.computationCost) + Number(gas.storageCost) - Number(gas.storageRebate);
-        }
+        const gas = resp.effects!.gasUsed;
+        totalGas += Number(gas.computationCost) + Number(gas.storageCost) - Number(gas.storageRebate);
     }
 
     let pagObjRes: PaginatedObjectsResponse;
     let cursor: null | string = null;
-    let currentBatch: { objectId: string, innerType: string }[] = [];
-    let zeroCoins: { objectId: string, innerType: string }[] = [];
+    let currentBatch: CoinInfo[] = [];
+    let zeroCoins: CoinInfo[] = [];
 
     // First collect all zero coins
     do {
@@ -91,43 +87,5 @@ export async function destroyZero(
         }
     }
 
-    if (!devInspect) {
-        log(`Gas used: ${totalGas / 1_000_000_000} SUI`);
-    }
-}
-
-async function executeTransaction(
-    tx: Transaction,
-    client: SuiClient,
-    signer: Signer,
-    devInspect: boolean,
-): Promise<DevInspectResults | SuiTransactionBlockResponse>
-{
-    let resp: DevInspectResults | SuiTransactionBlockResponse;
-
-    if (devInspect) {
-        resp = await client.devInspectTransactionBlock({
-            transactionBlock: tx,
-            sender: signer.toSuiAddress(),
-        });
-    } else {
-        resp = await signAndExecuteTx({ client, tx, signer });
-    }
-
-    const info = {
-        digest: "",
-        status: resp.effects?.status.status,
-        gasUsed: resp.effects?.gasUsed,
-        deleted: resp.effects?.deleted?.map(obj => obj.objectId)
-    };
-    if ("digest" in resp) {
-        info.digest = resp.digest;
-    }
-    debug("tx response", info);
-
-    if (resp.effects?.status.status !== "success") {
-        throw new Error("Transaction failed");
-    }
-
-    return resp;
+    log(`Gas used: ${totalGas / 1_000_000_000} SUI`);
 }
