@@ -22,6 +22,8 @@ import {
     readCsvFile,
 } from "@polymedia/suitcase-node";
 
+import { debug, log } from "../logger.js";
+
 /**
  * The Polymedia Bulksender package ID which contains the bulksender::send() function
  */
@@ -49,17 +51,14 @@ const RATE_LIMIT_DELAY = 300;
 export async function bulksend(
     coinType: string,
     inputFile: string,
-    outputFile: string,
+    outputFile: string, // TODO: remove
 ): Promise<void>
 {
     // === check input and output files ===
-    console.log(`Input file: ${inputFile}`);
-    console.log(`Output file: ${outputFile}`);
+    debug(`Input file: ${inputFile}`);
+    debug(`Output file: ${outputFile}`);
     if (!fileExists(inputFile)) {
         throw new Error(`${inputFile} doesn't exist. Create a .csv file with two columns: address and amount.`);
-    }
-    if (fileExists(outputFile)) {
-        throw new Error(`${outputFile} already exists. Check and handle it before rerunning the script.`);
     }
 
     // === initialize client ===
@@ -73,43 +72,43 @@ export async function bulksend(
         signTx: newSignTx(suiClient, signer),
     });
     const activeAddress = signer.toSuiAddress();
-    console.log(`Active network: ${networkName}`);
-    console.log(`Active address: ${activeAddress}`);
+    log(`Active network: ${networkName}`);
+    log(`Active address: ${activeAddress}`);
 
     // === check coin metadata ===
-    console.log(`Coin type: ${coinType}`);
+    debug(`Coin type: ${coinType}`);
     const coinMeta = await suiClient.getCoinMetadata({ coinType });
     if (!coinMeta) {
         throw new Error(`Failed to get CoinMetadata for coin type "${coinType}"`);
     }
     const coinSymbol = coinMeta.symbol;
     const coinDecimals = coinMeta.decimals;
-    console.log(`Coin symbol: ${coinSymbol}`);
-    console.log(`Coin decimals: ${coinDecimals}`);
+    debug(`Coin symbol: ${coinSymbol}`);
+    debug(`Coin decimals: ${coinDecimals}`);
 
     // === get user balance ===
     const userBalance = BigInt(
         (await suiClient.getBalance({ owner: activeAddress, coinType })).totalBalance
     );
-    console.log(`User balance: ${balanceToString(userBalance, coinDecimals)} ${coinSymbol}`);
+    debug(`User balance: ${balanceToString(userBalance, coinDecimals)} ${coinSymbol}`);
 
     // === read addresses and amounts from input file ===
     const addrsAndBals = readCsvFile<AddressBalancePair>(inputFile, (vals) => parseCsvLine(vals, coinDecimals));
-    console.log(`Found ${addrsAndBals.length} addresses in ${inputFile}`);
-
-    const batches = chunkArray(addrsAndBals, BATCH_SIZE);
-    console.log(`Airdrop will be done in ${batches.length} transaction blocks`);
+    log(`Found ${addrsAndBals.length} addresses in ${inputFile}`);
 
     const totalBalance = addrsAndBals.reduce((sum, pair) => sum + pair.balance, BigInt(0));
-    console.log(`Total amount to be sent: ${balanceToString(totalBalance, coinDecimals)} ${coinSymbol}`);
+    log(`Total amount to be sent: ${balanceToString(totalBalance, coinDecimals)} ${coinSymbol}`);
     if (totalBalance > userBalance) {
         throw new Error("Total amount to be sent is bigger than user balance");
     }
 
+    const batches = chunkArray(addrsAndBals, BATCH_SIZE);
+    log(`Airdrop will be done in ${batches.length} transaction blocks`);
+
     // === get user confirmation ===
-    const userConfirmed = await promptUser("\nDoes this look okay? (y/n) ");
+    const userConfirmed = networkName !== "mainnet" || await promptUser("\nDoes this look okay? (y/n) ");
     if (!userConfirmed) {
-        console.log("Execution aborted by the user.");
+        log("Execution aborted by the user.");
         return;
     }
 
@@ -163,8 +162,8 @@ export async function bulksend(
                 await sleep(RATE_LIMIT_DELAY); // give the RPC a break
             }
         }
-        console.log("\nDone!");
-        console.log(`Gas used: ${totalGas / 1_000_000_000} SUI\n`);
+        log("\nDone!");
+        log(`Gas used: ${totalGas / 1_000_000_000} SUI\n`);
     }
     catch (error) {
         logText(outputFile, String(error));
@@ -191,7 +190,7 @@ function parseCsvLine(
     const [addrStr, amountStr] = values;
     const address = validateAndNormalizeAddress(addrStr);
     if (address === null) {
-        console.debug(`[parseCsvLine] Skipping line with invalid owner: ${addrStr}`);
+        debug(`[parseCsvLine] Skipping line with invalid owner: ${addrStr}`);
         return null;
     }
     const balance = stringToBalance(amountStr, decimals);
@@ -211,7 +210,7 @@ function logTransactionStart(
     batch: AddressBalancePair[],
 ): void {
     const shortText = `Sending ${batchAmount} to batch ${batchNumber} (${batch.length} addresses)`;
-    console.log(shortText);
+    log(shortText);
     const addresses = batch.map(pair => pair.address.substring(0, 6)).join(", ");
     const longText = `${shortText}: ${addresses}`;
     logText(outputFile, longText);
