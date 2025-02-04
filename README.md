@@ -40,21 +40,26 @@ See all available tools with `zui -h`:
 ZUI: Sui command line tools
 
 Options:
-  -V, --version      output the version number
-  -h, --help         display help for command
+  -V, --version       output the version number
+  --json              output in JSON format (useful for scripting)
+  -q, --quiet         suppress non-error output
+  -v, --verbose       show debug output
+  -h, --help          display help for command
 
 Commands:
-  bulksend           Send Coin<T> to a list of addresses
-  destroy-zero       Destroy all Coin<T> objects with 0 balance in your wallet
-  empty-wallet       Send all objects in your wallet to a random address (except Coin<SUI>)
-  find-coin-holders  Find Coin<T> holders using the Suiscan API
-  find-last-tx       Find the last transaction for each Sui address
-  find-nft-holders   Find NFT holders for a set of collections via Indexer.xyz
-  find-nft-verified  Find all verified NFT collections via Indexer.xyz
-  find-nfts          Find all NFTs and their owners for a set of collections via Indexer.xyz
-  help               display help for command
-  msg-sign           Sign a Sui personal message
-  msg-verify         Verify a Sui personal message signature
-  random-addr        Generate pseudorandom Sui addresses
-  send-coin          Send a Coin<T> amount to a recipient
+  bulksend            Send Coin<T> to a list of addresses
+  bytecode-publish    Publish Move bytecode files as a Sui package
+  bytecode-transform  Replace constants and identifiers in Move bytecode files
+  destroy-zero        Destroy all Coin<T> objects with 0 balance in your wallet
+  empty-wallet        Send all objects in your wallet to a random address (except Coin<SUI>)
+  find-coin-holders   Find Coin<T> holders using the Suiscan API
+  find-last-tx        Find the latest transaction for one or more Sui addresses
+  find-nft-holders    Find NFT holders for a set of collections via Indexer.xyz
+  find-nft-verified   Find all verified NFT collections via Indexer.xyz
+  find-nfts           Find all NFTs and their owners for a set of collections via Indexer.xyz
+  help                display help for command
+  msg-sign            Sign a Sui personal message
+  msg-verify          Verify a Sui personal message signature
+  rand-addr           Generate pseudorandom Sui addresses
+  send-coin           Send a Coin<T> amount to a recipient
 ```

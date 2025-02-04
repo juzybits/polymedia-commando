@@ -1,12 +1,13 @@
+import { spawnSync } from "child_process";
 import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import { spawnSync } from "child_process";
 
 import { bcs, BcsType, fromHex, toHex } from "@mysten/bcs";
 import initWasmModule, { get_constants, update_constants, update_identifiers } from "@mysten/move-bytecode-template/move_bytecode_template.js";
 
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
+
 import { log, debug } from "../logger.js";
 
 // === types ===
@@ -77,13 +78,11 @@ async function loadWasmModule() {
 }
 
 function loadTransformConfig(configFile: string): TransformConfig {
-    const config = JSON.parse(fs.readFileSync(configFile, "utf8"));
+    const c = JSON.parse(fs.readFileSync(configFile, "utf8"));
 
-    if (!config || typeof config !== "object") {
+    if (!c || typeof c !== "object") {
         throw new Error("Config must be an object");
     }
-
-    const c = config as any;
 
     if (!c.outputDir || typeof c.outputDir !== "string") {
         throw new Error("Config must have an 'outputDir' string");
@@ -118,7 +117,7 @@ function loadTransformConfig(configFile: string): TransformConfig {
         }
     }
 
-    return config as TransformConfig;
+    return c as TransformConfig;
 }
 
 function executeBuildCommand(buildDir: string): void {
