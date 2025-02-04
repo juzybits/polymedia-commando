@@ -5,6 +5,8 @@ import { Transaction } from "@mysten/sui/transactions";
 import { objResToFields } from "@polymedia/suitcase-core";
 import { setupSuiTransaction, signAndExecuteTx } from "@polymedia/suitcase-node";
 
+import { log } from "../logger.js";
+
 const MAX_CALLS_PER_TX = 1000; // see `max_programmable_tx_commands` in sui/crates/sui-protocol-config/src/lib.rs
 
 export async function destroyZero(
@@ -49,7 +51,7 @@ export async function destroyZero(
 
             moveCallCount++;
             if (moveCallCount >= MAX_CALLS_PER_TX) {
-                console.log(`=== tx ${txNumber++}: Destroying ${moveCallCount} coins ===`);
+                log(`tx ${txNumber}: destroying ${moveCallCount} coins`);
                 await executeTransaction(tx, client, signer, devInspect);
                 tx = new Transaction();
                 txNumber++;
@@ -59,7 +61,7 @@ export async function destroyZero(
     } while (pagObjRes.hasNextPage);
 
     if (moveCallCount > 0) {
-        console.log(`=== tx ${txNumber++}: Destroying ${moveCallCount} coins ===`);
+        log(`tx ${txNumber}: destroying ${moveCallCount} coins`);
         await executeTransaction(tx, client, signer, devInspect);
     }
 }

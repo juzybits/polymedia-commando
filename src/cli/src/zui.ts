@@ -20,7 +20,8 @@ import { findNfts } from "./commands/find-nfts.js";
 import { msgSign } from "./commands/msg-sign.js";
 import { msgVerify } from "./commands/msg-verify.js";
 import { randAddr } from "./commands/rand-addr.js";
-import { sendCoin } from "./commands/send-coin.js";
+import { sendAmount } from "./commands/send-amount.js";
+import { sendZero } from "./commands/send-zero.js";
 import "./types.js";
 
 // @ts-expect-error Property 'toJSON' does not exist on type 'BigInt'
@@ -259,13 +260,31 @@ program
     });
 
 program
-    .command("send-coin")
+    .command("send-amount")
     .description("Send a Coin<T> amount to a recipient")
     .requiredOption("-a, --amount <amount>", "The number of coins to send (e.g. 0.5 for 0.5 SUI)")
     .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
     .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
     .action(async (opts) => {
-        await sendCoin(opts.amount, opts.coinType, opts.recipient);
+        await sendAmount({
+            amount: opts.amount,
+            coinType: opts.coinType,
+            recipient: opts.recipient,
+        });
+    });
+
+program
+    .command("send-zero")
+    .description("Send a number of Coin<T> with 0 balance to a recipient")
+    .requiredOption("-n, --number <number>", "The number of coins to send")
+    .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
+    .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
+    .action(async (opts) => {
+        await sendZero({
+            number: opts.number,
+            coinType: opts.coinType,
+            recipient: opts.recipient,
+        });
     });
 
 program.parse(process.argv);

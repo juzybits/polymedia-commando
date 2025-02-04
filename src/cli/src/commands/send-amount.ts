@@ -5,11 +5,13 @@ import { signAndExecuteTx, promptUser, setupSuiTransaction } from "@polymedia/su
 
 import { error, log, debug } from "../logger.js";
 
-export async function sendCoin(
-    amount: string,
-    coinType: string,
-    recipientAddr: string,
-): Promise<void>
+export async function sendAmount({
+    amount, coinType, recipient,
+}: {
+    amount: string;
+    coinType: string;
+    recipient: string;
+}): Promise<void>
 {
     /* Calculate amount with decimals */
 
@@ -38,7 +40,7 @@ export async function sendCoin(
     /* Get user confirmation */
 
     log("amount", `${formatBalance(balanceToSend, coinMeta.decimals)} ${coinMeta.symbol}`);
-    log("recipient", recipientAddr);
+    log("recipient", recipient);
     const userConfirmed = network !== "mainnet" || await promptUser("\nDoes this look okay? (y/n) ");
     if (!userConfirmed) {
         log("Execution aborted by the user");
@@ -51,7 +53,7 @@ export async function sendCoin(
         balance: balanceToSend,
         type: coinType,
     })(tx);
-    tx.transferObjects([coin], recipientAddr);
+    tx.transferObjects([coin], recipient);
 
     const resp = await signAndExecuteTx({ client, tx, signer, waitForTxOptions: false });
     debug("Response", resp);
