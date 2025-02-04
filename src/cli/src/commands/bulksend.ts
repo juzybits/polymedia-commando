@@ -2,23 +2,8 @@ import { bcs } from "@mysten/sui/bcs";
 import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
 import { coinWithBalance, Transaction } from "@mysten/sui/transactions";
 
-import {
-    balanceToString,
-    chunkArray,
-    NetworkName,
-    newSignTx,
-    sleep,
-    stringToBalance,
-    SuiClientBase,
-    validateAndNormalizeAddress
-} from "@polymedia/suitcase-core";
-import {
-    fileExists,
-    getActiveEnv,
-    getActiveKeypair,
-    promptUser,
-    readCsvFile,
-} from "@polymedia/suitcase-node";
+import { balanceToString, chunkArray, NetworkName, sleep, stringToBalance, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
+import { fileExists, getActiveEnv, getActiveKeypair, promptUser, readCsvFile, signAndExecuteTx } from "@polymedia/suitcase-node";
 
 import { debug, log, error } from "../logger.js";
 
@@ -44,36 +29,31 @@ const BATCH_SIZE = 500;
  */
 const RATE_LIMIT_DELAY = 300;
 
-// TODO: SerialTransactionExecutor
 // TODO: abort if current gas is lower than gas estimate
 export async function bulksend(
     coinType: string,
     inputFile: string,
 ): Promise<void>
 {
-    // === check input and output files ===
+    // check input file exists
     debug(`Input file: ${inputFile}`);
     if (!fileExists(inputFile)) {
         throw new Error(`${inputFile} doesn't exist. Create a .csv file with two columns: address and amount.`);
     }
 
-    // === initialize client ===
+    // initialize client
     const [networkName, signer] = await Promise.all([
         getActiveEnv(),
         getActiveKeypair(),
     ]);
-    const suiClient = new SuiClient({ url: getFullnodeUrl(networkName)});
-    const client = new SuiClientBaseWrapper({
-        suiClient,
-        signTx: newSignTx(suiClient, signer),
-    });
+    const client = new SuiClient({ url: getFullnodeUrl(networkName)});
     const activeAddress = signer.toSuiAddress();
     log("Active network", networkName);
     log("Active address", activeAddress);
 
-    // === check coin metadata ===
+    // fetch coin metadata
     debug("Coin type", coinType);
-    const coinMeta = await suiClient.getCoinMetadata({ coinType });
+    const coinMeta = await client.getCoinMetadata({ coinType });
     if (!coinMeta) {
         throw new Error(`Failed to get CoinMetadata for coin type "${coinType}"`);
     }
@@ -82,17 +62,18 @@ export async function bulksend(
     debug("Coin symbol", coinSymbol);
     debug("Coin decimals", coinDecimals);
 
-    // === get user balance ===
+    // get user balance
     const userBalance = BigInt(
-        (await suiClient.getBalance({ owner: activeAddress, coinType })).totalBalance
+        (await client.getBalance({ owner: activeAddress, coinType })).totalBalance
     );
     const userBalanceStr = `${balanceToString(userBalance, coinDecimals)} ${coinSymbol}`;
     debug("User balance", userBalanceStr);
 
-    // === read addresses and amounts from input file ===
+    // parse addresses and amounts from input file
     const addrsAndBals = readCsvFile<AddressBalancePair>(inputFile, (vals) => parseCsvLine(vals, coinDecimals));
     log("Addresses found in input file", addrsAndBals.length);
 
+    // calculate total balance to be sent
     const totalBalance = addrsAndBals.reduce((sum, pair) => sum + pair.balance, BigInt(0));
     const totalBalanceStr = `${balanceToString(totalBalance, coinDecimals)} ${coinSymbol}`;
     log("Total amount to be sent", totalBalanceStr);
@@ -100,17 +81,18 @@ export async function bulksend(
         throw new Error("Total amount to be sent is bigger than user balance");
     }
 
+    // split into transactions
     const batches = chunkArray(addrsAndBals, BATCH_SIZE);
     log("Transactions required", batches.length);
 
-    // === get user confirmation ===
+    // get user confirmation
     const userConfirmed = networkName !== "mainnet" || await promptUser("\nDoes this look okay? (y/n) ");
     if (!userConfirmed) {
         log("Execution aborted by the user.");
         return;
     }
 
-    // === send Coin<T> to each address ===
+    // send Coin<T> to each address
     let totalGas = 0;
     let batchNumber = 0;
     try {
@@ -144,7 +126,7 @@ export async function bulksend(
                 ],
             });
 
-            const resp = await client.signAndExecuteTx(tx);
+            const resp = await signAndExecuteTx({ client, tx, signer });
 
             if (resp.effects?.status.status !== "success") {
                 throw new Error(`Transaction status was '${resp.effects?.status.status}': ${resp.digest}. Response: ${JSON.stringify(resp, null, 2)}`);
@@ -165,7 +147,7 @@ export async function bulksend(
             }
         }
         log("Done!");
-        log(`Gas used: ${totalGas / 1_000_000_000} SUI\n`);
+        debug(`Gas used: ${totalGas / 1_000_000_000} SUI\n`);
     }
     catch (err) {
         error("Transaction failed", String(err));
@@ -181,8 +163,6 @@ type AddressBalancePair = {
 };
 
 // === helpers ===
-
-class SuiClientBaseWrapper extends SuiClientBase {}
 
 function parseCsvLine(
     values: string[],

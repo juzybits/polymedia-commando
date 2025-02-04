@@ -6,7 +6,6 @@ import { signAndExecuteTx, setupSuiTransaction } from "@polymedia/suitcase-node"
 
 const DEFAULT_RECIPIENT = "0xc67b4231d7f64be622d4534c590570fc2fdea1a70a7cbf72ddfeba16d11fd22e";
 
-// TODO: SerialTransactionExecutor
 export async function emptyWallet(
     recipient?: string,
 ): Promise<void>
