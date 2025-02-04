@@ -1,3 +1,4 @@
+/// will be replaced to `my_nft`
 module demo::nft;
 
 // === imports ===
@@ -15,8 +16,10 @@ use demo::{
 
 // === structs ===
 
+/// will be replaced to `MY_NFT`
 public struct NFT has drop {}
 
+/// will be replaced to `MyNft`
 public struct Nft has key, store {
     id: UID,
     name: String,

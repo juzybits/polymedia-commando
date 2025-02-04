@@ -34,7 +34,6 @@ export async function bytecodeTransform({
     const rawConfig = JSON.parse(fs.readFileSync(configFile, "utf8"));
     const config = validateTransformConfig(rawConfig);
 
-    // build the Move package if requested
     if (buildDir) {
         log("Building Move package...");
         executeBuildCommand(buildDir);

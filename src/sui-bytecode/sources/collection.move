@@ -1,3 +1,4 @@
+/// will be replaced to `my_collection`
 module demo::collection;
 
 // === imports ===
@@ -9,7 +10,7 @@ use sui::{
     table::{Self, Table},
 };
 
-// === constants ===
+// === constants (all values will be replaced) ===
 
 // basic primitives
 const A_BOOL: bool = false;
@@ -49,12 +50,15 @@ const A_VEC_VEC_VEC_U64: vector<vector<vector<u64>>> = vector[
 
 // === structs ===
 
+/// will be replaced to `MY_COLLECTION`
 public struct COLLECTION has drop {}
 
+/// will be replaced to `MyCollectionAdminCap`
 public struct CollectionAdminCap has key, store {
     id: UID,
 }
 
+/// will be replaced to `MyCollection`
 public struct Collection has key {
     id: UID,
     nfts: Table<address, u64>,

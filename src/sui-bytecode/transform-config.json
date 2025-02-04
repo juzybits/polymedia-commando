@@ -1,6 +1,10 @@
 {
     "outputDir": "../sui-bytecode/transform-output",
     "identifiers": {
+        "collection": "my_collection",
+        "COLLECTION": "MY_COLLECTION",
+        "Collection": "MyCollection",
+        "CollectionAdminCap": "MyCollectionAdminCap",
         "nft": "my_nft",
         "NFT": "MY_NFT",
         "Nft": "MyNft",
@@ -32,7 +36,7 @@
                 },
                 {
                     "moveType": "u64",
-                    "oldVal": 3333,
+                    "oldVal": 1000,
                     "newVal": 9000
                 },
                 {

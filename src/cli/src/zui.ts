@@ -69,15 +69,15 @@ program
 
 program
     .command("bytecode-transform")
-    .description("Update identifiers and constants in Move bytecode files")
+    .description("Replace constants and identifiers in Move bytecode files")
     .addHelpText("after", `
 Example config file:
 {
     "outputDir": "path/to/output/directory",
     "identifiers": {
-        "nft": "my_nft", // module name
+        "nft": "my_nft", // module/function/field
         "NFT": "MY_NFT", // one-time witness
-        "Nft": "MyNft"   // struct name
+        "Nft": "MyNft"   // struct
     },
     "files": [
         {
