@@ -1,3 +1,5 @@
+import { error } from "../logger.js";
+
 export async function findCoinHolders({
     coinType, limit = 999_999_999,
 }: {
@@ -10,8 +12,10 @@ export async function findCoinHolders({
     const urlHolders = `https://n.suiscan.xyz/data/api/coins/${coinType}/holders?page=0&sortBy=AMOUNT&orderBy=DESC&size=${limit}`;
     const resp: ApiResponse = await fetch(urlHolders)
     .then((response: Response) => {
-        if (!response.ok)
-            throw new Error(`HTTP error: ${response.status}`);
+        if (!response.ok) {
+            error("HTTP error", response.status);
+            process.exit(1);
+        }
         return response.json() as Promise<ApiResponse>;
     });
 

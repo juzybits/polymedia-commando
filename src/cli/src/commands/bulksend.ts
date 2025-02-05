@@ -39,7 +39,8 @@ export async function bulksend(
     // check input file exists
     debug(`Input file: ${inputFile}`);
     if (!fileExists(inputFile)) {
-        throw new Error(`${inputFile} doesn't exist. Create a .csv file with two columns: address and amount.`);
+        error(`${inputFile} doesn't exist. Create a .csv file with two columns: address and amount.`);
+        process.exit(1);
     }
 
     // initialize client
@@ -56,7 +57,8 @@ export async function bulksend(
     debug("Coin type", coinType);
     const coinMeta = await client.getCoinMetadata({ coinType });
     if (!coinMeta) {
-        throw new Error(`Failed to get CoinMetadata for coin type "${coinType}"`);
+        error("Failed to get CoinMetadata for coin type", coinType);
+        process.exit(1);
     }
     const coinSymbol = coinMeta.symbol;
     const coinDecimals = coinMeta.decimals;
@@ -79,7 +81,8 @@ export async function bulksend(
     const totalBalanceStr = `${balanceToString(totalBalance, coinDecimals)} ${coinSymbol}`;
     log("Total amount to be sent", totalBalanceStr);
     if (totalBalance > userBalance) {
-        throw new Error("Total amount to be sent is bigger than user balance");
+        error("Total amount to be sent is bigger than user balance");
+        process.exit(1);
     }
 
     // split into transactions
@@ -99,7 +102,8 @@ export async function bulksend(
     try {
         const packageId = PACKAGE_IDS.get(networkName);
         if (!packageId) {
-            throw new Error(`Bulksender package ID missing for network "${networkName}"`);
+            error("Bulksender package ID missing for network", networkName);
+            process.exit(1);
         }
         for (const batch of batches)
         {
@@ -130,12 +134,14 @@ export async function bulksend(
             const resp = await signAndExecuteTx({ client, tx, signer });
 
             if (resp.effects?.status.status !== "success") {
-                throw new Error(`Transaction status was '${resp.effects?.status.status}': ${resp.digest}. Response: ${JSON.stringify(resp, null, 2)}`);
+                error(`Transaction status was '${resp.effects?.status.status}': ${resp.digest}. Response: ${JSON.stringify(resp, null, 2)}`);
+                process.exit(1);
             }
 
             if (resp.effects?.created?.length !== batch.length) {
-                throw new Error(`Transaction created ${resp.effects?.created?.length} objects `
+                error(`Transaction created ${resp.effects?.created?.length} objects `
                 + `for ${batch.length} addresses: ${resp.digest}. Response: ${JSON.stringify(resp, null, 2)}`);
+                process.exit(1);
             }
 
             log("Transaction successful", resp.digest);
@@ -152,7 +158,7 @@ export async function bulksend(
     }
     catch (err) {
         error("Transaction failed", String(err));
-        throw err;
+        process.exit(1);
     }
 }
 

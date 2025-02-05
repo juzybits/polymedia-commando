@@ -16,11 +16,13 @@ export async function bytecodePublish({
 {
     // validate bytecode files
     if (bytecodeFiles.length === 0) {
-        throw new Error("no bytecode files specified");
+        error("no bytecode files specified");
+        process.exit(1);
     }
     for (const file of bytecodeFiles) {
         if (!fs.existsSync(file)) {
-            throw new Error(`file not found: ${file}`);
+            error("bytecode file not found", file);
+            process.exit(1);
         }
     }
 
@@ -43,7 +45,8 @@ export async function bytecodePublish({
     const normalizedDeps = dependencies.map(dep => {
         const normalized = validateAndNormalizeAddress(dep);
         if (!normalized) {
-            throw new Error(`Invalid dependency address: ${dep}`);
+            error("Invalid dependency address", dep);
+            process.exit(1);
         }
         return normalized;
     });
@@ -68,7 +71,7 @@ export async function bytecodePublish({
 
     if (resp.effects?.status.status !== "success") {
         error("Publish failed. Response", resp);
-        throw new Error("Publish failed");
+        process.exit(1);
     }
 
     debug("Publish successful. Response", resp);

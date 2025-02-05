@@ -8,7 +8,7 @@ import initWasmModule, { get_constants, update_constants, update_identifiers } f
 
 import { validateAndNormalizeAddress } from "@polymedia/suitcase-core";
 
-import { log, debug } from "../logger.js";
+import { log, debug, error } from "../logger.js";
 
 // === types ===
 
@@ -73,7 +73,8 @@ async function loadWasmModule() {
         const wasm = fs.readFileSync(wasmPath);
         await initWasmModule(wasm);
     } catch (e) {
-        throw new Error(`Failed to load WASM module: ${e}`);
+        error("Failed to load WASM module", e);
+        process.exit(1);
     }
 }
 
@@ -81,38 +82,47 @@ function loadTransformConfig(configFile: string): TransformConfig {
     const c = JSON.parse(fs.readFileSync(configFile, "utf8"));
 
     if (!c || typeof c !== "object") {
-        throw new Error("Config must be an object");
+        error("Config must be an object");
+        process.exit(1);
     }
 
     if (!c.outputDir || typeof c.outputDir !== "string") {
-        throw new Error("Config must have an 'outputDir' string");
+        error("Config must have an 'outputDir' string");
+        process.exit(1);
     }
 
     if (!c.identifiers || typeof c.identifiers !== "object") {
-        throw new Error("Config must have an 'identifiers' object");
+        error("Config must have an 'identifiers' object");
+        process.exit(1);
     }
 
     if (!Array.isArray(c.files)) {
-        throw new Error("Config must have a 'files' array");
+        error("Config must have a 'files' array");
+        process.exit(1);
     }
 
     for (const file of c.files) {
         if (!file.bytecodeInputFile || typeof file.bytecodeInputFile !== "string") {
-            throw new Error("Each file must have a 'bytecodeInputFile' string");
+            error("Each file must have a 'bytecodeInputFile' string");
+            process.exit(1);
         }
         if (!Array.isArray(file.constants)) {
-            throw new Error("Each file must have a 'constants' array");
+            error("Each file must have a 'constants' array");
+            process.exit(1);
         }
 
         for (const constant of file.constants) {
             if (!constant.moveType || typeof constant.moveType !== "string") {
-                throw new Error("Each constant must have a 'moveType' string");
+                error("Each constant must have a 'moveType' string");
+                process.exit(1);
             }
             if (!("oldVal" in constant)) {
-                throw new Error("Each constant must have an 'oldVal'");
+                error("Each constant must have an 'oldVal'");
+                process.exit(1);
             }
             if (!("newVal" in constant)) {
-                throw new Error("Each constant must have a 'newVal'");
+                error("Each constant must have a 'newVal'");
+                process.exit(1);
             }
         }
     }
@@ -153,7 +163,8 @@ function executeBuildCommand(buildDir: string): void {
 
     // Check for actual errors via exit code
     if (result.status !== 0) {
-        throw new Error(`Build command failed with status ${result.status}`);
+        error("Build command failed with status", result.status);
+        process.exit(1);
     }
 }
 
@@ -172,7 +183,8 @@ function createOrEmptyOutputDir(outputDir: string): void {
 function checkInputFilesExist(files: string[]): void {
     for (const file of files) {
         if (!fs.existsSync(file)) {
-            throw new Error(`Input file ${file} does not exist. Did you forget to \`sui move build\`?`);
+            error("Input file does not exist", file);
+            process.exit(1);
         }
     }
 }
@@ -206,7 +218,8 @@ function transformBytecode({
             normalizedType,
         );
         if (constantsBefore === JSON.stringify(get_constants(updated))) {
-            throw new Error(`Didn't update constant '${normalizedType}' with value ${oldVal} to ${newVal}. Make sure 'moveType' and 'oldVal' are correct in your config. You may need to \`sui move build\` again.`);
+            error(`Didn't update constant '${normalizedType}' with value ${oldVal} to ${newVal}. Make sure 'moveType' and 'oldVal' are correct in your config. You may need to \`sui move build\` again.`);
+            process.exit(1);
         }
     }
 
@@ -254,7 +267,8 @@ function getConstantBcsType(
             if (isNumberArray(value)) {
                 return bcs.vector(bcs.u8());
             }
-            throw new Error(`Invalid value for Vector(U8): ${value}`);
+            error("Invalid value for Vector(U8)", value);
+            process.exit(1);
         }
 
         // regular vector cases
@@ -270,7 +284,8 @@ function getConstantBcsType(
             input: (val: string) => {
                 const normalized = validateAndNormalizeAddress(val);
                 if (normalized === null) {
-                    throw new Error(`Invalid address: ${val}`);
+                    error("Invalid address", val);
+                    process.exit(1);
                 }
                 return fromHex(normalized);
             },

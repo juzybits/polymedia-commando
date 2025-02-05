@@ -19,7 +19,7 @@ export async function coinSend({
     const coinMeta = await client.getCoinMetadata({coinType: coinType});
     if (!coinMeta) {
         error(`CoinMetadata not found for ${coinType}`);
-        return;
+        process.exit(1);
     }
     const balanceToSend = stringToBalance(amount, coinMeta.decimals);
 
@@ -34,7 +34,7 @@ export async function coinSend({
     if (userBalance < balanceToSend) {
         const balance = Number(userBalance) / 10**coinMeta.decimals;
         error(`your balance is only ${formatNumber(balance)} ${coinMeta.symbol}`);
-        return;
+        process.exit(1);
     }
 
     /* Get user confirmation */

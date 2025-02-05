@@ -4,7 +4,7 @@ import { Transaction } from "@mysten/sui/transactions";
 import { objResToFields } from "@polymedia/suitcase-core";
 import { setupSuiTransaction, signAndExecuteTx } from "@polymedia/suitcase-node";
 
-import { debug, log } from "../logger.js";
+import { debug, log, error } from "../logger.js";
 
 // "Size limit exceeded: serialized transaction size exceeded maximum of 131072 is ..."
 // see `max_tx_size_bytes` in sui/crates/sui-protocol-config/src/lib.rs
@@ -64,7 +64,8 @@ export async function coinZeroDestroy(): Promise<void>
             const fullType = objData.type!;
             const innerType = (/<(.+)>/.exec(fullType))?.[1];
             if (!innerType) {
-                throw new Error(`Can't parse coin type: ${fullType}`);
+                error("Can't parse coin type", fullType);
+                process.exit(1);
             }
             if (objFields.balance !== "0") {
                 continue;
