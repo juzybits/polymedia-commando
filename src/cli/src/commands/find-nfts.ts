@@ -1,59 +1,47 @@
 import { apiRequestIndexer, sleep, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
-import { readJsonFile, writeJsonFile } from "@polymedia/suitcase-node";
 
-type Collection = {
-    name: string;
-    indexerId: string;
-};
+import { debug, error } from "../logger.js";
 
-export async function findNfts(
-    inputFile: string,
-    outputDir: string,
-): Promise<void>
+export async function findNfts({
+    type
+}: {
+    type: string;
+}): Promise<void>
 {
-    /* Read API credentials */
-
     const indexerApiUser = process.env.INDEXER_API_USER ?? atob("dHJhZGVwb3J0Lnh5eg==");
     const indexerApiKey = process.env.INDEXER_API_KEY ?? atob("dm1xVnU1ay5mZTAwZjZlMzEwM2JhNTFkODM1YjIzODJlNjgwOWEyYQ==");
-
     if (!indexerApiUser || !indexerApiKey) {
-        console.error("Error: Missing required environment variables.");
-        return;
+        error("missing required environment variables");
+        process.exit(1);
     }
 
-    /* Read command arguments */
-
-    console.log(`inputFile: ${inputFile}`);
-    console.log(`outputDir: ${outputDir}`);
-
-    /* Find all NFTs and their owners */
-
-    const collections = readJsonFile<Collection[]>(inputFile);
-    for (const collection of collections) {
-        const nfts: NftAndOwner[] = [];
-        let nullHolders = 0;
-        while (true) {
-            const offset = nfts.length + nullHolders;
-            console.log(`fetching ${collection.name} nfts from ${offset}`);
-            const results = await fetchNfts(collection.indexerId, offset, indexerApiUser, indexerApiKey);
-            if (results.length === 0) { // no more nfts
-                break;
+    const nfts: NftAndOwner[] = [];
+    let nullHolders = 0;
+    while (true) {
+        const offset = nfts.length + nullHolders;
+        debug("fetching holders from offset", offset);
+        const results = await fetchNfts(type, offset, indexerApiUser, indexerApiKey);
+        if (results.length === 0) { // no more nfts
+            if (nullHolders === 0 && type.includes("::")) {
+                type = type.split("::")[0];
+                debug("no results found, trying again with contract ID", type);
+                continue;
             }
-            for (const item of results) {
-                const address = item.owner && validateAndNormalizeAddress(item.owner);
-                if (address) {
-                    item.owner = address;
-                    nfts.push(item);
-                } else {
-                    nullHolders++;
-                }
-            }
-            await sleep(580); // avoid hitting the 100 req/min rate limit
+            break;
         }
-        console.log(`skipped ${nullHolders} null ${collection.name} holders`);
-        const filePath = `${outputDir}/find-nfts.${collection.name}.json`;
-        writeJsonFile(filePath, nfts);
+        for (const item of results) {
+            const address = item.owner && validateAndNormalizeAddress(item.owner);
+            if (address) {
+                item.owner = address;
+                nfts.push(item);
+            } else {
+                nullHolders++;
+            }
+        }
+        await sleep(580); // avoid hitting the 100 req/min rate limit
     }
+    debug(`skipped ${nullHolders} null ${type} holders`);
+    console.log(JSON.stringify(nfts, null, 2));
 }
 
 type NftAndOwner = {
@@ -61,8 +49,9 @@ type NftAndOwner = {
     name: string;
     token_id: string;
 };
+
 async function fetchNfts(
-    collectionId: string,
+    type: string,
     offset: number,
     indexerApiUser: string,
     indexerApiKey: string,
@@ -72,7 +61,7 @@ async function fetchNfts(
         sui {
             nfts(
                 where: {
-                    collection: { id: { _eq: "${collectionId}" } }
+                    collection: { slug: { _eq: "${type}" } }
                 }
                 offset: ${offset}
                 order_by: { token_id: asc }
@@ -86,7 +75,8 @@ async function fetchNfts(
     `;
     const result = await apiRequestIndexer<any>(indexerApiUser, indexerApiKey, query);
     if (!result?.data?.sui?.nfts) {
-        throw new Error(`[fetchNfts] unexpected result: ${JSON.stringify(result)}`);
+        error("unexpected API response", JSON.stringify(result));
+        process.exit(1);
     }
     return result.data.sui.nfts;
 }

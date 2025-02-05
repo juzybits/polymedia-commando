@@ -11,7 +11,7 @@ export async function findNftHolders({
     const indexerApiUser = process.env.INDEXER_API_USER ?? atob("dHJhZGVwb3J0Lnh5eg==");
     const indexerApiKey = process.env.INDEXER_API_KEY ?? atob("dm1xVnU1ay5mZTAwZjZlMzEwM2JhNTFkODM1YjIzODJlNjgwOWEyYQ==");
     if (!indexerApiUser || !indexerApiKey) {
-        error("missing required environment variables.");
+        error("missing required environment variables");
         process.exit(1);
     }
 
@@ -65,7 +65,8 @@ async function fetchHolders(
     `;
     const result = await apiRequestIndexer<any>(indexerApiUser, indexerApiKey, query);
     if (!result?.data?.sui?.nfts) {
-        throw new Error(`[fetchHolders] unexpected result: ${JSON.stringify(result)}`);
+        error("unexpected API response", JSON.stringify(result));
+        process.exit(1);
     }
     return result.data.sui.nfts;
 }

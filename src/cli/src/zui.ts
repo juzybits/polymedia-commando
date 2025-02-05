@@ -202,16 +202,11 @@ program
 program
     .command("find-nfts")
     .description("Find all NFTs and their owners for a set of collections via Indexer.xyz")
-    .addHelpText("after", `
-Example input file:
-[
-    { "name": "Prime Machin", "indexerId": "07231735-96de-4710-8e11-52c61a482578" },
-    { "name": "Fuddies", "indexerId": "4827d37b-5574-404f-b030-d26912ad7461" }
-]`)
-    .requiredOption("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
-    .requiredOption("-o, --output-dir <outputDir>", "Output directory to write the JSON files")
+    .requiredOption("-t, --type [type]", "The NFT type to find holders for (e.g. `0x123::nft::SomeNft`).")
     .action(async (opts) => {
-        await findNfts(opts.inputFile, opts.outputDir);
+        await findNfts({
+            type: opts.type,
+        });
     });
 
 program
