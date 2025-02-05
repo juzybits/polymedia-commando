@@ -19,7 +19,7 @@ export async function coinSendZero({
     recipient: string;
 }): Promise<void>
 {
-    log(`Sending ${number} coins with 0 balance to ${shortenAddress(recipient)}...`);
+    log(`Sending ${number} zero-balance coins to ${shortenAddress(recipient)}...`);
 
     const { client, signer } = await setupSuiTransaction();
     let totalGas = 0;
