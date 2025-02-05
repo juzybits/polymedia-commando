@@ -24,8 +24,8 @@ Commands:
   coin-zero-destroy   Destroy all zero-balance coin objects
   coin-zero-send      Create and transfer zero-balance coins
   empty-wallet        Transfer all non-SUI objects to an address
-  find-coin-holders   Find coin holders and their balances
   find-last-tx        Find the latest transaction for one or more Sui addresses
+  find-coin-holders   Find coin holders and their balances
   find-nft-holders    Find unique holders of an NFT collection
   find-nfts           Find all NFTs (object ID, owner, and name) in a collection
   find-nft-verified   Find all NFT collections that are verified on TradePort

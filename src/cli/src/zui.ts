@@ -165,18 +165,6 @@ program
     });
 
 program
-    .command("find-coin-holders")
-    .description("Find coin holders and their balances")
-    .requiredOption("-c, --coin-type <string>", "The type of the coin (the T in Coin<T>)")
-    .option("-l, --limit [number]", "Get at most this many holders")
-    .action(async (opts) => {
-        await findCoinHolders({
-            coinType: opts.coinType,
-            limit: opts.limit,
-        });
-    });
-
-program
     .command("find-last-tx")
     .description("Find the latest transaction for one or more Sui addresses")
     .addOption(new Option("-a, --address [address...]", "One or more Sui addresses")
@@ -191,9 +179,21 @@ program
     });
 
 program
+    .command("find-coin-holders")
+    .description("Find coin holders and their balances")
+    .requiredOption("-c, --coin-type <string>", "The type of the coin (the T in Coin<T>)")
+    .option("-l, --limit [number]", "Get at most this many holders")
+    .action(async (opts) => {
+        await findCoinHolders({
+            coinType: opts.coinType,
+            limit: opts.limit,
+        });
+    });
+
+program
     .command("find-nft-holders")
     .description("Find unique holders of an NFT collection")
-    .requiredOption("-t, --type [type]", "The NFT type, e.g. `0x123::nft::SomeNft`.")
+    .requiredOption("-t, --type [type]", "The NFT type, e.g. \"0x123::nft::SomeNft\".")
     .action(async (opts) => {
         await findNftHolders({
             type: opts.type,
@@ -203,7 +203,7 @@ program
 program
     .command("find-nfts")
     .description("Find all NFTs (object ID, owner, and name) in a collection")
-    .requiredOption("-t, --type [type]", "The NFT type, e.g. `0x123::nft::SomeNft`.")
+    .requiredOption("-t, --type [type]", "The NFT type, e.g. \"0x123::nft::SomeNft\".")
     .action(async (opts) => {
         await findNfts({
             type: opts.type,
