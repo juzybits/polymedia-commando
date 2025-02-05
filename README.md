@@ -58,3 +58,5 @@ cd src/cli
 pnpm i
 pnpm zui -h
 ```
+
+Optionally, create a `src/cli/.env` file with your Indexer.xyz credentials.

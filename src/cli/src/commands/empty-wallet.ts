@@ -9,7 +9,7 @@ import { log, error } from "../logger.js";
 export async function emptyWallet({
     recipient,
 }: {
-    recipient: string,
+    recipient: string;
 }): Promise<void>
 {
     const recipientAddr = validateAndNormalizeAddress(recipient);

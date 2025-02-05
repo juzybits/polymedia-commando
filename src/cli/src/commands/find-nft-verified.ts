@@ -1,6 +1,7 @@
 import { apiRequestIndexer, sleep } from "@polymedia/suitcase-core";
 
 import { debug, error } from "../logger.js";
+import { getEnvVarOrExit } from "../utils.js";
 
 type VerifiedCollection = {
     id: string;
@@ -27,12 +28,8 @@ type GraphQLResponse = {
 
 export async function findNftVerified(): Promise<void>
 {
-    const indexerApiUser = process.env.INDEXER_API_USER ?? atob("dHJhZGVwb3J0Lnh5eg==");
-    const indexerApiKey = process.env.INDEXER_API_KEY ?? atob("dm1xVnU1ay5mZTAwZjZlMzEwM2JhNTFkODM1YjIzODJlNjgwOWEyYQ==");
-    if (!indexerApiUser || !indexerApiKey) {
-        error("missing required environment variables");
-        process.exit(1);
-    }
+    const indexerApiUser = getEnvVarOrExit("INDEXER_API_USER");
+    const indexerApiKey = getEnvVarOrExit("INDEXER_API_KEY");
 
     const allCollections: VerifiedCollection[] = [];
     let offset = 0;
