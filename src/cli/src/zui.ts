@@ -212,9 +212,8 @@ program
 program
     .command("find-nft-verified")
     .description("Find all verified NFT collections via Indexer.xyz")
-    .requiredOption("-o, --output-file <outputFile>", "Output file to write the JSON")
-    .action(async (opts) => {
-        await findNftVerified(opts.outputFile);
+    .action(async (_opts) => {
+        await findNftVerified();
     });
 
 program

@@ -1,5 +1,6 @@
 import { apiRequestIndexer, sleep } from "@polymedia/suitcase-core";
-import { writeJsonFile } from "@polymedia/suitcase-node";
+
+import { debug, error } from "../logger.js";
 
 type VerifiedCollection = {
     id: string;
@@ -24,25 +25,21 @@ type GraphQLResponse = {
     };
 };
 
-export async function findNftVerified(
-    outputFile: string,
-): Promise<void> {
+export async function findNftVerified(): Promise<void>
+{
     const indexerApiUser = process.env.INDEXER_API_USER ?? atob("dHJhZGVwb3J0Lnh5eg==");
     const indexerApiKey = process.env.INDEXER_API_KEY ?? atob("dm1xVnU1ay5mZTAwZjZlMzEwM2JhNTFkODM1YjIzODJlNjgwOWEyYQ==");
-
     if (!indexerApiUser || !indexerApiKey) {
-        console.error("Error: Missing required environment variables.");
-        return;
+        error("missing required environment variables");
+        process.exit(1);
     }
-
-    console.log(`outputFile: ${outputFile}`);
 
     const allCollections: VerifiedCollection[] = [];
     let offset = 0;
     let hasMore = true;
 
     while (hasMore) {
-        console.log(`Fetching verified collections from offset ${offset}`);
+        debug("fetching verified collections from offset", offset);
         const results = await fetchVerifiedNftCollections(indexerApiUser, indexerApiKey, offset);
         allCollections.push(...results);
 
@@ -54,8 +51,8 @@ export async function findNftVerified(
         }
     }
 
-    console.log(`Total verified collections fetched: ${allCollections.length}`);
-    writeJsonFile(outputFile, allCollections);
+    debug(`total verified collections fetched: ${allCollections.length}`);
+    console.log(JSON.stringify(allCollections, null, 2));
 }
 
 async function fetchVerifiedNftCollections(
@@ -89,7 +86,8 @@ async function fetchVerifiedNftCollections(
     `;
     const result = await apiRequestIndexer<GraphQLResponse>(apiUser, apiKey, query);
     if (!result?.data?.sui?.collections) {
-        throw new Error(`[fetchVerifiedNftCollections] unexpected result: ${JSON.stringify(result)}`);
+        error("unexpected API response", JSON.stringify(result));
+        process.exit(1);
     }
     return result.data.sui.collections;
 }
