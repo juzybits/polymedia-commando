@@ -178,16 +178,14 @@ program
 program
     .command("find-last-tx")
     .description("Find the latest transaction for one or more Sui addresses")
-    .addOption(new Option("-a, --address <address>", "Single address to find the last transaction for")
+    .addOption(new Option("-a, --address [addresses...]", "One or more Sui addresses")
         .conflicts("input-file"))
-    .addOption(new Option("-i, --input-file <path>", "JSON file with an array of addresses")
+    .addOption(new Option("-i, --input-file [path]", "A plain text file with one address per line, or a CSV/TSV file with the addresses in the first column, or a JSON file with an array of addresses")
         .conflicts("address"))
-    .option("-o, --output-file [path]", "JSON file with addresses and their last transaction ID and time")
     .action(async (opts) => {
         await findLastTx({
-            address: opts.address,
+            addresses: opts.address,
             inputFile: opts.inputFile,
-            outputFile: opts.outputFile,
         });
     });
 

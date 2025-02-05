@@ -1,27 +1,35 @@
-import { SuiClientWithEndpoint, SuiMultiClient } from "@polymedia/suitcase-core";
-import { getActiveEnv, readJsonFile, writeJsonFile } from "@polymedia/suitcase-node";
+import { SuiClientWithEndpoint, SuiMultiClient, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
+import { getActiveEnv, ParseLine, readCsvFile, readJsonFile, readTsvFile } from "@polymedia/suitcase-node";
+
+import { error } from "../logger.js";
 
 export async function findLastTx({
-    address, inputFile, outputFile,
+    addresses, inputFile,
 }: {
-    address?: string;
+    addresses?: string[];
     inputFile?: string;
-    outputFile?: string;
 }): Promise<void>
 {
-    if (!address && !inputFile) {
-        console.log("error: either --address or --input-file must be provided");
+    if (!addresses && !inputFile) {
+        error("either --address or --input-file must be provided");
         process.exit(1);
     }
 
-    const addresses = address ? [address] : readJsonFile<string[]>(inputFile!);
-    const multiClient = SuiMultiClient.newWithDefaultEndpoints(await getActiveEnv());
-    const lastTxns = await multiClient.executeInBatches(addresses, fetchLastTxn);
-    if (outputFile) {
-        writeJsonFile(outputFile, lastTxns);
-    } else {
-        console.log(lastTxns);
+    if (!addresses && inputFile) {
+        if (inputFile.endsWith(".json")) {
+            addresses = readJsonFile<string[]>(inputFile);
+        } else if (inputFile.endsWith(".csv")) {
+            addresses = readCsvFile(inputFile, parseLine);
+        } else if (inputFile.endsWith(".tsv")) {
+            addresses = readTsvFile(inputFile, parseLine);
+        } else { // plain text
+            addresses = readCsvFile(inputFile, parseLine);
+        }
     }
+
+    const multiClient = SuiMultiClient.newWithDefaultEndpoints(await getActiveEnv());
+    const lastTxns = await multiClient.executeInBatches(addresses!, fetchLastTxn);
+    console.log(JSON.stringify(lastTxns, null, 2));
 }
 
 type LastTxn = {
@@ -53,8 +61,10 @@ async function fetchLastTxn(
             txnId: resp ? resp.digest : null,
             txnTime: resp ? (resp.timestampMs ?? null) : null,
         };
-    }).catch((error: unknown) => {
-        console.error(`Error getting last transaction for address ${address} from rpc ${client.endpoint}: ${error}`, error);
-        throw error;
+    }).catch((err: unknown) => {
+        error(`Error getting last transaction for address ${address} from rpc ${client.endpoint}: ${err}`);
+        process.exit(1);
     });
 }
+
+const parseLine: ParseLine<string> = (values) => validateAndNormalizeAddress(values[0]);

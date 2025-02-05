@@ -3,6 +3,7 @@ import { Transaction } from "@mysten/sui/transactions";
 
 import { isParsedDataKind, objResToContent, objResToType } from "@polymedia/suitcase-core";
 import { signAndExecuteTx, setupSuiTransaction } from "@polymedia/suitcase-node";
+
 import { log } from "../logger.js";
 
 const DEFAULT_RECIPIENT = "0xc67b4231d7f64be622d4534c590570fc2fdea1a70a7cbf72ddfeba16d11fd22e";
