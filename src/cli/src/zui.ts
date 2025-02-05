@@ -33,9 +33,9 @@ const program = new Command();
 
 program
     .name("zui")
-    .description("ZUI: Sui command line tools")
+    .description("zui: Sui command line tools")
     .version(`zui ${getVersion()}`)
-    .option("--json", "output in JSON format (useful for scripting)")
+    .option("--json", "output in JSON format")
     .option("-q, --quiet", "suppress non-error output")
     .option("-v, --verbose", "show debug output")
     .hook("preAction", (thisCommand) => {
@@ -45,8 +45,7 @@ program
     });
 
 program.configureHelp({
-    sortSubcommands: true,
-    subcommandTerm: (cmd) => cmd.name(), // only show the name, instead of short usage.
+    subcommandTerm: (cmd) => cmd.name(), // only show the name, instead of short usage
 });
 
 program
@@ -56,18 +55,6 @@ program
     .requiredOption("-i, --input-file <inputFile>", "Path to a CSV with recipient addresses and coin amounts")
     .action(async (opts) => {
         await bulksend(opts.coinType, opts.inputFile);
-    });
-
-program
-    .command("bytecode-publish")
-    .description("Publish Move bytecode files as a Sui package")
-    .requiredOption("-f, --files <files...>", "One or more Move bytecode files to publish")
-    .option("-d, --dependencies <dependencies...>", "The package IDs of dependencies, if any (0x1 and 0x2 are always included)")
-    .action(async (opts) => {
-        await bytecodePublish({
-            bytecodeFiles: opts.files,
-            dependencies: opts.dependencies,
-        });
     });
 
 program
@@ -117,6 +104,18 @@ For a complete working example, visit https://github.com/juzybits/polymedia-comm
         await bytecodeTransform({
             configFile: opts.config,
             buildDir: opts.build,
+        });
+    });
+
+program
+    .command("bytecode-publish")
+    .description("Publish Move bytecode files as a Sui package")
+    .requiredOption("-f, --files <files...>", "One or more Move bytecode files to publish")
+    .option("-d, --dependencies <dependencies...>", "The package IDs of dependencies, if any (0x1 and 0x2 are always included)")
+    .action(async (opts) => {
+        await bytecodePublish({
+            bytecodeFiles: opts.files,
+            dependencies: opts.dependencies,
         });
     });
 
@@ -218,7 +217,7 @@ program
 
 program
     .command("msg-sign")
-    .description("Sign a Sui personal message")
+    .description("Sign a Sui personal message with your active keypair")
     .addHelpText("after", `
 Output:
   On success (exit code 0):

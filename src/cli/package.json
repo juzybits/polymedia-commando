@@ -4,7 +4,7 @@
     "name": "@polymedia/zui",
     "author": "@juzybits (https://polymedia.app)",
     "homepage": "https://github.com/juzybits/polymedia-commando",
-    "description": "Sui command line tools for airdrops, data gathering, and more",
+    "description": "zui: Sui command line tools",
     "license": "Apache-2.0",
     "repository": {
         "type": "git",
@@ -13,7 +13,7 @@
     "keywords": [
         "polymedia",
         "sui",
-        "commando",
+        "cli",
         "zui"
     ],
     "scripts": {
