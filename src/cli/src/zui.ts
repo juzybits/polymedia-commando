@@ -200,7 +200,7 @@ program
 
 program
     .command("find-nfts")
-    .description("Find all NFTs (object ID, owner, and name) for a collection via Indexer.xyz")
+    .description("Find all NFTs (object ID, owner, and name) in a collection via Indexer.xyz")
     .requiredOption("-t, --type [type]", "The NFT type, e.g. `0x123::nft::SomeNft`.")
     .action(async (opts) => {
         await findNfts({
