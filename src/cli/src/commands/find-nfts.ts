@@ -33,7 +33,11 @@ export async function findNfts({
             const address = item.owner && validateAndNormalizeAddress(item.owner);
             if (address) {
                 item.owner = address;
-                nfts.push(item);
+                nfts.push({
+                    owner: item.owner,
+                    name: item.name,
+                    objectId: item.token_id,
+                });
             } else {
                 nullHolders++;
             }
@@ -47,7 +51,7 @@ export async function findNfts({
 type NftAndOwner = {
     owner: string;
     name: string;
-    token_id: string;
+    objectId: string;
 };
 
 async function fetchNfts(
@@ -55,7 +59,11 @@ async function fetchNfts(
     offset: number,
     indexerApiUser: string,
     indexerApiKey: string,
-): Promise<NftAndOwner[]> {
+): Promise<{
+    owner: string;
+    name: string;
+    token_id: string;
+}[]> {
     const query = `
     query {
         sui {

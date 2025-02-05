@@ -26,8 +26,8 @@ Commands:
   empty-wallet        Send all objects in your wallet to a random address (except Coin<SUI>)
   find-coin-holders   Find Coin<T> holders using the Suiscan API
   find-last-tx        Find the latest transaction for one or more Sui addresses
-  find-nft-holders    Find NFT holders for a set of collections via Indexer.xyz
-  find-nfts           Find all NFTs and their owners for a set of collections via Indexer.xyz
+  find-nft-holders    Find unique holders of an NFT collection via Indexer.xyz
+  find-nfts           Find all NFTs (object ID, owner, and name) for a collection via Indexer.xyz
   find-nft-verified   Find all verified NFT collections via Indexer.xyz
   msg-sign            Sign a Sui personal message with your active keypair
   msg-verify          Verify a Sui personal message signature

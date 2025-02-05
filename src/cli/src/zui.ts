@@ -190,8 +190,8 @@ program
 
 program
     .command("find-nft-holders")
-    .description("Find NFT holders for a set of collections via Indexer.xyz")
-    .requiredOption("-t, --type [type]", "The NFT type to find holders for (e.g. `0x123::nft::SomeNft`).")
+    .description("Find unique holders of an NFT collection via Indexer.xyz")
+    .requiredOption("-t, --type [type]", "The NFT type, e.g. `0x123::nft::SomeNft`.")
     .action(async (opts) => {
         await findNftHolders({
             type: opts.type,
@@ -200,8 +200,8 @@ program
 
 program
     .command("find-nfts")
-    .description("Find all NFTs and their owners for a set of collections via Indexer.xyz")
-    .requiredOption("-t, --type [type]", "The NFT type to find holders for (e.g. `0x123::nft::SomeNft`).")
+    .description("Find all NFTs (object ID, owner, and name) for a collection via Indexer.xyz")
+    .requiredOption("-t, --type [type]", "The NFT type, e.g. `0x123::nft::SomeNft`.")
     .action(async (opts) => {
         await findNfts({
             type: opts.type,
