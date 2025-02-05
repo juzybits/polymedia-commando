@@ -178,7 +178,7 @@ program
 program
     .command("find-last-tx")
     .description("Find the latest transaction for one or more Sui addresses")
-    .addOption(new Option("-a, --address [addresses...]", "One or more Sui addresses")
+    .addOption(new Option("-a, --address [address...]", "One or more Sui addresses")
         .conflicts("input-file"))
     .addOption(new Option("-i, --input-file [path]", "A plain text file with one address per line, or a CSV/TSV file with the addresses in the first column, or a JSON file with an array of addresses")
         .conflicts("address"))
@@ -192,16 +192,11 @@ program
 program
     .command("find-nft-holders")
     .description("Find NFT holders for a set of collections via Indexer.xyz")
-    .addHelpText("after", `
-Example input file:
-[
-    { "name": "Prime Machin", "indexerId": "07231735-96de-4710-8e11-52c61a482578" },
-    { "name": "Fuddies", "indexerId": "4827d37b-5574-404f-b030-d26912ad7461" }
-]`)
-    .requiredOption("-i, --input-file <inputFile>", "JSON file with collection names and Indexer.xyz collection IDs")
-    .requiredOption("-o, --output-dir <outputDir>", "Output directory to write the TXT files")
+    .requiredOption("-c, --collection [collection]", "The TradePort ID of the collection to find holders for. E.g. '307c7e7a-be3a-43a5-ae44-37f3a37d01f9' for DSL Legacy.")
     .action(async (opts) => {
-        await findNftHolders(opts.inputFile, opts.outputDir);
+        await findNftHolders({
+            collectionId: opts.collection,
+        });
     });
 
 program
