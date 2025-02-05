@@ -268,7 +268,10 @@ program
     .requiredOption("-n, --number <number>", "The amount of addresses to generate")
     .option("-b, --balance", "Include a random balance with each address")
     .action(async (opts) => {
-        await randAddr(opts.number, opts.balance);
+        await randAddr({
+            amount: opts.number,
+            withBalance: opts.balance,
+        });
     });
 
 program.parse(process.argv);
