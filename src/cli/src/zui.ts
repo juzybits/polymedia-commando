@@ -97,7 +97,7 @@ Example config file:
     ]
 }
 
-For a complete working example, visit https://github.com/juzybits/polymedia-commando/blob/main/src/sui-bytecode`)
+For a complete working example, visit https://github.com/juzybits/polymedia-zui/blob/main/src/sui-bytecode`)
     .requiredOption("-c, --config <file>", "Path to a JSON file specifying transformations")
     .option("-b, --build [directory]", "Build the Move package in this directory before transforming")
     .action(async (opts) => {

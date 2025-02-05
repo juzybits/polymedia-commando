@@ -1,6 +1,6 @@
 # zui: Sui command line tools
 
-![polymedia zui](https://assets.polymedia.app/img/commando/open-graph.webp)
+![Polymedia Zui](https://assets.polymedia.app/img/zui/open-graph.webp)
 
 ## `zui -h`
 
@@ -52,8 +52,8 @@ export INDEXER_API_KEY=your_api_key
 ## Development
 
 ```
-git clone https://github.com/juzybits/polymedia-commando.git
-cd polymedia-commando
+git clone https://github.com/juzybits/polymedia-zui.git
+cd polymedia-zui
 cd src/cli
 pnpm i
 pnpm zui -h
