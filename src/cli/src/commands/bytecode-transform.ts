@@ -79,6 +79,15 @@ async function loadWasmModule() {
 }
 
 function loadTransformConfig(configFile: string): TransformConfig {
+
+    if (!fs.existsSync(configFile)) {
+        error("Config file does not exist", configFile);
+        process.exit(1);
+    }
+    if (!fs.statSync(configFile).isFile()) {
+        error("Config file is not a file", configFile);
+        process.exit(1);
+    }
     const c = JSON.parse(fs.readFileSync(configFile, "utf8"));
 
     if (!c || typeof c !== "object") {
@@ -184,6 +193,10 @@ function checkInputFilesExist(files: string[]): void {
     for (const file of files) {
         if (!fs.existsSync(file)) {
             error("Input file does not exist", file);
+            process.exit(1);
+        }
+        if (!fs.statSync(file).isFile()) {
+            error("Input file is not a file", file);
             process.exit(1);
         }
     }
