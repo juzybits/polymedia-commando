@@ -192,10 +192,10 @@ program
 program
     .command("find-nft-holders")
     .description("Find NFT holders for a set of collections via Indexer.xyz")
-    .requiredOption("-c, --collection [collection]", "The TradePort ID of the collection to find holders for. E.g. '307c7e7a-be3a-43a5-ae44-37f3a37d01f9' for DSL Legacy.")
+    .requiredOption("-t, --type [type]", "The NFT type to find holders for (e.g. `0x123::nft::SomeNft`).")
     .action(async (opts) => {
         await findNftHolders({
-            collectionId: opts.collection,
+            type: opts.type,
         });
     });
 

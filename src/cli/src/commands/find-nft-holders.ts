@@ -3,9 +3,9 @@ import { apiRequestIndexer, sleep, validateAndNormalizeAddress } from "@polymedi
 import { debug, error } from "../logger.js";
 
 export async function findNftHolders({
-    collectionId
+    type
 }: {
-    collectionId: string;
+    type: string;
 }): Promise<void>
 {
     const indexerApiUser = process.env.INDEXER_API_USER ?? atob("dHJhZGVwb3J0Lnh5eg==");
@@ -19,8 +19,13 @@ export async function findNftHolders({
     let offset = 0;
     while (true) {
         debug("fetching holders from offset", offset);
-        const results = await fetchHolders(collectionId, offset, indexerApiUser, indexerApiKey);
+        const results = await fetchHolders(type, offset, indexerApiUser, indexerApiKey);
         if (results.length === 0) { // no more holders
+            if (offset === 0 && type.includes("::")) {
+                type = type.split("::")[0];
+                debug("no results found, trying again with contract ID", type);
+                continue;
+            }
             break;
         }
         for (const item of results) {
@@ -38,7 +43,7 @@ export async function findNftHolders({
 }
 
 async function fetchHolders(
-    collectionId: string,
+    type: string,
     offset: number,
     indexerApiUser: string,
     indexerApiKey: string,
@@ -48,7 +53,7 @@ async function fetchHolders(
         sui {
             nfts(
                 where: {
-                    collection: { id: { _eq: "${collectionId}" } }
+                    collection: { slug: { _eq: "${type}" } }
                 },
                 distinct_on: [ owner ]
                 offset: ${offset}
