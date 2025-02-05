@@ -1,26 +1,32 @@
 import { PaginatedObjectsResponse } from "@mysten/sui/client";
 import { Transaction } from "@mysten/sui/transactions";
 
-import { isParsedDataKind, objResToContent, objResToType } from "@polymedia/suitcase-core";
-import { signAndExecuteTx, setupSuiTransaction } from "@polymedia/suitcase-node";
+import { isParsedDataKind, objResToContent, objResToType, validateAndNormalizeAddress } from "@polymedia/suitcase-core";
+import { signAndExecuteTx, setupSuiTransaction, promptUser } from "@polymedia/suitcase-node";
 
-import { log } from "../logger.js";
+import { log, error } from "../logger.js";
 
-const DEFAULT_RECIPIENT = "0xc67b4231d7f64be622d4534c590570fc2fdea1a70a7cbf72ddfeba16d11fd22e";
-
-export async function emptyWallet(
-    recipient?: string,
-): Promise<void>
+export async function emptyWallet({
+    recipient,
+}: {
+    recipient: string,
+}): Promise<void>
 {
-    log("Emptying wallet...");
+    const recipientAddr = validateAndNormalizeAddress(recipient);
+    if (!recipientAddr) {
+        error("Invalid address", recipient);
+        process.exit(1);
+    }
+
+    log("Sending all objects to", recipientAddr);
 
     const { network, signer, client } = await setupSuiTransaction();
 
-    if (network === "mainnet") {
-        throw new Error("You are on mainnet! Aborting.");
+    const userConfirmed = network !== "mainnet" || await promptUser("You are on mainnet! Continue? (y/n) ");
+    if (!userConfirmed) {
+        log("Execution aborted by the user");
+        return;
     }
-
-    const recipientAddr = recipient ?? DEFAULT_RECIPIENT;
 
     let pagObjRes: PaginatedObjectsResponse;
     let cursor: null | string = null;

@@ -157,9 +157,11 @@ program
 program
     .command("empty-wallet")
     .description("Transfer all non-SUI objects to an address")
-    .option("-r, --recipient <recipient>", "The address where the objects will be sent")
+    .requiredOption("-r, --recipient <recipient>", "The address where the objects will be sent")
     .action(async (opts) => {
-        await emptyWallet(opts.recipient);
+        await emptyWallet({
+            recipient: opts.recipient,
+        });
     });
 
 program
