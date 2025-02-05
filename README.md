@@ -50,7 +50,9 @@ Commands:
   bulksend            Send Coin<T> to a list of addresses
   bytecode-publish    Publish Move bytecode files as a Sui package
   bytecode-transform  Replace constants and identifiers in Move bytecode files
-  destroy-zero        Destroy all Coin<T> objects with 0 balance in your wallet
+  coin-send           Send a Coin<T> amount to a recipient
+  coin-zero-destroy   Destroy all Coin<T> objects with 0 balance in your wallet
+  coin-zero-send      Create and send coins with 0 balance
   empty-wallet        Send all objects in your wallet to a random address (except Coin<SUI>)
   find-coin-holders   Find Coin<T> holders using the Suiscan API
   find-last-tx        Find the latest transaction for one or more Sui addresses
@@ -61,6 +63,4 @@ Commands:
   msg-sign            Sign a Sui personal message
   msg-verify          Verify a Sui personal message signature
   rand-addr           Generate pseudorandom Sui addresses
-  send-amount         Send a Coin<T> amount to a recipient
-  send-zero           Create and send coins with 0 balance
 ```
