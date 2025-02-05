@@ -50,7 +50,7 @@ program.configureHelp({
 
 program
     .command("bulksend")
-    .description("Send Coin<T> to a list of addresses")
+    .description("Airdrop coins to multiple addresses")
     .requiredOption("-c, --coin-type <coinType>", "The type of coin to send (the T in Coin<T>)")
     .requiredOption("-i, --input-file <inputFile>", "Path to a CSV with recipient addresses and coin amounts")
     .action(async (opts) => {
@@ -59,7 +59,7 @@ program
 
 program
     .command("bytecode-transform")
-    .description("Replace constants and identifiers in Move bytecode files")
+    .description("Modify Move bytecode by replacing constants and identifiers")
     .addHelpText("after", `
 Example config file:
 {
@@ -121,7 +121,7 @@ program
 
 program
     .command("coin-send")
-    .description("Send a Coin<T> amount to a recipient")
+    .description("Send a coin amount to an address")
     .requiredOption("-a, --amount <amount>", "The number of coins to send (e.g. 0.5 for 0.5 SUI)")
     .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
     .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
@@ -135,14 +135,14 @@ program
 
 program
     .command("coin-zero-destroy")
-    .description("Destroy all Coin<T> objects with 0 balance in your wallet")
+    .description("Destroy all zero-balance coin objects")
     .action(async (_opts) => {
         await coinZeroDestroy();
     });
 
 program
     .command("coin-zero-send")
-    .description("Create and send coins with 0 balance")
+    .description("Create and transfer zero-balance coins")
     .requiredOption("-n, --number <number>", "The number of coins to send")
     .requiredOption("-c, --coin-type <coinType>", "The type of the coin (the T in Coin<T>)")
     .requiredOption("-r, --recipient <recipient>", "The address of the recipient")
@@ -156,7 +156,7 @@ program
 
 program
     .command("empty-wallet")
-    .description("Send all objects in your wallet to a random address (except Coin<SUI>)")
+    .description("Transfer all non-SUI objects to an address")
     .option("-r, --recipient <recipient>", "The address where the objects will be sent")
     .action(async (opts) => {
         await emptyWallet(opts.recipient);
@@ -164,7 +164,7 @@ program
 
 program
     .command("find-coin-holders")
-    .description("Find Coin<T> holders using the Suiscan API")
+    .description("Find coin holders and their balances")
     .requiredOption("-c, --coin-type <string>", "The type of the coin (the T in Coin<T>)")
     .option("-l, --limit [number]", "Get at most this many holders")
     .action(async (opts) => {
@@ -190,7 +190,7 @@ program
 
 program
     .command("find-nft-holders")
-    .description("Find unique holders of an NFT collection via Indexer.xyz")
+    .description("Find unique holders of an NFT collection")
     .requiredOption("-t, --type [type]", "The NFT type, e.g. `0x123::nft::SomeNft`.")
     .action(async (opts) => {
         await findNftHolders({
@@ -200,7 +200,7 @@ program
 
 program
     .command("find-nfts")
-    .description("Find all NFTs (object ID, owner, and name) in a collection via Indexer.xyz")
+    .description("Find all NFTs (object ID, owner, and name) in a collection")
     .requiredOption("-t, --type [type]", "The NFT type, e.g. `0x123::nft::SomeNft`.")
     .action(async (opts) => {
         await findNfts({
@@ -210,7 +210,7 @@ program
 
 program
     .command("find-nft-verified")
-    .description("Find all verified NFT collections via Indexer.xyz")
+    .description("Find all NFT collections that are verified on TradePort")
     .action(async (_opts) => {
         await findNftVerified();
     });
@@ -236,7 +236,7 @@ Example:
 
 program
     .command("msg-verify")
-    .description("Verify a Sui personal message signature")
+    .description("Validate a Sui personal message signature")
     .addHelpText("after", `
 Output:
   On success (exit code 0):

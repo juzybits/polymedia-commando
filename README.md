@@ -17,20 +17,20 @@ Options:
   -h, --help          display help for command
 
 Commands:
-  bulksend            Send Coin<T> to a list of addresses
-  bytecode-transform  Replace constants and identifiers in Move bytecode files
+  bulksend            Airdrop coins to multiple addresses
+  bytecode-transform  Modify Move bytecode by replacing constants and identifiers
   bytecode-publish    Publish Move bytecode files as a Sui package
-  coin-send           Send a Coin<T> amount to a recipient
-  coin-zero-destroy   Destroy all Coin<T> objects with 0 balance in your wallet
-  coin-zero-send      Create and send coins with 0 balance
-  empty-wallet        Send all objects in your wallet to a random address (except Coin<SUI>)
-  find-coin-holders   Find Coin<T> holders using the Suiscan API
+  coin-send           Send a coin amount to an address
+  coin-zero-destroy   Destroy all zero-balance coin objects
+  coin-zero-send      Create and transfer zero-balance coins
+  empty-wallet        Transfer all non-SUI objects to an address
+  find-coin-holders   Find coin holders and their balances
   find-last-tx        Find the latest transaction for one or more Sui addresses
-  find-nft-holders    Find unique holders of an NFT collection via Indexer.xyz
-  find-nfts           Find all NFTs (object ID, owner, and name) in a collection via Indexer.xyz
-  find-nft-verified   Find all verified NFT collections via Indexer.xyz
+  find-nft-holders    Find unique holders of an NFT collection
+  find-nfts           Find all NFTs (object ID, owner, and name) in a collection
+  find-nft-verified   Find all NFT collections that are verified on TradePort
   msg-sign            Sign a Sui personal message with your active keypair
-  msg-verify          Verify a Sui personal message signature
+  msg-verify          Validate a Sui personal message signature
   rand-addr           Generate pseudorandom Sui addresses
   help                display help for command
 ```
