@@ -14,14 +14,13 @@ export async function bytecodePublish({
     dependencies?: string[];
 }): Promise<void>
 {
-    // validate bytecode files
-    if (bytecodeFiles.length === 0) {
-        error("no bytecode files specified");
-        process.exit(1);
-    }
     for (const file of bytecodeFiles) {
         if (!fs.existsSync(file)) {
             error("bytecode file not found", file);
+            process.exit(1);
+        }
+        if (!fs.statSync(file).isFile()) {
+            error("you provided a directory, not a file", file);
             process.exit(1);
         }
     }
