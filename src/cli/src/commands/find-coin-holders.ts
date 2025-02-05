@@ -1,15 +1,7 @@
-import { writeJsonFile } from "@polymedia/suitcase-node";
-
-export type AddressAndBalance = {
-    address: string;
-    balance: number; // TODO use bigint
-};
-
 export async function findCoinHolders({
-    coinType, outputFile, limit = 999_999_999,
+    coinType, limit = 999_999_999,
 }: {
     coinType: string;
-    outputFile?: string;
     limit?: number;
 }): Promise<void>
 {
@@ -23,45 +15,41 @@ export async function findCoinHolders({
         return response.json() as Promise<ApiResponse>;
     });
 
-    const output = new Array<AddressAndBalance>();
+    const output: Holder[] = [];
     for (const holder of resp.content) {
         output.push({
             address: holder.address,
-            balance: holder.amount,
+            amount: holder.amount,
+            usdAmount: holder.usdAmount,
+            percentage: holder.percentage,
         });
     }
 
-    if (outputFile) {
-        writeJsonFile(outputFile, output);
-    } else {
-        console.log(output);
-    }
+    console.log(JSON.stringify(output, null, 2));
 }
 
 type ApiResponse = {
     content: Holder[];
-
-    first: boolean;
-    last: boolean;
-    totalPages: number;
-    empty: boolean;
-    totalElements: number;
-    numberOfElements: number;
-
-    number: number;
-    size: number;
-    sort: any;
-    pageable: any;
+    // first: boolean;
+    // last: boolean;
+    // totalPages: number;
+    // empty: boolean;
+    // totalElements: number;
+    // numberOfElements: number;
+    // number: number;
+    // size: number;
+    // sort: any;
+    // pageable: any;
 };
 
 type Holder =  {
     address: string;
-    holderName: null | string;
-    holderImg: null | string;
     amount: number;
     usdAmount: number;
     percentage: number;
-    countObjects: number;
-    coinType: string;
-    denom: string;
+    // holderName: null | string;
+    // holderImg: null | string;
+    // countObjects: number;
+    // coinType: string;
+    // denom: string;
 };

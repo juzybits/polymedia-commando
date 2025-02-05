@@ -167,12 +167,10 @@ program
     .command("find-coin-holders")
     .description("Find Coin<T> holders using the Suiscan API")
     .requiredOption("-c, --coin-type <string>", "The type of the coin (the T in Coin<T>)")
-    .option("-o, --output-file [string]", "JSON file with addresses and balances")
     .option("-l, --limit [number]", "Get at most this many holders")
     .action(async (opts) => {
         await findCoinHolders({
             coinType: opts.coinType,
-            outputFile: opts.outputFile,
             limit: opts.limit,
         });
     });
