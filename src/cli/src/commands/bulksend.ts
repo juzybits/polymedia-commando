@@ -12,7 +12,7 @@ import { debug, log, error } from "../logger.js";
  * The Polymedia Bulksender package ID which contains the bulksender::send() function
  */
 const PACKAGE_IDS = new Map<NetworkName, string> ([
-    ["localnet", "0x8bd6031ad73629d54d1426038d790d1936d26b2227c3ae813861d5911814c953"],
+    ["localnet", ""],
     ["devnet", ""],
     ["testnet", "0x7f541b25c64aa2d0330a64dfaeb7c0e35924b6633069b8047125e038728d15d6"],
     ["mainnet", "0x026b2b422e630c79c961fdb5d63821547ec8fb2ad5b7095189c440e1bdbba9f1"],
@@ -39,7 +39,7 @@ export async function bulksend(
     // check input file exists
     debug(`Input file: ${inputFile}`);
     if (!fileExists(inputFile)) {
-        error(`${inputFile} doesn't exist. Create a .csv file with two columns: address and amount.`);
+        error(`${inputFile} doesn't exist. Provide a CSV file with two columns: address and amount.`);
         process.exit(1);
     }
 
