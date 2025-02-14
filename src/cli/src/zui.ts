@@ -121,10 +121,13 @@ program
     });
 
 program
-    .command("clock-timestamp")
+    .command("clock-time")
     .description("Get the current timestamp in milliseconds")
-    .action(async () => {
-        await clockTime();
+    .option("-f, --format <type>", "output format: 'ts' (default), 'iso' (UTC), or 'local'")
+    .action(async (opts) => {
+        await clockTime({
+            format: opts.format,
+        });
     });
 
 program
