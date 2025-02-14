@@ -10,6 +10,7 @@ import dotenv from "dotenv";
 import { bulksend } from "./commands/bulksend.js";
 import { bytecodePublish } from "./commands/bytecode-publish.js";
 import { bytecodeTransform } from "./commands/bytecode-transform.js";
+import { clockTime } from "./commands/clock-time.js";
 import { coinSend } from "./commands/coin-send.js";
 import { coinZeroDestroy } from "./commands/coin-zero-destroy.js";
 import { coinSendZero } from "./commands/coin-zero-send.js";
@@ -117,6 +118,13 @@ program
             bytecodeFiles: opts.files,
             dependencies: opts.dependencies,
         });
+    });
+
+program
+    .command("clock-timestamp")
+    .description("Get the current timestamp in milliseconds")
+    .action(async () => {
+        await clockTime();
     });
 
 program
